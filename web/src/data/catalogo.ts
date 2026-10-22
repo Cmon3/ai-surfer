@@ -41,7 +41,7 @@ export const itinerarios: Itinerario[] = [
     color: "#7f77dd",
     modulos: [
       { codigo: "F1", carpeta: "F1-python", titulo: "Python para datos", estado: "disponible" },
-      { codigo: "F2", carpeta: null, titulo: "SQL para análisis de datos", estado: "en-preparacion", nota: "SELECT, JOIN, agregaciones y funciones de ventana con DuckDB/SQLite." },
+      { codigo: "F2", carpeta: "F2-sql", titulo: "SQL para análisis de datos", estado: "disponible" },
       { codigo: "F3", carpeta: "F3-estadistica", titulo: "Estadística para la toma de decisiones", estado: "disponible" },
       { codigo: "F4", carpeta: null, titulo: "Matemáticas para ML", estado: "en-preparacion", nota: "Vectores y matrices, derivadas y gradiente, probabilidad; todo con NumPy." },
       { codigo: "F5", carpeta: null, titulo: "Herramientas del oficio", estado: "en-preparacion", nota: "Terminal, Git y GitHub, entornos y buenas prácticas en notebooks." },
