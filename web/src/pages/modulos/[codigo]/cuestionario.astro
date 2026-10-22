@@ -1,0 +1,22 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { modulosDisponibles } from "../../../data/catalogo";
+import { material } from "../../../data/modulos-md";
+
+export function getStaticPaths() {
+  return modulosDisponibles()
+    .filter((m) => material(m.carpeta!).cuestionarioHtml)
+    .map((m) => ({ params: { codigo: m.codigo.toLowerCase() }, props: { m } }));
+}
+
+const { m } = Astro.props;
+const mat = material(m.carpeta!);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Base titulo={`Cuestionario · ${m.codigo}`} descripcion={`Cuestionario del módulo ${m.codigo}`}>
+  <div class="wrap">
+    <p><a href={`${base}/modulos/${m.codigo.toLowerCase()}/`}>← {m.titulo}</a></p>
+    <h1>Cuestionario · {m.codigo}</h1>
+    <div class="prose" set:html={mat.cuestionarioHtml} />
+  </div>
+</Base>

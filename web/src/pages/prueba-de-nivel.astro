@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import { preguntas } from "../data/prueba-nivel";
+---
+<Base titulo="Prueba de nivel" descripcion="Test de 12 preguntas para saber por qué bloque empezar">
+  <div class="wrap">
+    <h1>Prueba de nivel</h1>
+    <p>12 preguntas, ~5 minutos. Al final te recomendamos por qué itinerario empezar. Sin registro: el resultado se muestra aquí y no se envía a ningún sitio.</p>
+
+    <form id="quiz">
+      {preguntas.map((p, i) => (
+        <fieldset class="pregunta">
+          <legend>{i + 1}. {p.texto}</legend>
+          {p.opciones.map((op, j) => (
+            <label>
+              <input type="radio" name={`q${i}`} value={j} required /> {op}
+            </label>
+          ))}
+        </fieldset>
+      ))}
+      <button class="cta" type="submit" style="border:none;cursor:pointer;font-size:1rem">Ver mi nivel</button>
+    </form>
+
+    <div id="resultado" style="display:none;margin-top:1.5rem;padding:1.25rem" class="card">
+      <h2 style="margin-top:0">Tu resultado</h2>
+      <p id="resultado-texto"></p>
+      <a id="resultado-enlace" class="cta" href="/">Ir al itinerario →</a>
+    </div>
+  </div>
+
+  <script define:vars={{ preguntas: preguntas.map((p) => ({ bloque: p.bloque, correcta: p.correcta })) }}>
+    const form = document.getElementById("quiz");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const datos = new FormData(form);
+      let n1 = 0, n2 = 0, r3: string[] = [];
+      preguntas.forEach((p, i) => {
+        const v = Number(datos.get(`q${i}`));
+        if (p.correcta === -1) { r3.push(String(v)); return; } // pregunta de orientación
+        if (p.bloque === "N1" && v === p.correcta) n1++;
+        if (p.bloque === "N2" && v === p.correcta) n2++;
+      });
+
+      let ruta, texto;
+      const aCausal = r3[0] === "0", aLlms = r3[0] === "1";
+      if (n1 < 3) {
+        ruta = "n1-fundamentos"; texto = `Fundamentos (N1): acertaste ${n1}/4 de la base. Empiezas mejor con Python, SQL y estadística.`;
+      } else if (n2 < 4) {
+        ruta = "n2-intermedio"; texto = `Intermedio (N2): dominas la base (${n1}/4). Es tu bloque: el núcleo de machine learning.`;
+      } else {
+        ruta = aLlms ? "n3-ai-engineering" : "n3-data-science";
+        texto = `Nivel 3 (${aLlms ? "AI Engineering" : "Data Science"}): dominas fundamentos (${n1}/4) y ML (${n2}/5). Puedes cursar directamente la especialización.`;
+      }
+      document.getElementById("resultado-texto").textContent = texto;
+      document.getElementById("resultado-enlace").setAttribute("href", `/itinerarios/${ruta}/`);
+      const div = document.getElementById("resultado");
+      div.style.display = "block";
+      div.scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+</Base>

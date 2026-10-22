@@ -1,0 +1,36 @@
+---
+import "../styles/base.css";
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+}
+const { titulo, descripcion = "AI Surfer — escuela de ciencia de datos e IA por niveles" } = Astro.props;
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={descripcion} />
+    <title>{titulo} · AI Surfer</title>
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">AI Surfer</a>
+        <nav>
+          <a href="/#itinerarios">Itinerarios</a>
+          <a href="/mi-progreso/">Mi progreso</a>
+          <a href="/prueba-de-nivel/">Prueba de nivel</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="pie">
+      <div class="wrap">
+        AI Surfer — contenido abierto. Certificado, corrección y cohorte en preparación.
+      </div>
+    </footer>
+  </body>
+</html>

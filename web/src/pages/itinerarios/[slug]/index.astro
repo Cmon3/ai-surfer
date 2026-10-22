@@ -1,0 +1,47 @@
+---
+import { itinerarios } from "../../../data/catalogo";
+import Base from "../../../layouts/Base.astro";
+
+export function getStaticPaths() {
+  return itinerarios.map((it) => ({ params: { slug: it.slug }, props: { it } }));
+}
+
+const { it } = Astro.props;
+const anterior = itinerarios.find((x) => x.slug === it.anterior);
+const siguientes = itinerarios.filter((x) => x.anterior === it.slug);
+---
+<Base titulo={it.nombre} descripcion={it.descripcion}>
+  <div class="wrap">
+    <p><a href="/">← Inicio</a></p>
+    <h1 style={`border-bottom: 4px solid ${it.color}; padding-bottom:.5rem`}>{it.nombre}</h1>
+    <p style="color:var(--texto-suave)">{it.semanas}{it.horasSemana ? ` · ${it.horasSemana}` : ""} · Certificado: <strong>{it.certificado}</strong></p>
+    <p>{it.descripcion}</p>
+
+    <h2>Módulos</h2>
+    <ul class="modulos">
+      {it.modulos.map((m) => (
+        <li>
+          <span class="codigo">{m.codigo}</span>
+          <span>
+            {m.carpeta ? <a href={`/modulos/${m.codigo.toLowerCase()}/`}>{m.titulo}</a> : m.titulo}
+            {m.nota && <div class="nota">{m.nota}</div>}
+          </span>
+          <span class={`badge ${m.estado === "disponible" ? "ok" : "wip"}`} style="margin-left:auto">
+            {m.estado === "disponible" ? "Disponible" : "En preparación"}
+          </span>
+        </li>
+      ))}
+      <li>
+        <span class="codigo">★</span>
+        <span><strong>Proyecto:</strong> {it.proyecto}</span>
+      </li>
+    </ul>
+
+    <p style="margin-top:2rem">
+      {anterior && <>← <a href={`/itinerarios/${anterior.slug}/`}>{anterior.nombre}</a>&nbsp;&nbsp;&nbsp;</>}
+      {siguientes.map((s) => (
+        <a href={`/itinerarios/${s.slug}/`} class="cta" style="margin-right:.5rem;padding:.5rem 1rem">{s.nombre} →</a>
+      ))}
+    </p>
+  </div>
+</Base>

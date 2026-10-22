@@ -1,0 +1,67 @@
+---
+import Base from "../layouts/Base.astro";
+import { itinerarios, modulosDisponibles } from "../data/catalogo";
+
+// El progreso se pinta con un script: los datos vienen de localStorage.
+const totalDisponibles = modulosDisponibles().length;
+---
+<Base titulo="Ciencia de Datos e IA Aplicada">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Surfea la ciencia de datos y la IA, por niveles 🏄</h1>
+      <p>
+        Cuatro itinerarios con proyectos de portafolio y certificados acumulables:
+        desde cero hasta data science avanzada o AI engineering. Empieza donde te corresponda.
+      </p>
+      <a class="cta" href="/prueba-de-nivel/">Haz la prueba de nivel</a>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <h2>Itinerarios</h2>
+    <div class="grid">
+      {itinerarios.map((it) => (
+        <a class="card" href={`/itinerarios/${it.slug}/`} style={`border-top-color: ${it.color}`}>
+          <span class="meta">{it.semanas}{it.horasSemana ? ` · ${it.horasSemana}` : ""}</span>
+          <h3>{it.nombre}</h3>
+          <p>{it.subtitulo}</p>
+          <p class="progreso">
+            <span class="barra"><span data-progreso={it.slug}></span></span>
+            <span data-progreso-texto={it.slug}>—</span>
+          </p>
+        </a>
+      ))}
+    </div>
+
+    <h2>¿Cómo funciona?</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Practica en el navegador</h3>
+        <p>Cada módulo trae notebooks ejecutables: local, en Colab o (próximamente) sin salir de la página.</p>
+      </div>
+      <div class="card">
+        <h3>Proyectos de portafolio</h3>
+        <p>Cada bloque termina con un proyecto integrador que puedes publicar en GitHub o Hugging Face.</p>
+      </div>
+      <div class="card">
+        <h3>Certificados acumulables</h3>
+        <p>Un certificado por bloque ({totalDisponibles} módulos ya disponibles de los 27 previstos).</p>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ itinerarios: itinerarios.map((i) => ({ slug: i.slug, codigos: i.modulos.map((m) => m.codigo) })) }}>
+    // Progreso guardado en localStorage: { "modulos-completados": ["F1", ...] }
+    const clave = "modulos-completados";
+    const hechos = new Set(JSON.parse(localStorage.getItem(clave) || "[]"));
+
+    for (const it of itinerarios) {
+      const hechas = it.codigos.filter((c) => hechos.has(c)).length;
+      const pct = it.codigos.length ? Math.round((100 * hechas) / it.codigos.length) : 0;
+      const barra = document.querySelector(`[data-progreso="${it.slug}"]`);
+      const texto = document.querySelector(`[data-progreso-texto="${it.slug}"]`);
+      if (barra) barra.style.width = pct + "%";
+      if (texto) texto.textContent = `${hechas}/${it.codigos.length} módulos`;
+    }
+  </script>
+</Base>

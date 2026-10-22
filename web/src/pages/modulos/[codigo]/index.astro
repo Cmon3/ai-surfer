@@ -1,0 +1,52 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { modulosDisponibles } from "../../../data/catalogo";
+import { material } from "../../../data/modulos-md";
+
+export function getStaticPaths() {
+  return modulosDisponibles().map((m) => ({
+    params: { codigo: m.codigo.toLowerCase() },
+    props: { m },
+  }));
+}
+
+const { m } = Astro.props;
+const mat = material(m.carpeta!);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Base titulo={`${m.codigo} · ${m.titulo}`} descripcion={m.titulo}>
+  <div class="wrap">
+    <p><a href={`${base}/itinerarios/${m.itinerario.slug}/`}>← {m.itinerario.nombre}</a></p>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+      <div>
+        <p class="meta" style="color:var(--texto-suave);margin:0">Módulo {m.codigo}</p>
+        <h1 style="margin:.2rem 0">{m.titulo}</h1>
+      </div>
+      <button class="cta" data-marcar={m.codigo} style="border:none;cursor:pointer;font-size:.95rem;padding:.55rem 1.1rem">Marcar completado</button>
+    </div>
+
+    {mat.apuntesHtml && <p>📖 <a href={`${base}/modulos/${m.codigo.toLowerCase()}/apuntes/`}>Apuntes completos</a> (teoría de cada lección en el navegador)</p>}
+    {mat.cuestionarioHtml && <p>📝 <a href={`${base}/modulos/${m.codigo.toLowerCase()}/cuestionario/`}>Cuestionario de autoevaluación</a> (10 preguntas)</p>}
+
+    <div class="prose" set:html={mat.readmeHtml} />
+  </div>
+
+  <script define:vars={{ codigo: m.codigo }}>
+    const clave = "modulos-completados";
+    const leer = () => JSON.parse(localStorage.getItem(clave) || "[]");
+    const boton = document.querySelector("[data-marcar]");
+    function pintar() {
+      const hecho = leer().includes(codigo);
+      boton.textContent = hecho ? "✓ Completado" : "Marcar completado";
+      boton.style.background = hecho ? "var(--ok)" : "var(--enfasis)";
+    }
+    boton.addEventListener("click", () => {
+      const lista = leer();
+      const i = lista.indexOf(codigo);
+      if (i >= 0) lista.splice(i, 1); else lista.push(codigo);
+      localStorage.setItem(clave, JSON.stringify(lista));
+      pintar();
+    });
+    pintar();
+  </script>
+</Base>

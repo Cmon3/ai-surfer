@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+import { itinerarios } from "../data/catalogo";
+---
+<Base titulo="Mi progreso" descripcion="Progreso por itinerario, guardado solo en tu navegador">
+  <div class="wrap">
+    <h1>Mi progreso</h1>
+    <p style="color:var(--texto-suave)">Sin cuentas todavía: esto se guarda solo en tu navegador (localStorage). En la plataforma final se sincronizará con tu cuenta.</p>
+
+    <div class="grid">
+      {itinerarios.map((it) => (
+        <div class="card" style={`border-top-color:${it.color}`}>
+          <h3><a href={`/itinerarios/${it.slug}/`}>{it.nombre}</a></h3>
+          <p class="progreso">
+            <span class="barra"><span data-progreso={it.slug}></span></span>
+            <span data-progreso-texto={it.slug}>—</span>
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <p style="margin-top:2rem"><button id="reiniciar" class="card" style="cursor:pointer;font-size:.9rem">Reiniciar mi progreso</button></p>
+  </div>
+
+  <script define:vars={{ itinerarios: itinerarios.map((i) => ({ slug: i.slug, codigos: i.modulos.map((m) => m.codigo) })) }}>
+    const clave = "modulos-completados";
+    const pintar = () => {
+      const hechos = new Set(JSON.parse(localStorage.getItem(clave) || "[]"));
+      for (const it of itinerarios) {
+        const hechas = it.codigos.filter((c) => hechos.has(c)).length;
+        const pct = it.codigos.length ? Math.round((100 * hechas) / it.codigos.length) : 0;
+        const barra = document.querySelector(`[data-progreso="${it.slug}"]`);
+        const texto = document.querySelector(`[data-progreso-texto="${it.slug}"]`);
+        if (barra) barra.style.width = pct + "%";
+        if (texto) texto.textContent = `${hechas}/${it.codigos.length} (${pct} %)`;
+      }
+    };
+    document.getElementById("reiniciar").addEventListener("click", () => {
+      if (confirm("¿Seguro? Borrarás todo tu progreso.")) { localStorage.removeItem(clave); pintar(); }
+    });
+    pintar();
+  </script>
+</Base>
