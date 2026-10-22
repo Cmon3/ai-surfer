@@ -12,7 +12,7 @@ Orientada a puestos como *AI/LLM Engineer*: post-entrenamiento, evaluación y pr
 |---|---|---|---|
 | 1 | AI1 | [Transformers por dentro](../../modulos/AI1-transformers/) | ✅ Disponible |
 | 2 | AI2 | [Aplicaciones con LLMs](../../modulos/AI2-apps-llms/) | ✅ Disponible |
-| 3 | AI3 | RAG y agentes: embeddings, bases de datos vectoriales, *chunking*, *reranking*, agentes con herramientas y sus límites (amplía I7) | 🚧 En preparación |
+| 3 | AI3 | [RAG y agentes](../../modulos/AI3-rag-agentes/) | ✅ Disponible |
 | 4 | AI4 | Evaluación de LLMs: conjuntos de evaluación, LLM como juez y su calibración, evaluaciones de comportamiento y análisis de fallos | 🚧 En preparación |
 | 5 | AI5 | Fine-tuning supervisado: preparación de datos, SFT, LoRA y QLoRA con TRL + PEFT, entrenamiento en GPU y *chat templates* | 🚧 En preparación |
 | 6 | AI6 | Alineación y post-entrenamiento: datos de preferencias, DPO, GRPO con funciones de recompensa, reproducibilidad | 🚧 En preparación |
