@@ -14,12 +14,12 @@ Orientada a puestos como *AI/LLM Engineer*: post-entrenamiento, evaluación y pr
 | 2 | AI2 | [Aplicaciones con LLMs](../../modulos/AI2-apps-llms/) | ✅ Disponible |
 | 3 | AI3 | [RAG y agentes](../../modulos/AI3-rag-agentes/) | ✅ Disponible |
 | 4 | AI4 | [Evaluación de LLMs](../../modulos/AI4-evaluacion-llms/) | ✅ Disponible |
-| 5 | AI5 | Fine-tuning supervisado: preparación de datos, SFT, LoRA y QLoRA con TRL + PEFT, entrenamiento en GPU y *chat templates* | 🚧 En preparación |
-| 6 | AI6 | Alineación y post-entrenamiento: datos de preferencias, DPO, GRPO con funciones de recompensa, reproducibilidad | 🚧 En preparación |
-| 7 | AI7 | Inferencia y despliegue: cuantización, vLLM, latencia y coste, *batching*, servir modelos ajustados y pruebas de carga | 🚧 En preparación |
-| 8 | AI8 | Seguridad, moderación y LLMOps: clasificadores de moderación, *red teaming*, inyección de instrucciones, observabilidad y regulación (RGPD y Reglamento europeo de IA) | 🚧 En preparación |
+| 5 | AI5 | [Fine-tuning supervisado](../../modulos/AI5-fine-tuning/) | ✅ Disponible |
+| 6 | AI6 | [Alineación y post-entrenamiento](../../modulos/AI6-alineacion/) | ✅ Disponible |
+| 7 | AI7 | [Inferencia y despliegue](../../modulos/AI7-inferencia/) | ✅ Disponible |
+| 8 | AI8 | [Seguridad, moderación y LLMOps](../../modulos/AI8-seguridad/) | ✅ Disponible |
 | 9 | AI9 | Multimodal (optativo): modelos de visión y lenguaje, voz | 🚧 En preparación |
-| 10–12 | — | Capstone AI: ajustar un modelo abierto pequeño para un caso de uso concreto, con evaluación propia, comparación frente al modelo base y despliegue. Se publica en Hugging Face | 🚧 En preparación |
+| 10–12 | — | [Capstone AI](../../modulos/AI-capstone/): fine-tune con QLoRA + eval + deploy. Se publica en Hugging Face | ✅ Disponible |
 
 ## Criterios del certificado
 
