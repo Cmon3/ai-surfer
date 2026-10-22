@@ -44,7 +44,7 @@ export const itinerarios: Itinerario[] = [
       { codigo: "F2", carpeta: "F2-sql", titulo: "SQL para análisis de datos", estado: "disponible" },
       { codigo: "F3", carpeta: "F3-estadistica", titulo: "Estadística para la toma de decisiones", estado: "disponible" },
       { codigo: "F4", carpeta: "F4-matematicas-ml", titulo: "Matemáticas para ML", estado: "disponible" },
-      { codigo: "F5", carpeta: null, titulo: "Herramientas del oficio", estado: "en-preparacion", nota: "Terminal, Git y GitHub, entornos y buenas prácticas en notebooks." },
+      { codigo: "F5", carpeta: "F5-herramientas", titulo: "Herramientas del oficio", estado: "disponible" },
     ],
     proyecto: "Análisis exploratorio completo de un conjunto de datos público, con SQL + pandas e informe.",
     siguiente: "n2-intermedio",
