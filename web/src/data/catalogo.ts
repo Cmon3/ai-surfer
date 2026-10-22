@@ -105,7 +105,7 @@ export const itinerarios: Itinerario[] = [
     certificado: "AI Engineering",
     color: "#d4896a",
     modulos: [
-      { codigo: "AI1", carpeta: null, titulo: "Transformers por dentro", estado: "en-preparacion" },
+      { codigo: "AI1", carpeta: "AI1-transformers", titulo: "Transformers por dentro", estado: "disponible" },
       { codigo: "AI2", carpeta: null, titulo: "Aplicaciones con LLMs", estado: "en-preparacion" },
       { codigo: "AI3", carpeta: null, titulo: "RAG y agentes", estado: "en-preparacion" },
       { codigo: "AI4", carpeta: null, titulo: "Evaluación de LLMs", estado: "en-preparacion" },
