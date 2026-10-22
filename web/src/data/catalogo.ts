@@ -108,7 +108,7 @@ export const itinerarios: Itinerario[] = [
       { codigo: "AI1", carpeta: "AI1-transformers", titulo: "Transformers por dentro", estado: "disponible" },
       { codigo: "AI2", carpeta: "AI2-apps-llms", titulo: "Aplicaciones con LLMs", estado: "disponible" },
       { codigo: "AI3", carpeta: "AI3-rag-agentes", titulo: "RAG y agentes", estado: "disponible" },
-      { codigo: "AI4", carpeta: null, titulo: "Evaluación de LLMs", estado: "en-preparacion" },
+      { codigo: "AI4", carpeta: "AI4-evaluacion-llms", titulo: "Evaluación de LLMs", estado: "disponible" },
       { codigo: "AI5", carpeta: null, titulo: "Fine-tuning supervisado", estado: "en-preparacion" },
       { codigo: "AI6", carpeta: null, titulo: "Alineación y post-entrenamiento", estado: "en-preparacion" },
       { codigo: "AI7", carpeta: null, titulo: "Inferencia y despliegue", estado: "en-preparacion" },
