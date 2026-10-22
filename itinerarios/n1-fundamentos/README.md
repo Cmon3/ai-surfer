@@ -11,7 +11,7 @@ Primer bloque de la escuela. Para quien empieza desde cero o necesita una base s
 | 1–2 | F1 | [Python para datos](../../modulos/F1-python/) | ✅ Disponible |
 | 2–3 | F2 | [SQL para análisis de datos](../../modulos/F2-sql/) | ✅ Disponible |
 | 3–4 | F3 | [Estadística para la toma de decisiones](../../modulos/F3-estadistica/) | ✅ Disponible |
-| 4–5 | F4 | [Matemáticas para ML](../../modulos/F4-matematicas-ml/): vectores y matrices, derivadas y gradiente, probabilidad condicionada; todo con NumPy | 🚧 En preparación |
+| 4–5 | F4 | [Matemáticas para ML](../../modulos/F4-matematicas-ml/) | ✅ Disponible |
 | 5–6 | F5 | [Herramientas del oficio](../../modulos/F5-herramientas/): terminal, Git y GitHub, entornos y buenas prácticas en notebooks | 🚧 En preparación |
 | 6 | — | [Proyecto N1](proyecto/): análisis exploratorio completo de un conjunto de datos público con SQL + pandas e informe | 🚧 En preparación |
 
