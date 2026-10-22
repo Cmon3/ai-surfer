@@ -27,7 +27,7 @@ Al terminar este módulo podrás:
 | [`apuntes.md`](apuntes.md) | Teoría de cada lección, para estudiar y repasar |
 | [`notebook.ipynb`](notebook.ipynb) | Práctica guiada con ejercicios (SQLite desde Python) |
 | [`cuestionario.md`](cuestionario.md) | Cuestionario evaluable (10 preguntas) |
-| [`recursos-abiertos.md`)](recursos-abiertos.md) | Vídeos y lecturas gratuitas recomendadas |
+| [`recursos-abiertos.md`](recursos-abiertos.md) | Vídeos y lecturas gratuitas recomendadas |
 | [`soluciones.ipynb`](soluciones.ipynb) | *Instructores:* soluciones de los ejercicios |
 
 ## Práctica guiada
