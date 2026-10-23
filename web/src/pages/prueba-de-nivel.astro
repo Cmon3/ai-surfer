@@ -1,61 +1,194 @@
 ---
 import Base from "../layouts/Base.astro";
 import { preguntas } from "../data/prueba-nivel";
+
+// Retos: cada test es [expresión_python, valor_esperado_como_literal_python]
+const retos = [
+  {
+    id: "r1", nivel: "N1", titulo: "Calcula la media",
+    enunciado: "Implementa <code>media(numeros)</code> que devuelva el promedio.",
+    starter: "def media(numeros):\n    # tu código aquí\n    pass\n",
+    pista: "La media es la suma de los elementos dividida entre cuántos hay. Python trae funciones para ambas cosas.",
+    tests: [
+      ["media([1, 2, 3])", "2"],
+      ["media([2, 4, 6, 8])", "5"],
+      ["media([10])", "10"],
+    ],
+  },
+  {
+    id: "r2", nivel: "N2", titulo: "Total de ventas > 1000 €",
+    enunciado: "Devuelve el <code>total_grandes(ventas)</code>: suma de importes que superan 1000.",
+    starter: "def total_grandes(ventas):\n    # ventas = [{'importe': 1200}, ...]\n    # tu código aquí\n    pass\n",
+    pista: "Recorre las ventas, quédate solo con las que superan 1000 y acumula su importe (un generador dentro de sum() lo hace en una línea).",
+    tests: [
+      ["total_grandes([{'importe': 1200}, {'importe': 800}, {'importe': 1500}])", "2700"],
+      ["total_grandes([{'importe': 500}, {'importe': 1001}, {'importe': 999.5}])", "1001"],
+    ],
+  },
+  {
+    id: "r3", nivel: "N3", titulo: "Top-3 productos por ingresos",
+    enunciado: "Devuelve <code>top3(ventas)</code>: los nombres de los 3 productos con más ingresos (unidades × precio), de mayor a menor.",
+    starter: "def top3(ventas):\n    # ventas = [{'producto': 'cafe', 'unidades': 3, 'precio': 4.5}, ...]\n    # tu código aquí\n    pass\n",
+    pista: "Acumula ingresos por producto en un diccionario (un producto puede repetirse), ordénalo de mayor a menor y quédate con los 3 primeros nombres.",
+    tests: [
+      ["top3([{'producto':'cafe','unidades':3,'precio':4.5},{'producto':'te','unidades':5,'precio':3},{'producto':'pan','unidades':2,'precio':2},{'producto':'leche','unidades':1,'precio':1}])", "['cafe', 'te', 'pan']"],
+    ],
+  },
+];
 ---
-<Base titulo="Prueba de nivel" descripcion="Test de 12 preguntas para saber por qué bloque empezar">
+<Base titulo="Prueba de nivel" descripcion="Test + retos de código ejecutados en tu navegador">
   <div class="wrap">
     <h1>Prueba de nivel</h1>
-    <p>12 preguntas, ~5 minutos. Al final te recomendamos por qué itinerario empezar. Sin registro: el resultado se muestra aquí y no se envía a ningún sitio.</p>
+    <p>Parte 1: 12 preguntas (~5 min). Parte 2: <strong>3 retos de código que se ejecutan en tu navegador</strong> (Python real vía Pyodide, sin servidor y sin instalar nada). La combinación determina por dónde empezar.</p>
 
+    <h2>Parte 1 · Cuestionario</h2>
     <form id="quiz">
       {preguntas.map((p, i) => (
         <fieldset class="pregunta">
           <legend>{i + 1}. {p.texto}</legend>
           {p.opciones.map((op, j) => (
-            <label>
-              <input type="radio" name={`q${i}`} value={j} required /> {op}
-            </label>
+            <label><input type="radio" name={"q" + i} value={j} required /> {op}</label>
           ))}
         </fieldset>
       ))}
-      <button class="cta" type="submit" style="border:none;cursor:pointer;font-size:1rem">Ver mi nivel</button>
+      <button class="cta" type="submit" style="border:none;cursor:pointer;font-size:1rem">Evaluar cuestionario</button>
     </form>
 
     <div id="resultado" style="display:none;margin-top:1.5rem;padding:1.25rem" class="card">
-      <h2 style="margin-top:0">Tu resultado</h2>
+      <h2 style="margin-top:0">Resultado del cuestionario</h2>
       <p id="resultado-texto"></p>
       <a id="resultado-enlace" class="cta" href="/">Ir al itinerario →</a>
     </div>
+
+    <h2 style="margin-top:2.5rem">Parte 2 · Retos de código <span class="badge ok">ejecutándose en tu navegador</span></h2>
+    <p style="color:var(--texto-suave)">Escribe Python real: se ejecuta en tu navegador (Pyodide/WASM). Los tests corren en Python y muestran ✓/✗.</p>
+
+    {retos.map((r) => (
+      <fieldset class="pregunta" style="background:#fff">
+        <legend><span class="badge ok">{r.nivel}</span> · {r.titulo}</legend>
+        <p style="margin:.25rem 0 .5rem" set:html={r.enunciado} />
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <textarea id={"code-" + r.id} rows="7" spellcheck="false"
+            style="width:100%;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.85rem;border:1px solid var(--borde);border-radius:8px;padding:.6rem;background:#1e1b18;color:#f5f2ec">{r.starter}</textarea>
+        <button class="cta" data-run={r.id} style="border:none;cursor:pointer;font-size:.9rem;padding:.5rem 1rem">▶ Ejecutar y comprobar</button>
+          <output id={"out-" + r.id} style="font-size:.9rem;color:var(--texto-suave)">Sin ejecutar.</output>
+        </div>
+      </fieldset>
+    ))}
+
+    <div id="resultado-final" style="display:none;margin-top:1.5rem;padding:1.25rem" class="card">
+      <h2 style="margin-top:0">Veredicto combinado (quiz + retos)</h2>
+      <p id="veredicto-texto"></p>
+      <a id="veredicto-enlace" class="cta" href="/">Ir al itinerario recomendado →</a>
+    </div>
   </div>
 
-  <script define:vars={{ preguntas: preguntas.map((p) => ({ bloque: p.bloque, correcta: p.correcta })) }}>
+  <script define:vars={{ preguntas, retos }}>
+    // ---------- 1 · Cuestionario ----------
     const form = document.getElementById("quiz");
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const datos = new FormData(form);
-      let n1 = 0, n2 = 0, r3: string[] = [];
+      let n1 = 0, n2 = 0, r3 = [];
       preguntas.forEach((p, i) => {
-        const v = Number(datos.get(`q${i}`));
-        if (p.correcta === -1) { r3.push(String(v)); return; } // pregunta de orientación
+        const v = Number(datos.get("q" + i));
+        if (p.correcta === -1) { r3.push(String(v)); return; }
         if (p.bloque === "N1" && v === p.correcta) n1++;
         if (p.bloque === "N2" && v === p.correcta) n2++;
       });
-
       let ruta, texto;
-      const aCausal = r3[0] === "0", aLlms = r3[0] === "1";
-      if (n1 < 3) {
-        ruta = "n1-fundamentos"; texto = `Fundamentos (N1): acertaste ${n1}/4 de la base. Empiezas mejor con Python, SQL y estadística.`;
-      } else if (n2 < 4) {
-        ruta = "n2-intermedio"; texto = `Intermedio (N2): dominas la base (${n1}/4). Es tu bloque: el núcleo de machine learning.`;
-      } else {
-        ruta = aLlms ? "n3-ai-engineering" : "n3-data-science";
-        texto = `Nivel 3 (${aLlms ? "AI Engineering" : "Data Science"}): dominas fundamentos (${n1}/4) y ML (${n2}/5). Puedes cursar directamente la especialización.`;
-      }
+      if (n1 < 3) { ruta = "n1-fundamentos"; texto = "Fundamentos (N1): acertaste " + n1 + "/4 de la base."; }
+      else if (n2 < 4) { ruta = "n2-intermedio"; texto = "Intermedio (N2): dominas la base (" + n1 + "/4)."; }
+      else { ruta = (r3[0] === "1") ? "n3-ai-engineering" : "n3-data-science";
+             texto = "Nivel 3: dominas fundamentos y ML."; }
       document.getElementById("resultado-texto").textContent = texto;
-      document.getElementById("resultado-enlace").setAttribute("href", `/itinerarios/${ruta}/`);
+      document.getElementById("resultado-enlace").setAttribute("href", "/itinerarios/" + ruta + "/");
       const div = document.getElementById("resultado");
-      div.style.display = "block";
-      div.scrollIntoView({ behavior: "smooth" });
+      div.style.display = "block"; div.scrollIntoView({ behavior: "smooth" });
+      window.__rutaQuiz = ruta;
     });
-  </script>
+
+    // ---------- 2 · Retos con Pyodide (tests EN Python) ----------
+    window.__retosOk = {};
+    let pyodide = null;
+    const CDN = "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/";
+
+    async function getPyodide() {
+      if (pyodide) return pyodide;
+      if (!window.loadPyodide) {
+        await new Promise((res, rej) => {
+          const s = document.createElement("script");
+          s.src = CDN + "pyodide.js";
+          s.onload = res; s.onerror = () => rej(new Error("Sin conexión al CDN de Pyodide"));
+          document.head.appendChild(s);
+        });
+      }
+      pyodide = await loadPyodide({ indexURL: CDN });
+      return pyodide;
+    }
+
+    // El harness corre en Python: exec del código + eval de los tests.
+    // Los tests viajan por py.globals (_code, _tests) — no hay inyección de strings.
+    function harnessPython() {
+      return [
+        "import json as _json, ast as _ast",
+        "_resultados = []",
+        "try:",
+        "    exec(_code)",
+        "except Exception as _e:",
+        "    _resultados.append([False, 'Error al ejecutar tu c\u00f3digo: ' + str(_e)])",
+        "for _expr, _esp in _json.loads(_tests):",
+        "    try:",
+        "        _got = eval(_expr)",
+        "        _resultados.append((_got == _ast.literal_eval(_esp), _expr + '  ->  ' + repr(_got)))",
+        "    except Exception as _e:",
+        "        _resultados.append((False, _expr + '  ->  error: ' + str(_e)))",
+        "_json.dumps(_resultados)",
+      ].join("\n");
+    }
+
+    document.querySelectorAll("[data-run]").forEach((btn) => {
+      btn.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const id = btn.dataset.run;
+        const out = document.getElementById("out-" + id);
+        const code = document.getElementById("code-" + id).value;
+        const reto = retos.find((r) => r.id === id);
+        out.textContent = "Cargando Python\u2026 (la primera vez ~10 s)";
+        try {
+          const py = await getPyodide();
+          py.globals.set("_code", code);
+          py.globals.set("_tests", JSON.stringify(reto.tests));
+          const res = py.runPython(harnessPython());
+          const resultados = JSON.parse(res);
+          const pasados = resultados.filter((r) => r[0]).length;
+          const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+          const detalle = resultados.map((r) => (r[0] ? "\u2713 " : "\u2717 ") + esc(r[1])).join("\n");
+          if (pasados === resultados.length) {
+            window.__retosOk[id] = true;
+            out.innerHTML = "<strong style='color:var(--ok)'>\u00a1Superado! (" + pasados + "/" + resultados.length + " tests)</strong><pre style='white-space:pre-wrap;margin:.4rem 0 0'>" + detalle + "</pre>";
+          } else {
+            out.innerHTML = "<strong style='color:#b3562a'>" + pasados + "/" + resultados.length + " tests.</strong> Pista: " + reto.pista + "<pre style='white-space:pre-wrap;margin:.4rem 0 0'>" + detalle + "</pre>";
+          }
+          actualizarVeredicto();
+        } catch (err) {
+          out.textContent = "\u274c " + err.message;
+        }
+      });
+    });
+
+    function actualizarVeredicto() {
+      const ok = Object.keys(window.__retosOk).length;
+      if (!ok) return;
+      let ruta, texto;
+      if (window.__retosOk.r3) { ruta = (window.__rutaQuiz || "").startsWith("n3-") ? window.__rutaQuiz : "n3-ai-engineering"; texto = "Los 3 retos pasan: dominas hasta el nivel N3 en c\u00f3digo."; }
+      else if (window.__retosOk.r2) { ruta = "n2-intermedio"; texto = "Retos N1 y N2 correctos: puedes seguir al n\u00facleo de ML."; }
+      else { ruta = "n1-fundamentos"; texto = "Consolida N1 con los retos antes de subir."; }
+      if (window.__rutaQuiz) texto += " El cuestionario tambi\u00e9n suger\u00eda: " + window.__rutaQuiz + ".";
+      document.getElementById("veredicto-texto").textContent = texto;
+      document.getElementById("veredicto-enlace").setAttribute("href", "/itinerarios/" + ruta + "/");
+      const div = document.getElementById("resultado-final");
+      div.style.display = "block"; div.scrollIntoView({ behavior: "smooth" });
+    }
+</script>
 </Base>
