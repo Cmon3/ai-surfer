@@ -1,6 +1,6 @@
-# Módulo 09 · IA generativa y modelos de lenguaje
+# Módulo I7 · Introducción a los LLMs por API
 
-**Semana 11 · 6–8 horas**
+**Semana 7 de N2 · 6–8 horas**
 
 ## Objetivos
 - Explicar, sin matemáticas avanzadas, cómo funciona un modelo de lenguaje (tokens, transformers, preentrenamiento y ajuste).

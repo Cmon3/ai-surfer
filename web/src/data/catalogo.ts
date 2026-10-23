@@ -67,7 +67,7 @@ export const itinerarios: Itinerario[] = [
       { codigo: "I5", carpeta: "I5-deep-learning", titulo: "Deep learning con PyTorch", estado: "disponible" },
       { codigo: "I6", carpeta: "I6-series-temporales", titulo: "Series temporales", estado: "disponible" },
       { codigo: "I7", carpeta: "I7-llms-api", titulo: "Introducción a los LLMs por API", estado: "disponible" },
-      { codigo: "I8", carpeta: null, titulo: "Del notebook a producción", estado: "en-preparacion", nota: "Código modular, tests, FastAPI, Docker y MLflow." },
+      { codigo: "I8", carpeta: "I8-produccion", titulo: "Del notebook a producción", estado: "disponible" },
     ],
     proyecto: "Modelo predictivo desplegado como API, con informe de negocio.",
     anterior: "n1-fundamentos",

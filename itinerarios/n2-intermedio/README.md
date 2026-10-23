@@ -15,7 +15,7 @@ El núcleo de machine learning. Es el programa original de 14 semanas, reorganiz
 | 5 | I5 | [Deep learning con PyTorch](../../modulos/I5-deep-learning/) (se ampliará con transformers y embeddings) | ✅ Disponible |
 | 6 | I6 | [Series temporales](../../modulos/I6-series-temporales/) | ✅ Disponible |
 | 7 | I7 | [Introducción a los LLMs por API](../../modulos/I7-llms-api/): prompting, salidas estructuradas, RAG básico | ✅ Disponible |
-| 8 | I8 | Del notebook a producción: código modular, tests, API con FastAPI, Docker y seguimiento de experimentos con MLflow | 🚧 En preparación |
+| 8 | I8 | [Del notebook a producción](../../modulos/I8-produccion/): paquete, tests, FastAPI, Docker, CI con GitHub Actions, MLflow y deriva | ✅ Disponible |
 | 9–10 | — | [Proyecto N2](../../proyecto-final/): modelo predictivo desplegado como API, con informe de negocio | ✅ Disponible (se adaptará al nuevo formato) |
 
 ## Criterios del certificado

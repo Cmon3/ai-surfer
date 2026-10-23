@@ -27,10 +27,10 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 | Código | Módulo | Estado |
 |---|---|---|
 | F1 | [Python para datos](modulos/F1-python/) | ✅ |
-| F2 | SQL para análisis de datos | 🚧 |
+| F2 | [SQL para análisis de datos](modulos/F2-sql/) | ✅ (faltan diapositivas y guiones) |
 | F3 | [Estadística para la toma de decisiones](modulos/F3-estadistica/) | ✅ |
-| F4 | Matemáticas para ML | 🚧 |
-| F5 | Herramientas del oficio | 🚧 |
+| F4 | [Matemáticas para ML](modulos/F4-matematicas-ml/) | ✅ |
+| F5 | [Herramientas del oficio](modulos/F5-herramientas/) | ✅ |
 | I1 | [Aprendizaje no supervisado](modulos/I1-no-supervisado/) | ✅ |
 | I2 | [Regresión y predicción](modulos/I2-regresion/) | ✅ |
 | I3 | [Clasificación y pruebas de hipótesis](modulos/I3-clasificacion/) | ✅ |
@@ -38,12 +38,15 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 | I5 | [Deep learning con PyTorch](modulos/I5-deep-learning/) | ✅ |
 | I6 | [Series temporales](modulos/I6-series-temporales/) | ✅ |
 | I7 | [Introducción a los LLMs por API](modulos/I7-llms-api/) | ✅ |
-| I8 | Del notebook a producción | 🚧 |
+| I8 | [Del notebook a producción](modulos/I8-produccion/) | ✅ |
+| DS1–DS3, DS6–DS8 | Especialización Data Science | 🚧 |
 | DS4 | [Sistemas de recomendación](modulos/DS4-recomendacion/) | ✅ |
 | DS5 | [Redes y grafos](modulos/DS5-redes-grafos/) | ✅ |
-| DS1–DS3, DS6–DS8, AI1–AI9 | Especializaciones | 🚧 |
+| AI1–AI4 | [Transformers](modulos/AI1-transformers/), [apps con LLMs](modulos/AI2-apps-llms/), [RAG y agentes](modulos/AI3-rag-agentes/), [evaluación](modulos/AI4-evaluacion-llms/) | ✅ |
+| AI5–AI8 | [Fine-tuning](modulos/AI5-fine-tuning/), [alineación](modulos/AI6-alineacion/), [inferencia](modulos/AI7-inferencia/), [seguridad y LLMOps](modulos/AI8-seguridad/) | 🟡 versión corta: faltan apuntes, guiones y soluciones |
+| AI9 | Multimodal (optativo) | 🚧 esqueleto |
 
-✅ material completo · 🚧 en preparación (ver la hoja de ruta del plan v2)
+✅ material completo · 🟡 utilizable pero incompleto · 🚧 en preparación. Plan de trabajo y prioridades: [docs/plan-v3-plataforma-y-empleabilidad.md](docs/plan-v3-plataforma-y-empleabilidad.md).
 
 Cada módulo incluye:
 
@@ -99,12 +102,12 @@ pip install -r requirements.txt
 jupyter lab
 ```
 
-Todos los notebooks usan conjuntos de datos incluidos en las librerías (scikit-learn, statsmodels, NetworkX) o generados en el propio notebook, así que funcionan sin descargar nada. El módulo I7 necesita una clave de la API de Anthropic para las celdas que llaman al modelo; sin ella, esas celdas se saltan y el resto del notebook se ejecuta igual.
+Todos los notebooks usan conjuntos de datos incluidos en las librerías (scikit-learn, statsmodels, NetworkX) o generados en el propio notebook, así que funcionan sin descargar nada. Requiere **Python ≥ 3.10**. Los módulos I7 y AI2–AI4 necesitan una clave de la API de Anthropic para las celdas que llaman al modelo; sin ella, esas celdas se saltan y el resto del notebook se ejecuta igual.
 
 ## Cómo comprobar el material (instructores)
 
 ```bash
-python scripts/ejecutar_notebooks.py          # ejecuta todos los notebooks
+python scripts/ejecutar_notebooks.py          # ejecuta todos los notebooks (con el Python del .venv)
 python scripts/ejecutar_notebooks.py I2 I3    # solo los módulos indicados (por código)
 scripts/generar_diapositivas.sh               # regenera los PDF de las diapositivas (requiere Node.js y Chrome)
 ```
