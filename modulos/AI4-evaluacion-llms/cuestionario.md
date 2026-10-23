@@ -24,7 +24,7 @@
 - a) prefiere respuestas cortas.
 - b) puntúa más alto la respuesta larga, aunque no sea mejor.
 - c) falla con textos en inglés.
-- d) solo funciona con temperature 0.
+- d) solo aparece con modelos pequeños.
 
 ---
 

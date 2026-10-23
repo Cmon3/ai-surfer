@@ -81,7 +81,7 @@ En el notebook: judge mock con sesgo + calibración binarizada.
 
 # Regresión A/B
 
-- Mismos casos, misma seed, temperature 0
+- Mismos casos, modelo fijado (id exacto), prompt versionado; repetir N veces y comparar medias (la API actual no admite `temperature`)
 - Tabla por categoría: % casos pasan
 - Decisión: B si **no rompe categoría** y mejora ≥ 1
 

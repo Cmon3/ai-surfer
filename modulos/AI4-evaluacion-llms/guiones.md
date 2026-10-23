@@ -23,7 +23,7 @@
 - [30–35] Por qué juzgar con otro modelo o plantilla ayuda.
 
 ## 4.6 + 4.7 · Regresión y taxonomía (30 min)
-- [0–6] Protocolo A/B: set congelado, seed, temperature 0.
+- [0–6] Protocolo A/B: set congelado, id de modelo fijado, prompt versionado y varias repeticiones por caso (los modelos actuales no aceptan `temperature`: la variabilidad se mide, no se elimina).
 - [6–14] Tabla por categorías; decisión de merge.
 - [14–22] Taxonomía: frecuencia × impacto; arregla causas no síntomas.
 - [22–30] El entregable: evals de tu dominio.
