@@ -29,7 +29,8 @@ for (const d of readdirSync(`${RAIZ}/modulos`).sort()) {
   const doc = parse(readFileSync(f, "utf8"));
   for (const ej of doc.ejercicios) {
     total++;
-    await py.loadPackage(ej.paquetes ?? []);
+    // Igual que la web (src/data/ejercicios.ts): los ejercicios SQL necesitan el paquete sqlite3.
+    await py.loadPackage([...(ej.paquetes ?? []), ...(ej.tipo === "sql" ? ["sqlite3"] : [])]);
     const r = JSON.parse(ejecutar(ej.solucion, JSON.stringify({ tipo: ej.tipo ?? "python", setup: ej.setup, tests: ej.tests })));
     const ok = !r.error && r.resultados.length && r.resultados.every((x) => x[0]);
     if (ok) console.log(`OK    ${d}/${ej.id} (${r.resultados.length} tests)`);

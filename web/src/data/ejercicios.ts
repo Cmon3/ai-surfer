@@ -85,8 +85,9 @@ export function cargarEjercicios(carpeta: string): EjerciciosModulo | null {
     }
     if (!Array.isArray(e.pistas) || e.pistas.length < 2) fallo(carpeta, id, "se esperan al menos 2 «pistas»");
     if (typeof e.solucion !== "string") fallo(carpeta, id, "falta «solucion» (se usa en CI; no se publica)");
-    // sqlite3 viene incluido en la biblioteca estándar de Pyodide 314: no hay que cargarlo como paquete.
+    // En Pyodide 0.28 sqlite3 es un paquete aparte: los ejercicios SQL lo cargan bajo demanda.
     const paquetes: string[] = [...(e.paquetes ?? [])];
+    if (tipo === "sql" && !paquetes.includes("sqlite3")) paquetes.push("sqlite3");
     return {
       id,
       titulo: e.titulo,

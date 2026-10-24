@@ -4,10 +4,8 @@
  */
 
 // ─── Repositorio público ──────────────────────────────────────────────────
-// MARCADOR: sustituye por el usuario/organización y el nombre reales del
-// repositorio cuando se publique (plan v3, decisión D8). Mientras valga
-// "TU-USUARIO", los enlaces a Colab y a GitHub NO funcionarán.
-export const REPO_USUARIO = "TU-USUARIO";
+// Repositorio público en GitHub (los enlaces a Colab solo funcionan con repos públicos).
+export const REPO_USUARIO = "Cmon3";
 export const REPO_NOMBRE = "ai-surfer";
 export const REPO_RAMA = "main";
 
@@ -30,8 +28,9 @@ export const LISTA_ESPERA_EMAIL = "";
 // Versión fijada de Pyodide en cdn.jsdelivr.net (D11). Para actualizarla,
 // cambia el número y vuelve a ejecutar `verificar_ejercicios` (ver web/README.md):
 // cada versión trae otras versiones de numpy/pandas/scikit-learn.
-// 314.x = Python 3.14. Comprobada: 314.0.7 (sept. 2026).
-export const PYODIDE_VERSION = "314.0.7";
+// 0.28.3 = Python 3.13. Comprobada en Chrome real (oct. 2026): la 314.0.7 NO carga
+// con importScripts dentro de un Worker aunque sí en Node; verifica siempre en navegador.
+export const PYODIDE_VERSION = "0.28.3";
 export const PYODIDE_CDN = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 /** Segundos máximos que puede tardar una ejecución antes de abortar el Worker. */
 export const EJERCICIOS_TIMEOUT_S = 20;

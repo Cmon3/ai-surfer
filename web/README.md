@@ -113,7 +113,7 @@ ejercicios:
 Detalles útiles:
 
 - **Tests con `expr`/`esperado`** comparan `eval(expr) == literal_eval(esperado)`; listas/arrays/tuplas se normalizan (un `np.ndarray` equivale a una lista) y `tol` se aplica a los números anidados.
-- **Ejercicios SQL (`tipo: sql`)**: el alumno escribe una sentencia `SELECT`. El `setup` debe crear la conexión `con` (`sqlite3` en memoria); los tests ven `filas` (lista de tuplas) y `columnas`. `sqlite3` ya viene en la biblioteca estándar de Pyodide.
+- **Ejercicios SQL (`tipo: sql`)**: el alumno escribe una sentencia `SELECT`. El `setup` debe crear la conexión `con` (`sqlite3` en memoria); los tests ven `filas` (lista de tuplas) y `columnas`. La web carga el paquete `sqlite3` de Pyodide automáticamente para los ejercicios `tipo: sql`.
 - **YAML y números:** escribe `tol: 0.000001`, no `1e-6` (PyYAML lo lee como texto, aunque la web no).
 - Al **ejecutar** se usa un *Web Worker* con un Pyodide compartido por todos los ejercicios de la página; si el código tarda más de `EJERCICIOS_TIMEOUT_S` segundos (bucle infinito) se mata el Worker y se reinicia. Toda la salida se inserta con `textContent`, nunca como HTML.
 - **Progreso:** `localStorage["ejercicios:<CODIGO>"]` guarda por ejercicio si está superado, el último código escrito y las pistas vistas. Todo va envuelto en `try/catch`: sin almacenamiento, funciona igual pero sin recordar.
@@ -131,7 +131,7 @@ Detalles útiles:
 2. Cambia `PYODIDE_VERSION` en `src/config.ts` **y** el `devDependency` `pyodide` de `package.json` (exacto, sin `^`): `verificar_ejercicios_pyodide.mjs` falla si no coinciden.
 3. `npm install && npm run verificar:pyodide`. Si algún ejercicio falla, ajusta el ejercicio (no el arnés) o fija las versiones que importan.
 
-> Con Pyodide 314 (Python 3.14, pandas 3) ya no hace falta `loadPackage("sqlite3")`: viene en la biblioteca estándar. En versiones anteriores sí.
+> Pyodide está fijado en la 0.28.3. La 314.x pasa la verificación en Node pero **no carga en un Web Worker del navegador** (comprobado en Chrome, oct. 2026): antes de subir de versión, prueba siempre un ejercicio en un navegador real.
 
 ## Cuestionarios interactivos
 
