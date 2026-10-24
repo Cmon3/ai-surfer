@@ -1,4 +1,4 @@
-# Módulo 02 · Datos no estructurados: clustering y reducción de dimensión — Apuntes
+# Módulo I1 · Datos no estructurados: clustering y reducción de dimensión — Apuntes
 
 Hasta ahora hemos trabajado con preguntas que tenían una respuesta conocida en los datos: ¿cuánto vale el ticket medio?, ¿difieren dos grupos? En este módulo cambiamos de terreno. Tenemos miles de clientes, productos o imágenes **sin ninguna etiqueta**, y queremos que los datos nos cuenten qué estructura tienen: qué grupos naturales existen, qué variables se mueven juntas, cómo resumir decenas de columnas en dos o tres sin perder lo esencial.
 

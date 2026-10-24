@@ -3,12 +3,12 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 00 · Fundamentos de Python para datos
+title: Módulo F1 · Fundamentos de Python para datos
 ---
 
 <!-- _class: lead -->
 
-# Módulo 00
+# Módulo F1
 ## Fundamentos de Python para datos
 
 Ciencia de Datos e IA Aplicada: de los datos a las decisiones
@@ -428,7 +428,7 @@ $$
 | 15.000 € | 400 € |
 
 ---
-
+<style scoped>section { font-size: 23px; }</style>
 <!-- 0.4-3 -->
 ## Bucles `for`
 
@@ -828,7 +828,7 @@ Deduplica **antes** de imputar o agregar
 > Ejemplo: los productos caros se registran a mano y se olvidan más
 
 ---
-
+<style scoped>section { font-size: 23px; }</style>
 <!-- 0.7-4 -->
 ## Estrategias para los nulos
 
@@ -861,7 +861,7 @@ df["ciudad"].str.strip().str.title()     # "sevilla " → "Sevilla"
 `errors="coerce"`: lo no convertible pasa a `NaN` → cuenta y revisa
 
 ---
-
+<style scoped>section { font-size: 23px; }</style>
 <!-- 0.7-6 -->
 ## Fechas
 

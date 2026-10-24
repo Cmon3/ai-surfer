@@ -1,4 +1,4 @@
-# Módulo 08 · Analítica predictiva con series temporales — Guiones de los vídeos
+# Módulo I6 · Analítica predictiva con series temporales — Guiones de los vídeos
 
 Guiones de las 8 lecciones del módulo. Las marcas entre corchetes son indicaciones de producción: [DIAPOSITIVA N.M-k] remite al identificador de `diapositivas.md`; [PANTALLA], [DEMO] y [CÁMARA] indican qué se ve en cada momento. Las demos se describen, no se narran línea a línea. Extensión orientativa: unas 100 palabras de narración por minuto.
 

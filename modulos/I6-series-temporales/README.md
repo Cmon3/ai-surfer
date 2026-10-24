@@ -1,6 +1,6 @@
-# Módulo 08 · Analítica predictiva con series temporales
+# Módulo I6 · Analítica predictiva con series temporales
 
-**Semana 10 · 6–8 horas**
+**Semana 6 de N2 · 6–8 horas**
 
 ## Objetivos
 - Descomponer una serie temporal en tendencia, estacionalidad y residuo.

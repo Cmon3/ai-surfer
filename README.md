@@ -26,7 +26,7 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 
 | Código | Módulo | Estado |
 |---|---|---|
-| F1–F5 | [Python](modulos/F1-python/), [SQL](modulos/F2-sql/), [estadística](modulos/F3-estadistica/), [matemáticas para ML](modulos/F4-matematicas-ml/), [herramientas del oficio y agentes de código](modulos/F5-herramientas/) | ✅ (F2 sin diapositivas ni guiones) |
+| F1–F5 | [Python](modulos/F1-python/), [SQL](modulos/F2-sql/), [estadística](modulos/F3-estadistica/), [matemáticas para ML](modulos/F4-matematicas-ml/), [herramientas del oficio y agentes de código](modulos/F5-herramientas/) | ✅ |
 | I1–I3 | [No supervisado](modulos/I1-no-supervisado/), [regresión](modulos/I2-regresion/), [clasificación](modulos/I3-clasificacion/) | ✅ |
 | I4 | [Ingeniería de variables y gradient boosting](modulos/I4-boosting/) | ✅ |
 | I5–I8 | [Deep learning](modulos/I5-deep-learning/), [series temporales](modulos/I6-series-temporales/), [LLMs por API](modulos/I7-llms-api/), [del notebook a producción](modulos/I8-produccion/) | ✅ |

@@ -1,4 +1,4 @@
-# Módulo 08 · Analítica predictiva con series temporales — Cuestionario
+# Módulo I6 · Analítica predictiva con series temporales — Cuestionario
 
 10 preguntas tipo test. Cada pregunta tiene una única respuesta correcta.
 

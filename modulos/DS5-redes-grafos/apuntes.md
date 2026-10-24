@@ -1,4 +1,4 @@
-# Módulo 07 · Redes y grafos — Apuntes
+# Módulo DS5 · Redes y grafos — Apuntes
 
 Hasta ahora casi todos los datos del curso han sido **tablas**: una fila por cliente, por paciente o por día, y columnas con sus atributos. En este módulo cambiamos el foco a las **relaciones**: quién compra a quién, qué cuenta transfiere dinero a qué otra cuenta, qué almacén abastece a qué tienda, quién sigue a quién. Cuando lo interesante está en las conexiones, la herramienta natural es el **grafo** (o red).
 

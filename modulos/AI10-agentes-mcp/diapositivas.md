@@ -19,7 +19,7 @@ paginate: true
 - Al terminar: un repositorio con **servidor MCP propio + agente + evals en CI**
 
 ---
-
+<style scoped>section { font-size: 26px; }</style>
 # Mapa del módulo
 
 1. Qué es MCP

@@ -3,18 +3,18 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 02 · Datos no estructurados: clustering y reducción de dimensión
+title: Módulo I1 · Datos no estructurados: clustering y reducción de dimensión
 ---
 
 <!-- _class: lead -->
 
-# Módulo 02
+# Módulo I1
 ## Datos no estructurados: clustering y reducción de dimensión
 
-Ciencia de Datos e IA Aplicada · Semana 3
+AI Surfer · N2 · Intermedio
 
 ---
-
+<style scoped>section { font-size: 26px; }</style>
 ## En este módulo
 
 | # | Lección |

@@ -1,4 +1,4 @@
-# Módulo 05 · Deep learning — Apuntes
+# Módulo I5 · Deep learning — Apuntes
 
 Estos apuntes acompañan a los vídeos y al notebook de la semana 6. El hilo conductor es el caso del notebook: una empresa de logística quiere leer automáticamente los códigos postales escritos a mano en los paquetes, y empezamos por el problema reducido de reconocer dígitos de 8×8 píxeles. Por el camino verás qué es una red neuronal por dentro, cómo aprende, cómo se programa en PyTorch y, sobre todo, cuándo merece la pena usarla frente a un modelo clásico.
 

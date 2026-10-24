@@ -19,7 +19,7 @@ paginate: true
 - Los conceptos son los mismos en las tres nubes: aprende el patrón una vez
 
 ---
-
+<style scoped>section { font-size: 26px; }</style>
 # Mapa del módulo
 
 1. Mapa de la nube y cuenta segura

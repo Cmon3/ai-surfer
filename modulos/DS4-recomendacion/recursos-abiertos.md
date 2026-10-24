@@ -1,4 +1,4 @@
-# Módulo 06 · Recursos abiertos
+# Módulo DS4 · Recursos abiertos
 
 > Verificado el 13/10/2026. Todos los enlaces se han comprobado abriendo la página en esa fecha. Las licencias son las que declara cada fuente. Si un recurso no indica licencia para un contenido concreto (por ejemplo, vídeos alojados fuera del repositorio), se trata como "Enlazar/insertar".
 

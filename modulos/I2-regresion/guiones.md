@@ -1,4 +1,4 @@
-# Módulo 03 · Regresión y predicción — Guiones de los vídeos
+# Módulo I2 · Regresión y predicción — Guiones de los vídeos
 
 Convenciones: las indicaciones de producción van entre corchetes en su propia línea. [DIAPOSITIVA N.M-k] remite a `diapositivas.md`; [DEMO] describe lo que se muestra en el notebook (no se narra línea a línea); [PANTALLA] indica otro contenido en pantalla; [CÁMARA] indica plano del presentador. Ritmo de referencia: ~100 palabras por minuto.
 

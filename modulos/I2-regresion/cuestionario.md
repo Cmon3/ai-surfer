@@ -1,4 +1,4 @@
-# Módulo 03 · Regresión y predicción — Cuestionario evaluable
+# Módulo I2 · Regresión y predicción — Cuestionario evaluable
 
 **Instrucciones:** 10 preguntas tipo test, una sola respuesta correcta por pregunta. Tiempo orientativo: 20 minutos. Puedes consultar tus apuntes y el notebook.
 

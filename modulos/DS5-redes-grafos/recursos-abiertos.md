@@ -1,4 +1,4 @@
-# Módulo 07 · Recursos abiertos
+# Módulo DS5 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace se ha comprobado con un resultado de búsqueda que muestra la URL exacta. Cuando la licencia no figura de forma explícita en la fuente, se indica y se trata como «solo enlazar». En las lecturas, la duración es una estimación del tiempo de lectura.
 >

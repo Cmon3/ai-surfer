@@ -1,4 +1,4 @@
-# Módulo 09 · Recursos abiertos
+# Módulo I7 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace se ha comprobado abriendo la página o a través de una fuente oficial que muestra esa URL exacta (p. ej. el README del repositorio del autor). Las licencias se han comprobado en la propia fuente. Cuando un dato (duración, subtítulos) no se ha podido comprobar, se indica "n/d".
 

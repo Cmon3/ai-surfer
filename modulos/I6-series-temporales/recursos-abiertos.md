@@ -1,4 +1,4 @@
-# Módulo 08 · Recursos abiertos
+# Módulo I6 · Recursos abiertos
 
 > Verificado el 13/10/2026. Todos los enlaces se han comprobado (página abierta o URL exacta en resultados de búsqueda). Las duraciones son estimaciones de lectura o práctica. Si una licencia no aparece declarada en la fuente, se indica "sin licencia abierta declarada" y el uso permitido es solo **enlazar**.
 >

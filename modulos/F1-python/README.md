@@ -1,4 +1,4 @@
-# Módulo 00 · Fundamentos de Python para datos
+# Módulo F1 · Fundamentos de Python para datos
 
 **Semanas 0–1 · 10–12 horas en total** · Módulo de nivelación, obligatorio para quien no programe en Python habitualmente.
 

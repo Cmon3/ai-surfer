@@ -1,4 +1,4 @@
-# Módulo 03 · Recursos abiertos
+# Módulo I2 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace se ha comprobado mediante búsqueda web (la URL exacta aparecía en los resultados). Las licencias se indican según lo que declara la fuente; cuando no se ha podido confirmar una licencia abierta, el recurso se trata como «todos los derechos reservados» y solo se recomienda **enlazar**. La duración solo se indica cuando la fuente la publica; «n/v» significa «no verificada» (consúltala en la propia página).
 

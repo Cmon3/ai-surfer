@@ -3,16 +3,16 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 03 · Regresión y predicción
+title: Módulo I2 · Regresión y predicción
 ---
 
 <!-- _class: lead -->
 
-# Módulo 03
+# Módulo I2
 ## Regresión y predicción
 
 Ciencia de Datos e IA Aplicada: de los datos a las decisiones
-Semana 4
+N2 · Intermedio
 
 ---
 
@@ -92,7 +92,7 @@ $$\hat\beta_1 = r_{xy}\,\frac{s_y}{s_x} \qquad \hat\beta_0 = \bar y - \hat\beta_
 - En regresión simple: $R^2 = r^2$
 
 ---
-
+<style scoped>section { font-size: 23px; }</style>
 <!-- 3.1-5 -->
 ## En el notebook: IMC → progresión
 

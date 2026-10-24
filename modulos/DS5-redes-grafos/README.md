@@ -1,6 +1,6 @@
-# Módulo 07 · Redes y grafos
+# Módulo DS5 · Redes y grafos
 
-**Semana 9 · 6–8 horas**
+**Semana 5 de N3-DS · 6–8 horas**
 
 ## Objetivos
 - Representar datos relacionales como grafos y calcular sus métricas básicas.

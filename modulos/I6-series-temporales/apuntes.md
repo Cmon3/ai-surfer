@@ -1,4 +1,4 @@
-# Módulo 08 · Analítica predictiva con series temporales — Apuntes
+# Módulo I6 · Analítica predictiva con series temporales — Apuntes
 
 Casi todas las decisiones de una empresa miran al futuro: cuánto stock pedir, cuántas personas poner en el turno del sábado, qué capacidad contratar al proveedor de la nube o qué presupuesto de ventas comprometer. Detrás de cada una hay una **serie temporal**, una secuencia de mediciones ordenadas en el tiempo, y una pregunta: ¿qué valores tomará en las próximas semanas o meses, y con qué incertidumbre?
 

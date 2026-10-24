@@ -1,4 +1,4 @@
-# Módulo 01 · Estadística para la toma de decisiones — Cuestionario
+# Módulo F3 · Estadística para la toma de decisiones — Cuestionario
 
 **Instrucciones:** 10 preguntas tipo test con una sola respuesta correcta. Dispones de 25 minutos. Puedes usar una calculadora o Python, pero no consultes los apuntes.
 

@@ -1,6 +1,6 @@
-# Módulo 03 · Regresión y predicción
+# Módulo I2 · Regresión y predicción
 
-**Semana 4 · 6–8 horas**
+**Semana 2 de N2 · 6–8 horas**
 
 ## Objetivos
 - Ajustar modelos de regresión lineal simple y múltiple e interpretar coeficientes, p-valores y R².

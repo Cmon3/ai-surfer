@@ -1,4 +1,4 @@
-# Módulo 00 · Fundamentos de Python para datos — Apuntes
+# Módulo F1 · Fundamentos de Python para datos — Apuntes
 
 Estos apuntes acompañan a los vídeos y al notebook del módulo. Están pensados para quien **no ha programado nunca en Python** (o lo hizo hace mucho): empezamos por preparar el entorno de trabajo y terminamos respondiendo preguntas de negocio con tablas y gráficos. Cada lección explica primero la intuición, después la sintaxis justa y, por último, los errores que verás una y otra vez al empezar.
 

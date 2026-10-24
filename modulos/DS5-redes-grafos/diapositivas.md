@@ -3,16 +3,16 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 07 · Redes y grafos
+title: Módulo DS5 · Redes y grafos
 ---
 
 <!-- _class: lead -->
 
-# Módulo 07 · Redes y grafos
+# Módulo DS5 · Redes y grafos
 
 **Ciencia de Datos e IA Aplicada: de los datos a las decisiones**
 
-Semana 9 · Caso: el club de kárate de Zachary
+N3-DS · Data Science avanzada · Caso: el club de kárate de Zachary
 
 ---
 

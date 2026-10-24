@@ -1,6 +1,6 @@
-# Módulo 05 · Deep learning
+# Módulo I5 · Deep learning
 
-**Semana 6 · 7–8 horas**
+**Semana 5 de N2 · 7–8 horas**
 
 ## Objetivos
 - Explicar cómo aprende una red neuronal: capas, activaciones, función de pérdida, descenso de gradiente y retropropagación.

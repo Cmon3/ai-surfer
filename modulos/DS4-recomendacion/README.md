@@ -1,6 +1,6 @@
-# Módulo 06 · Sistemas de recomendación
+# Módulo DS4 · Sistemas de recomendación
 
-**Semana 8 · 6–8 horas**
+**Semana 4 de N3-DS · 6–8 horas**
 
 ## Objetivos
 - Conocer las familias de recomendadores: popularidad, basados en contenido, filtrado colaborativo e híbridos.

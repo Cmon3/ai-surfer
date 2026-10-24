@@ -1,4 +1,4 @@
-# Módulo 01 · Estadística para la toma de decisiones — Apuntes
+# Módulo F3 · Estadística para la toma de decisiones — Apuntes
 
 Casi todas las decisiones de negocio se toman con información incompleta: no ves a todos tus clientes, no observas todos los pedidos y el futuro todavía no ha ocurrido. La estadística es la disciplina que te permite decir **qué sabes, cuánto lo sabes y con qué margen de error**. En este módulo trabajamos con un caso que recorre todo el notebook: una app de reparto quiere conocer el **importe medio de sus pedidos** y saber cuánto puede fiarse de esa cifra.
 

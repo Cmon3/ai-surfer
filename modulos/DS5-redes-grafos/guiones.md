@@ -1,4 +1,4 @@
-# Módulo 07 · Redes y grafos — Guiones de los vídeos
+# Módulo DS5 · Redes y grafos — Guiones de los vídeos
 
 Convenciones de producción:
 

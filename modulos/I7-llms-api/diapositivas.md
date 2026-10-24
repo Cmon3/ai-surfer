@@ -3,15 +3,15 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 09 · IA generativa y modelos de lenguaje
+title: Módulo I7 · IA generativa y modelos de lenguaje
 ---
 
 <!-- _class: lead -->
 
-# Módulo 09
+# Módulo I7
 ## IA generativa y modelos de lenguaje
 
-Ciencia de Datos e IA Aplicada · Semana 11
+AI Surfer · N2 · Intermedio
 
 Caso: atención al cliente de *TiendaSur*
 

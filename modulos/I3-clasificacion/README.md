@@ -1,6 +1,6 @@
-# Módulo 04 · Clasificación y pruebas de hipótesis
+# Módulo I3 · Clasificación y pruebas de hipótesis
 
-**Semana 5 · 7–8 horas** (el módulo más denso del programa)
+**Semana 3 de N2 · 7–8 horas** (el módulo más denso del programa)
 
 ## Objetivos
 - Entrenar y comparar clasificadores: regresión logística, árboles, random forest y gradient boosting.

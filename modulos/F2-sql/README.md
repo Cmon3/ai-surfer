@@ -25,9 +25,11 @@ Al terminar este módulo podrás:
 | Material | Para qué sirve |
 |---|---|
 | [`apuntes.md`](apuntes.md) | Teoría de cada lección, para estudiar y repasar |
+| [`diapositivas.pdf`](diapositivas.pdf) ([fuente editable](diapositivas.md)) | Diapositivas de los vídeos y de las sesiones en vivo |
 | [`notebook.ipynb`](notebook.ipynb) | Práctica guiada con ejercicios (SQLite desde Python) |
 | [`cuestionario.md`](cuestionario.md) | Cuestionario evaluable (10 preguntas) |
 | [`recursos-abiertos.md`](recursos-abiertos.md) | Vídeos y lecturas gratuitas recomendadas |
+| [`guiones.md`](guiones.md) | *Instructores:* guiones para grabar los vídeos |
 | [`soluciones.ipynb`](soluciones.ipynb) | *Instructores:* soluciones de los ejercicios |
 
 ## Práctica guiada

@@ -1,4 +1,4 @@
-# Módulo 06 · Sistemas de recomendación — Apuntes
+# Módulo DS4 · Sistemas de recomendación — Apuntes
 
 Cada vez que abres una plataforma de vídeo, una tienda online o una aplicación de música, alguien ha decidido qué ves primero. Con catálogos de miles o millones de productos y una atención limitada, esa decisión vale dinero: una buena parrilla aumenta el consumo, la retención y la satisfacción; una mala hace que el cliente se vaya sin encontrar nada. En este módulo aprenderás a construir esa decisión con datos: desde la referencia más sencilla (lo más popular) hasta la factorización de matrices, pasando por el filtrado colaborativo y por las preguntas incómodas que aparecen al desplegar: cómo evaluar, qué hacer con usuarios y productos nuevos y cómo evitar encerrar a la gente en una burbuja.
 

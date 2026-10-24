@@ -1,6 +1,6 @@
-# Módulo 02 · Datos no estructurados: clustering y reducción de dimensión
+# Módulo I1 · Datos no estructurados: clustering y reducción de dimensión
 
-**Semana 3 · 6–8 horas**
+**Semana 1 de N2 · 6–8 horas**
 
 ## Objetivos
 - Explicar qué es el aprendizaje no supervisado y cuándo aporta valor (segmentación, exploración, compresión).

@@ -1,4 +1,4 @@
-# Módulo 05 · Recursos abiertos
+# Módulo I5 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace y cada licencia se han comprobado en la fuente oficial: la propia página o el repositorio oficial del autor en GitHub (para 3Blue1Brown, MIT 6.S191, Karpathy, D2L, PyTorch, Microsoft, Hugging Face y fast.ai, los enlaces proceden de los README y archivos de configuración de sus repositorios oficiales). Las duraciones de los vídeos no se han podido comprobar y se indican como "no verificada"; las de lectura son estimaciones nuestras.
 >

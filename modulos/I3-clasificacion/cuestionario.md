@@ -1,4 +1,4 @@
-# Módulo 04 · Clasificación y pruebas de hipótesis — Cuestionario evaluable
+# Módulo I3 · Clasificación y pruebas de hipótesis — Cuestionario evaluable
 
 10 preguntas tipo test. Cada pregunta tiene **una sola respuesta correcta**. Tiempo orientativo: 20 minutos.
 

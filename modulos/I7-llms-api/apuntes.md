@@ -1,4 +1,4 @@
-# Módulo 09 · IA generativa y modelos de lenguaje — Apuntes
+# Módulo I7 · IA generativa y modelos de lenguaje — Apuntes
 
 Hasta ahora, en el curso, hemos construido modelos que **predicen un número o una categoría** a partir de datos tabulares, imágenes o series temporales. En este módulo damos un salto: usamos modelos que **generan texto** y que, bien dirigidos, clasifican reseñas, extraen datos de correos, responden preguntas sobre documentación interna o encadenan acciones. No vamos a entrenar uno (cuesta millones de euros), sino a **usarlos bien**: entender lo suficiente de su funcionamiento para prever sus fallos, controlarlos con instrucciones, conectarlos a nuestros datos, evaluarlos con el mismo rigor que cualquier otro modelo y desplegarlos respetando el RGPD y el Reglamento europeo de IA.
 

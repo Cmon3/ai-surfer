@@ -1,6 +1,6 @@
-# Módulo 01 · Estadística para la toma de decisiones
+# Módulo F3 · Estadística para la toma de decisiones
 
-**Semana 2 · 6–8 horas**
+**Semana 3–4 de N1 · 6–8 horas**
 
 ## Objetivos
 - Reconocer las distribuciones de probabilidad más habituales y qué fenómenos modelan.

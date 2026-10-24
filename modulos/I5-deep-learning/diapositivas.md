@@ -3,21 +3,21 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 05 · Deep learning
+title: Módulo I5 · Deep learning
 ---
 
 <!-- _class: lead -->
 
-# Módulo 05 · Deep learning
+# Módulo I5 · Deep learning
 
 **Ciencia de Datos e IA Aplicada: de los datos a las decisiones**
 
-Semana 6 · Redes neuronales, PyTorch, CNN, regularización y transfer learning
+N2 · Intermedio · Redes neuronales, PyTorch, CNN, regularización y transfer learning
 
 Caso: leer códigos postales escritos a mano
 
 ---
-
+<style scoped>section { font-size: 26px; }</style>
 ## Mapa del módulo
 
 | # | Lección |

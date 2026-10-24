@@ -1,4 +1,4 @@
-# Módulo 00 · Fundamentos de Python para datos — Cuestionario
+# Módulo F1 · Fundamentos de Python para datos — Cuestionario
 
 10 preguntas tipo test. Cada pregunta tiene **una sola respuesta correcta**. Tiempo orientativo: 20 minutos.
 Puedes usar el notebook para comprobar tus respuestas, pero intenta razonarlas primero.

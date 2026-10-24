@@ -1,4 +1,4 @@
-# Módulo 02 · Cuestionario evaluable
+# Módulo I1 · Cuestionario evaluable
 
 **Datos no estructurados: clustering y reducción de dimensión**
 

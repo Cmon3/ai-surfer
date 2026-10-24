@@ -1,4 +1,4 @@
-# Módulo 05 · Deep learning — Cuestionario evaluable
+# Módulo I5 · Deep learning — Cuestionario evaluable
 
 10 preguntas tipo test. Cada pregunta tiene una única respuesta correcta. Tiempo orientativo: 20 minutos.
 

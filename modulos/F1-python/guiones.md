@@ -1,4 +1,4 @@
-# Módulo 00 · Fundamentos de Python para datos — Guiones de vídeo
+# Módulo F1 · Fundamentos de Python para datos — Guiones de vídeo
 
 Guiones para grabar los 9 vídeos del módulo (150 minutos en total). Convenciones:
 

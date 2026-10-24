@@ -1,4 +1,4 @@
-# Módulo 04 · Recursos abiertos
+# Módulo I3 · Recursos abiertos
 
 > Verificado el 13/10/2026. Enlaces comprobados mediante búsqueda web (la URL exacta aparece en los resultados del buscador); las licencias se han tomado de la propia fuente o de su ficha oficial. Las duraciones solo se indican cuando se han podido confirmar; «n/d» significa que no se ha verificado.
 

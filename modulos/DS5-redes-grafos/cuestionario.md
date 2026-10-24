@@ -1,4 +1,4 @@
-# Módulo 07 · Redes y grafos — Cuestionario evaluable
+# Módulo DS5 · Redes y grafos — Cuestionario evaluable
 
 10 preguntas tipo test. Cada pregunta tiene una única respuesta correcta. Tiempo orientativo: 20 minutos.
 

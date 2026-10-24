@@ -1,4 +1,4 @@
-# Módulo 01 · Estadística para la toma de decisiones — Guiones de los vídeos
+# Módulo F3 · Estadística para la toma de decisiones — Guiones de los vídeos
 
 Convenciones de producción:
 

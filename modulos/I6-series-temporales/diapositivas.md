@@ -3,16 +3,16 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 08 · Analítica predictiva con series temporales
+title: Módulo I6 · Analítica predictiva con series temporales
 ---
 
 <!-- _class: lead -->
 
-# Módulo 08
+# Módulo I6
 ## Analítica predictiva con series temporales
 
 Ciencia de Datos e IA Aplicada: de los datos a las decisiones
-Semana 10
+N2 · Intermedio
 
 ---
 

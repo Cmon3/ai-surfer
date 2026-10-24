@@ -91,7 +91,7 @@ La aritmética no se equivoca.
 # Voz
 
 ---
-
+<style scoped>section { font-size: 26px; }</style>
 # El pipeline y su presupuesto
 
 ```

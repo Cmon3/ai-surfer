@@ -1,4 +1,4 @@
-# Módulo 01 · Recursos abiertos
+# Módulo F3 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace se ha comprobado mediante búsqueda web (la URL exacta aparece en los resultados de búsqueda de su sitio oficial). Las licencias se han tomado de las páginas oficiales de licencia o términos de uso de cada proyecto. Las duraciones son aproximadas; «n/d» indica que no se ha podido verificar la duración exacta.
 

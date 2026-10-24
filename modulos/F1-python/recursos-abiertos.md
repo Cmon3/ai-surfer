@@ -1,4 +1,4 @@
-# Módulo 00 · Recursos abiertos
+# Módulo F1 · Recursos abiertos
 
 > Verificado el 13/10/2026. Enlaces comprobados mediante búsqueda (la URL exacta aparece en los resultados de la fuente). Antes de usar cualquier recurso en una edición de pago del curso, revisa [docs/recursos-y-licencias.md](../../docs/recursos-y-licencias.md).
 

@@ -3,16 +3,16 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 04 · Clasificación y pruebas de hipótesis
+title: Módulo I3 · Clasificación y pruebas de hipótesis
 ---
 
 <!-- _class: lead -->
 
-# Módulo 04
+# Módulo I3
 ## Clasificación y pruebas de hipótesis
 
 Ciencia de Datos e IA Aplicada: de los datos a las decisiones
-Semana 5 · 9 lecciones
+N2 · Intermedio · 9 lecciones
 
 ---
 

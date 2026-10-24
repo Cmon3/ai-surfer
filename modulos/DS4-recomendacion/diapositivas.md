@@ -3,16 +3,16 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 06 · Sistemas de recomendación
+title: Módulo DS4 · Sistemas de recomendación
 ---
 
 <!-- _class: lead -->
 
-# Módulo 06 · Sistemas de recomendación
+# Módulo DS4 · Sistemas de recomendación
 
 **Ciencia de Datos e IA Aplicada: de los datos a las decisiones**
 
-Semana 8 · Popularidad · Filtrado colaborativo · Factorización de matrices · Evaluación · Arranque en frío
+N3-DS · Data Science avanzada · Popularidad · Filtrado colaborativo · Factorización de matrices · Evaluación · Arranque en frío
 
 ---
 

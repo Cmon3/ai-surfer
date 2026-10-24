@@ -3,17 +3,17 @@ marp: true
 theme: default
 paginate: true
 math: mathjax
-title: Módulo 01 · Estadística para la toma de decisiones
+title: Módulo F3 · Estadística para la toma de decisiones
 ---
 
 <!-- _class: lead -->
 
-# Módulo 01
+# Módulo F3
 ## Estadística para la toma de decisiones
 
 ¿Cuánto me puedo fiar de lo que veo en una muestra?
 
-Semana 2 · Ciencia de Datos e IA Aplicada
+N1 · Fundamentos · Ciencia de Datos e IA Aplicada
 
 ---
 

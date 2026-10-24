@@ -1,4 +1,4 @@
-# Módulo 06 · Sistemas de recomendación — Guiones de los vídeos
+# Módulo DS4 · Sistemas de recomendación — Guiones de los vídeos
 
 Convenciones: las indicaciones de producción van entre corchetes en su propia línea. [DIAPOSITIVA N.M-k] remite a `diapositivas.md`; [DEMO] describe lo que se muestra en el notebook (`notebook.ipynb`) o en las soluciones (`soluciones.ipynb`); [CÁMARA] indica plano del presentador. El texto normal es la narración.
 

@@ -1,4 +1,4 @@
-# Módulo 04 · Clasificación y pruebas de hipótesis — Apuntes
+# Módulo I3 · Clasificación y pruebas de hipótesis — Apuntes
 
 Este es el módulo más denso del programa, y tiene sentido que lo sea: reúne las dos herramientas que más decisiones mueven en una empresa basada en datos. La primera mitad trata de **clasificación**: modelos que asignan cada caso a una categoría (fraude/no fraude, abandona/se queda, maligno/benigno) y, sobre todo, de cómo evaluarlos y convertir sus probabilidades en decisiones. La segunda mitad trata de **pruebas de hipótesis y experimentos A/B**: cómo saber si una diferencia observada es real o fruto del azar, cuántos datos necesitas para saberlo y qué errores convierten un experimento aparentemente impecable en una fuente de falsas certezas.
 

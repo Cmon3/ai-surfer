@@ -1,4 +1,4 @@
-# Módulo 02 · Datos no estructurados: clustering y reducción de dimensión — Guiones de vídeo
+# Módulo I1 · Datos no estructurados: clustering y reducción de dimensión — Guiones de vídeo
 
 Guiones para grabar los 8 vídeos del módulo. Las indicaciones entre corchetes son de producción y no se leen:
 

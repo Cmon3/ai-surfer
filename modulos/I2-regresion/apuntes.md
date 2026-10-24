@@ -1,4 +1,4 @@
-# Módulo 03 · Regresión y predicción — Apuntes
+# Módulo I2 · Regresión y predicción — Apuntes
 
 La regresión lineal es probablemente el modelo más útil que vas a aprender en este curso. No porque sea el más potente, sino porque es el que mejor combina tres cosas que en la empresa se piden a la vez: **predecir** con un error razonable, **explicar** qué variables se asocian con el resultado y **comunicarlo** a alguien que no es analista. Además, casi todo lo que veremos después (regresión logística, regularización, redes neuronales) se construye sobre las ideas de este módulo.
 

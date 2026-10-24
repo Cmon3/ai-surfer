@@ -1,4 +1,4 @@
-# Módulo 02 · Recursos abiertos
+# Módulo I1 · Recursos abiertos
 
 > Verificado el 13/10/2026. Cada enlace se ha comprobado en su fuente oficial: el repositorio público del propio recurso (texto, autores, licencia y URL de publicación), los metadatos oficiales del paquete en PyPI o, en el caso de ISLP, la búsqueda web realizada ese mismo día para el módulo 03. Las licencias se han tomado del archivo de licencia del recurso. Las duraciones de lectura están **estimadas a partir del número de palabras** del texto fuente (≈ 200 palabras/min) y no incluyen ejecutar el código; «n/d» significa que no se ha podido estimar.
 >

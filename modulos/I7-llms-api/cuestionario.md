@@ -1,4 +1,4 @@
-# Módulo 09 · IA generativa y modelos de lenguaje — Cuestionario evaluable
+# Módulo I7 · IA generativa y modelos de lenguaje — Cuestionario evaluable
 
 10 preguntas · una sola respuesta correcta por pregunta · 1 punto cada una.
 

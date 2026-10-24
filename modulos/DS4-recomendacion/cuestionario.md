@@ -1,4 +1,4 @@
-# Módulo 06 · Sistemas de recomendación — Cuestionario semanal
+# Módulo DS4 · Sistemas de recomendación — Cuestionario semanal
 
 10 preguntas tipo test. Cada pregunta tiene una única respuesta correcta.
 

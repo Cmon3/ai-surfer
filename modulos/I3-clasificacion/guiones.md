@@ -1,4 +1,4 @@
-# Módulo 04 · Clasificación y pruebas de hipótesis — Guiones de los vídeos
+# Módulo I3 · Clasificación y pruebas de hipótesis — Guiones de los vídeos
 
 Guiones para grabar los 9 vídeos del módulo (140 minutos en total). Convenciones:
 

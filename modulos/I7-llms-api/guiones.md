@@ -1,4 +1,4 @@
-# Módulo 09 · IA generativa y modelos de lenguaje — Guiones de los vídeos
+# Módulo I7 · IA generativa y modelos de lenguaje — Guiones de los vídeos
 
 Convenciones: las indicaciones de producción van entre corchetes en su propia línea. [DIAPOSITIVA N.M-k] remite a `diapositivas.md`; [DEMO] describe lo que se muestra en `notebook.ipynb` (la narración durante la demo es orientativa); [PANTALLA] indica otro contenido en pantalla; [CÁMARA] indica plano del presentador.
 
