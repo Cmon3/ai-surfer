@@ -9,10 +9,16 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "verificar:ejercicios": "../.venv/bin/python scripts/verificar_ejercicios.py",
+    "verificar:pyodide": "node scripts/verificar_ejercicios_pyodide.mjs"
   },
   "dependencies": {
     "astro": "^7.4.2",
-    "marked": "^18.1.1"
+    "marked": "^18.1.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "pyodide": "314.0.7"
   }
 }

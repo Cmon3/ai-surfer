@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import { preguntas } from "../data/prueba-nivel";
+import MotorEjercicios from "../components/MotorEjercicios.astro";
+import type { EjercicioPublico } from "../data/ejercicios";
 
 // Retos: cada test es [expresión_python, valor_esperado_como_literal_python]
 const retos = [
@@ -35,11 +37,23 @@ const retos = [
     ],
   },
 ];
+// Los retos usan el mismo motor que los ejercicios de los módulos.
+const ejercicios: EjercicioPublico[] = retos.map((r) => ({
+  id: r.id,
+  titulo: r.titulo,
+  nivel: r.nivel,
+  tipo: "python",
+  enunciadoHtml: `<p>${r.enunciado}</p>`,
+  inicial: r.starter,
+  paquetes: [],
+  tests: r.tests.map(([expr, esperado]) => ({ expr, esperado })),
+  pistasHtml: [r.pista],
+}));
 ---
 <Base titulo="Prueba de nivel" descripcion="Test + retos de código ejecutados en tu navegador">
   <div class="wrap">
     <h1>Prueba de nivel</h1>
-    <p>Parte 1: 12 preguntas (~5 min). Parte 2: <strong>3 retos de código que se ejecutan en tu navegador</strong> (Python real vía Pyodide, sin servidor y sin instalar nada). La combinación determina por dónde empezar.</p>
+    <p>Parte 1: 12 preguntas (~5 min). Parte 2: <strong>3 retos de código que se ejecutan en tu navegador</strong> (Python real vía Pyodide en un Web Worker, sin servidor y sin instalar nada). La combinación determina por dónde empezar.</p>
 
     <h2>Parte 1 · Cuestionario</h2>
     <form id="quiz">
@@ -63,18 +77,7 @@ const retos = [
     <h2 style="margin-top:2.5rem">Parte 2 · Retos de código <span class="badge ok">ejecutándose en tu navegador</span></h2>
     <p style="color:var(--texto-suave)">Escribe Python real: se ejecuta en tu navegador (Pyodide/WASM). Los tests corren en Python y muestran ✓/✗.</p>
 
-    {retos.map((r) => (
-      <fieldset class="pregunta" style="background:#fff">
-        <legend><span class="badge ok">{r.nivel}</span> · {r.titulo}</legend>
-        <p style="margin:.25rem 0 .5rem" set:html={r.enunciado} />
-        <div style="display:flex;flex-direction:column;gap:.5rem">
-          <textarea id={"code-" + r.id} rows="7" spellcheck="false"
-            style="width:100%;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.85rem;border:1px solid var(--borde);border-radius:8px;padding:.6rem;background:#1e1b18;color:#f5f2ec">{r.starter}</textarea>
-        <button class="cta" data-run={r.id} style="border:none;cursor:pointer;font-size:.9rem;padding:.5rem 1rem">▶ Ejecutar y comprobar</button>
-          <output id={"out-" + r.id} style="font-size:.9rem;color:var(--texto-suave)">Sin ejecutar.</output>
-        </div>
-      </fieldset>
-    ))}
+    <MotorEjercicios ejercicios={ejercicios} clave="prueba-de-nivel" persistir={false} />
 
     <div id="resultado-final" style="display:none;margin-top:1.5rem;padding:1.25rem" class="card">
       <h2 style="margin-top:0">Veredicto combinado (quiz + retos)</h2>
@@ -83,7 +86,7 @@ const retos = [
     </div>
   </div>
 
-  <script define:vars={{ preguntas, retos }}>
+  <script define:vars={{ preguntas }}>
     // ---------- 1 · Cuestionario ----------
     const form = document.getElementById("quiz");
     form.addEventListener("submit", (e) => {
@@ -108,73 +111,11 @@ const retos = [
       window.__rutaQuiz = ruta;
     });
 
-    // ---------- 2 · Retos con Pyodide (tests EN Python) ----------
+    // ---------- 2 · Retos: los ejecuta el motor de ejercicios (Web Worker + Pyodide) ----------
     window.__retosOk = {};
-    let pyodide = null;
-    const CDN = "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/";
-
-    async function getPyodide() {
-      if (pyodide) return pyodide;
-      if (!window.loadPyodide) {
-        await new Promise((res, rej) => {
-          const s = document.createElement("script");
-          s.src = CDN + "pyodide.js";
-          s.onload = res; s.onerror = () => rej(new Error("Sin conexión al CDN de Pyodide"));
-          document.head.appendChild(s);
-        });
-      }
-      pyodide = await loadPyodide({ indexURL: CDN });
-      return pyodide;
-    }
-
-    // El harness corre en Python: exec del código + eval de los tests.
-    // Los tests viajan por py.globals (_code, _tests) — no hay inyección de strings.
-    function harnessPython() {
-      return [
-        "import json as _json, ast as _ast",
-        "_resultados = []",
-        "try:",
-        "    exec(_code)",
-        "except Exception as _e:",
-        "    _resultados.append([False, 'Error al ejecutar tu c\u00f3digo: ' + str(_e)])",
-        "for _expr, _esp in _json.loads(_tests):",
-        "    try:",
-        "        _got = eval(_expr)",
-        "        _resultados.append((_got == _ast.literal_eval(_esp), _expr + '  ->  ' + repr(_got)))",
-        "    except Exception as _e:",
-        "        _resultados.append((False, _expr + '  ->  error: ' + str(_e)))",
-        "_json.dumps(_resultados)",
-      ].join("\n");
-    }
-
-    document.querySelectorAll("[data-run]").forEach((btn) => {
-      btn.addEventListener("click", async (ev) => {
-        ev.preventDefault();
-        const id = btn.dataset.run;
-        const out = document.getElementById("out-" + id);
-        const code = document.getElementById("code-" + id).value;
-        const reto = retos.find((r) => r.id === id);
-        out.textContent = "Cargando Python\u2026 (la primera vez ~10 s)";
-        try {
-          const py = await getPyodide();
-          py.globals.set("_code", code);
-          py.globals.set("_tests", JSON.stringify(reto.tests));
-          const res = py.runPython(harnessPython());
-          const resultados = JSON.parse(res);
-          const pasados = resultados.filter((r) => r[0]).length;
-          const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-          const detalle = resultados.map((r) => (r[0] ? "\u2713 " : "\u2717 ") + esc(r[1])).join("\n");
-          if (pasados === resultados.length) {
-            window.__retosOk[id] = true;
-            out.innerHTML = "<strong style='color:var(--ok)'>\u00a1Superado! (" + pasados + "/" + resultados.length + " tests)</strong><pre style='white-space:pre-wrap;margin:.4rem 0 0'>" + detalle + "</pre>";
-          } else {
-            out.innerHTML = "<strong style='color:#b3562a'>" + pasados + "/" + resultados.length + " tests.</strong> Pista: " + reto.pista + "<pre style='white-space:pre-wrap;margin:.4rem 0 0'>" + detalle + "</pre>";
-          }
-          actualizarVeredicto();
-        } catch (err) {
-          out.textContent = "\u274c " + err.message;
-        }
-      });
+    document.addEventListener("ejercicio-superado", (ev) => {
+      window.__retosOk[ev.detail.id] = true;
+      actualizarVeredicto();
     });
 
     function actualizarVeredicto() {

@@ -1,0 +1,126 @@
+# CI del curso (plan v3, D9): en cada push y pull request comprueba que
+#   1) los notebooks de los módulos se ejecutan de principio a fin (sin clave de API),
+#   2) las soluciones de los ejercicios del navegador pasan sus tests, y
+#   3) la web compila (incluye validar todos los ejercicios.yml).
+# La versión semanal con dependencias recién resueltas está en curso-semanal.yml.
+name: Curso
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: curso-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  notebooks:
+    name: Notebooks
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      # Sin clave: las celdas que llaman a Claude siguen su camino simulado (TIENE_CLAVE = False).
+      ANTHROPIC_API_KEY: ""
+      MLFLOW_DISABLE_AGENT_HINT: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          # PyTorch solo en CPU (el runner no tiene GPU; evita bajar ~2 GB de CUDA).
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+
+      - name: Elegir módulos a ejecutar
+        id: modulos
+        shell: bash
+        run: |
+          # Solo los módulos tocados por el cambio. Si cambian los scripts, las dependencias
+          # o el propio workflow (o no se puede calcular el cambio), se ejecutan todos.
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE=""
+          fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "lista=" >> "$GITHUB_OUTPUT"; echo "Sin base de comparación: todos los módulos."; exit 0
+          fi
+          CAMBIOS=$(git diff --name-only "$BASE" HEAD)
+          echo "$CAMBIOS"
+          if echo "$CAMBIOS" | grep -E -q '^(scripts/|requirements\.txt|\.github/workflows/curso)'; then
+            echo "lista=" >> "$GITHUB_OUTPUT"; echo "Cambian los scripts o dependencias: todos los módulos."; exit 0
+          fi
+          # modulos/F1-python/... -> F1 (solo carpetas que tienen notebooks)
+          LISTA=""
+          for d in $(echo "$CAMBIOS" | sed -n 's#^modulos/\([^/]*\)/.*#\1#p' | sort -u); do
+            if ls "modulos/$d"/*.ipynb >/dev/null 2>&1; then LISTA="$LISTA ${d%%-*}"; fi
+          done
+          if [ -z "$LISTA" ]; then
+            echo "omitir=true" >> "$GITHUB_OUTPUT"; echo "Ningún módulo con notebooks ha cambiado."
+          fi
+          echo "lista=$LISTA" >> "$GITHUB_OUTPUT"
+
+      - name: Ejecutar notebooks
+        if: steps.modulos.outputs.omitir != 'true'
+        run: python scripts/ejecutar_notebooks.py ${{ steps.modulos.outputs.lista }}
+
+  ejercicios:
+    name: Ejercicios del navegador
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias mínimas
+        run: pip install numpy pandas scipy scikit-learn pyyaml
+
+      # Usa el mismo arnés (web/public/ejercicios/harness.py) que el navegador.
+      - name: Verificar soluciones de referencia
+        run: python web/scripts/verificar_ejercicios.py
+
+  web:
+    name: Compilar la web
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+
+      # El build falla si un ejercicios.yml está mal formado.
+      - run: npm run build
+
+      - name: Comprobar que se han generado las páginas
+        run: |
+          test -f dist/index.html
+          test -f dist/rutas/index.html
+          test -f dist/ejercicios/worker.js
+          echo "Páginas HTML generadas: $(find dist -name '*.html' | wc -l)"

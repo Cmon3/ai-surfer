@@ -1,94 +1,69 @@
 # Programa del curso
 
-**Ciencia de Datos e IA Aplicada: de los datos a las decisiones** · 14 semanas · 6–8 h/semana
+**AI Surfer · Ciencia de datos e IA aplicada, por niveles.** Este documento explica cómo se organiza el programa:
+cuatro **itinerarios** que ordenan el aprendizaje, cinco **rutas por rol** que lo orientan al empleo y un **catálogo de módulos**
+con códigos estables. El plan de trabajo vigente está en [docs/plan-v3-plataforma-y-empleabilidad.md](docs/plan-v3-plataforma-y-empleabilidad.md);
+el estado de cada módulo, en el [README](README.md).
 
-## Resultados de aprendizaje
+> Antes de los itinerarios, el curso era un único programa de 14 semanas. Se conserva como [sección histórica](#histórico-el-programa-original-de-14-semanas) al final.
 
-Al terminar el programa, cada participante será capaz de:
+## Cómo está organizado
 
-1. **Preparar datos**: cargar, limpiar, transformar y explorar conjuntos de datos con pandas, y comunicar hallazgos con visualizaciones claras.
-2. **Razonar con incertidumbre**: estimar, construir intervalos de confianza, diseñar y analizar pruebas A/B, y evitar errores comunes (p-hacking, comparaciones múltiples, confusión correlación/causalidad).
-3. **Descubrir estructura**: segmentar clientes o productos con clustering y reducir la dimensión de datos complejos con PCA y t-SNE.
-4. **Predecir**: construir, regularizar y validar modelos de regresión y clasificación, eligiendo métricas alineadas con el coste de negocio de cada error.
-5. **Aplicar deep learning**: entrenar redes neuronales sencillas (MLP y CNN) y saber cuándo compensan frente a modelos clásicos.
-6. **Personalizar**: diseñar sistemas de recomendación basados en popularidad, filtrado colaborativo y factorización de matrices.
-7. **Analizar relaciones**: modelar datos como grafos, medir centralidad, detectar comunidades y usar PageRank.
-8. **Pronosticar**: descomponer series temporales, comparar modelos (ingenuo, suavizado exponencial, ARIMA) con validación temporal.
-9. **Integrar IA generativa**: usar LLMs vía API con prompts robustos, salidas estructuradas y recuperación de contexto (RAG), y evaluar sus riesgos.
-10. **Resolver un problema completo**: plantear la pregunta, elegir el método, validar y presentar recomendaciones accionables a una audiencia no técnica.
+```
+N1 · FUNDAMENTOS (6 sem.)  →  N2 · INTERMEDIO (10 sem.)  →  N3-DS · Data Science avanzada (10 sem.)
+                                                           →  N3-AI · AI Engineering (12 sem.)
+```
 
-## Calendario semana a semana
+- **Itinerarios (niveles):** cada uno es un conjunto de módulos con un proyecto integrador para el portafolio y un certificado acumulable.
+  Empiezas donde te corresponda (la web incluye una prueba de nivel).
+- **Módulos:** la unidad de estudio, con código estable (F1, I3, AI5…). Cada módulo completo trae lecciones en vídeo (guiones),
+  apuntes, diapositivas, un notebook de práctica con soluciones, ejercicios de código que se corrigen en el navegador,
+  un cuestionario y recursos abiertos.
+- **Rutas por rol:** responden a «quiero trabajar de…». Reutilizan los mismos módulos, ordenados para un puesto concreto.
 
-Cada semana sigue el mismo ritmo:
+## Itinerarios
 
-| Día | Actividad | Tiempo aprox. |
+| Itinerario | Duración | Módulos | Proyecto | Certificado |
+|---|---|---|---|---|
+| [N1 · Fundamentos](itinerarios/n1-fundamentos/) | 6 semanas | F1 Python · F2 SQL · F3 Estadística · F4 Matemáticas para ML · F5 Herramientas | Análisis exploratorio completo con SQL + pandas e informe | *Fundamentos de Ciencia de Datos* |
+| [N2 · Intermedio](itinerarios/n2-intermedio/) | 10 semanas | I1 No supervisado · I2 Regresión · I3 Clasificación y A/B · I4 Boosting* · I5 Deep learning · I6 Series temporales · I7 LLMs por API · I8 Producción | Modelo predictivo desplegado como API, con informe de negocio | *Machine Learning Aplicado* |
+| [N3-DS · Data Science avanzada](itinerarios/n3-data-science/) | 10 semanas | DS1–DS3 Causalidad, experimentación y bayesiana* · DS4 Recomendación · DS5 Redes y grafos · DS6–DS8 Forecasting, datos a escala y comunicación* | Capstone DS: decisión causal o experimental | *Data Science Avanzada* |
+| [N3-AI · AI Engineering](itinerarios/n3-ai-engineering/) | 12 semanas | AI1 Transformers · AI2 Apps con LLMs · AI3 RAG y agentes · AI4 Evaluación · AI5 Fine-tuning · AI6 Alineación · AI7 Inferencia · AI8 Seguridad y LLMOps · AI9 Multimodal* | Capstone AI publicado en Hugging Face | *AI Engineering* |
+
+\* En preparación o con material incompleto: el estado exacto de cada módulo está en el [README](README.md).
+
+## Rutas por rol
+
+Cada ruta termina con tres piezas de portafolio que un reclutador puede comprobar abriendo un repositorio. Se muestran,
+con el estado de cada módulo, en la página `/rutas/` de la [web](web/README.md). Detalle y justificación en la
+[sección 4 del plan v3](docs/plan-v3-plataforma-y-empleabilidad.md).
+
+| Ruta | Módulos | Portafolio mínimo |
 |---|---|---|
-| Lunes | Se publican los vídeos y lecturas del módulo | 2–3 h |
-| Martes–Miércoles | Notebook guiado | 2 h |
-| Jueves | Sesión en vivo con mentor (dudas + caso práctico en grupo) | 1,5 h |
-| Domingo | Entrega del caso práctico y cuestionario | 1–2 h |
+| **Data Scientist** | N1 + N2 + DS1–DS3, DS8 + CAR | Análisis con decisión de negocio · modelo desplegado · experimento A/B o estudio causal |
+| **ML Engineer / MLOps** | N1 + N2 + CL1, DS7 + CAR | I8 desplegado en la nube con monitorización · pipeline de datos orquestado |
+| **AI Engineer** | F1, F2, F5 + I3, I7, I8 + AI1–AI4, AI8, AI10 + CL1 + CAR | RAG evaluado · agente con servidor MCP propio y evals en CI · capstone AI |
+| **Forward Deployed Engineer** | Ruta AI Engineer + FS1 + AI9 + CAR (énfasis en comunicación) | Demo full-stack para un «cliente» con discovery documentado |
+| **LLM post-training** (nicho) | Ruta AI Engineer + AI5–AI7 completos | Modelo ajustado y publicado con evaluación frente al modelo base |
 
-### Semanas 0–1 · Fundamentos de Python para datos
-- **Contenido:** sintaxis básica, tipos, funciones, listas/diccionarios; NumPy; pandas (Series, DataFrame, selección, `groupby`, `merge`, fechas); visualización con matplotlib/seaborn.
-- **Práctica:** análisis exploratorio de un conjunto de ventas de una cadena de tiendas.
-- **Entrega:** notebook con 5 preguntas de negocio respondidas con código y gráficos.
+AI10 (agentes en producción, MCP), CAR (empleabilidad), CL1 (cloud) y FS1 (full-stack) son los módulos nuevos del plan v3.
 
-### Semana 2 · Estadística para la toma de decisiones
-- **Contenido:** variables aleatorias y distribuciones; ley de los grandes números y teorema central del límite; estimación e intervalos de confianza; bootstrap; correlación vs. causalidad; paradoja de Simpson.
-- **Práctica:** estimar el ticket medio y su incertidumbre; simular el TCL.
-- **Entrega:** informe de una página con un intervalo de confianza bien interpretado.
+## Cómo se estudia un módulo
 
-### Semana 3 · Datos no estructurados: clustering y reducción de dimensión
-- **Contenido:** distancias y escalado; k-means, elección de *k* (codo, silueta); clustering jerárquico; PCA; t-SNE; interpretación de segmentos.
-- **Práctica:** segmentación de clientes y visualización de imágenes de dígitos en 2D.
-- **Entrega:** propuesta de segmentación con descripción de cada segmento y acción recomendada.
+| Paso | Actividad | Tiempo aprox. |
+|---|---|---|
+| 1 | Vídeos y apuntes de las lecciones | 2–3 h |
+| 2 | Notebook guiado y **ejercicios de código** (se corrigen solos en el navegador) | 2–3 h |
+| 3 | Cuestionario de autoevaluación (corrección inmediata con explicación) | 20 min |
+| 4 | Caso práctico entregable, con rúbrica | 1–2 h |
+| 5 | Sesión en vivo con mentor (cuando haya cohorte) | 1,5 h |
 
-### Semana 4 · Regresión y predicción
-- **Contenido:** regresión lineal (MCO), interpretación de coeficientes, supuestos y residuos; variables categóricas e interacciones; sobreajuste, validación cruzada; Ridge y Lasso.
-- **Práctica:** predecir la progresión de una enfermedad a partir de variables clínicas.
-- **Entrega:** modelo validado + explicación de las 3 variables más influyentes.
+El ritmo orientativo es de 6–8 h/semana. Cada itinerario indica sus semanas en su propio README.
 
-### Semana 5 · Clasificación y pruebas de hipótesis
-- **Contenido:** regresión logística, árboles, random forest y gradient boosting; matriz de confusión, precisión, recall, AUC; umbral óptimo según costes; pruebas de hipótesis, p-valores, potencia, pruebas A/B y comparaciones múltiples.
-- **Práctica:** diagnóstico de tumores y análisis de un test A/B de conversión.
-- **Entrega:** recomendación de umbral con análisis coste-beneficio + conclusión del test A/B.
+## Evaluación y certificados
 
-### Semana 6 · Deep learning
-- **Contenido:** perceptrón y redes multicapa; funciones de activación; descenso de gradiente y retropropagación; PyTorch; redes convolucionales; regularización (dropout, early stopping); transferencia de aprendizaje.
-- **Práctica:** clasificar dígitos manuscritos con un MLP y una CNN.
-- **Entrega:** comparación MLP vs. CNN vs. modelo clásico, con curvas de aprendizaje.
-
-### Semana 7 · Recuperación y entrega intermedia
-- Semana sin contenido nuevo para ponerse al día.
-- **Entrega:** propuesta del proyecto final (problema, datos, métrica de éxito).
-
-### Semana 8 · Sistemas de recomendación
-- **Contenido:** recomendación por popularidad; filtrado colaborativo usuario-usuario e ítem-ítem; factorización de matrices (SVD, ALS); problema de arranque en frío; métricas (RMSE, precisión@k).
-- **Práctica:** recomendador de películas sobre una matriz de valoraciones.
-- **Entrega:** comparar tres recomendadores y justificar cuál desplegar.
-
-### Semana 9 · Redes y grafos
-- **Contenido:** grafos, grados y caminos; centralidad (grado, intermediación, cercanía, autovector); PageRank; detección de comunidades; clustering espectral; predicción de enlaces.
-- **Práctica:** análisis de una red social real (club de kárate de Zachary).
-- **Entrega:** identificar a los actores clave de una red y justificar una estrategia de difusión.
-
-### Semana 10 · Analítica predictiva con series temporales
-- **Contenido:** tendencia, estacionalidad y ruido; estacionariedad; modelos ingenuos como referencia; suavizado exponencial (Holt-Winters); ARIMA/SARIMA; validación temporal (*backtesting*); métricas MAE/MAPE.
-- **Práctica:** pronóstico de la concentración de CO₂ atmosférico.
-- **Entrega:** pronóstico a 12 meses con intervalo y comparación frente a la referencia ingenua.
-
-### Semana 11 · IA generativa y modelos de lenguaje
-- **Contenido:** cómo funcionan los LLMs (tokens, transformers, preentrenamiento y ajuste); ingeniería de prompts; salidas estructuradas; RAG; evaluación de respuestas; riesgos (alucinaciones, privacidad, sesgo) y gobernanza.
-- **Práctica:** asistente que responde preguntas sobre documentos internos con recuperación + API de Claude.
-- **Entrega:** prototipo de caso de uso de IA generativa con evaluación de 10 preguntas de prueba.
-
-### Semanas 12–14 · Proyecto final
-- **Semana 12:** datos y análisis exploratorio. Revisión con mentor.
-- **Semana 13:** modelado y validación. Revisión con mentor.
-- **Semana 14:** informe ejecutivo + presentación de 10 minutos ante el grupo.
-- Ver [proyecto-final/](proyecto-final/).
-
-## Ponderación de la nota
+La ponderación y los requisitos están en [docs/evaluacion-y-certificado.md](docs/evaluacion-y-certificado.md); el cálculo de la nota original
+(que sigue siendo la base de cada bloque) fue:
 
 | Componente | Peso |
 |---|---|
@@ -97,4 +72,29 @@ Cada semana sigue el mismo ritmo:
 | Participación en sesiones en vivo | 5 % |
 | Proyecto final | 40 % |
 
-Detalles y criterios en [docs/evaluacion-y-certificado.md](docs/evaluacion-y-certificado.md).
+Para impartirlo como cohorte, véanse [docs/como-lanzar-el-curso.md](docs/como-lanzar-el-curso.md) y [docs/guia-del-instructor.md](docs/guia-del-instructor.md).
+
+---
+
+## Histórico: el programa original de 14 semanas
+
+El curso nació como un programa único de **14 semanas · 6–8 h/semana** (*Ciencia de Datos e IA Aplicada: de los datos a las decisiones*).
+Los itinerarios actuales lo han absorbido y ampliado; se conserva el calendario por si ayuda a ver de dónde viene cada módulo.
+
+| Semana(s) | Tema original | Hoy está en |
+|---|---|---|
+| 0–1 | Fundamentos de Python para datos | F1 (y F2, F5) |
+| 2 | Estadística para la toma de decisiones | F3 |
+| 3 | Clustering y reducción de dimensión | I1 |
+| 4 | Regresión y predicción | I2 |
+| 5 | Clasificación y pruebas de hipótesis (incl. A/B) | I3 |
+| 6 | Deep learning | I5 |
+| 7 | Recuperación y entrega intermedia | (sin módulo propio) |
+| 8 | Sistemas de recomendación | DS4 |
+| 9 | Redes y grafos | DS5 |
+| 10 | Series temporales | I6 |
+| 11 | IA generativa y modelos de lenguaje | I7 (y el bloque N3-AI) |
+| 12–14 | Proyecto final | [proyecto-final/](proyecto-final/) y los proyectos de cada itinerario |
+
+El ritmo semanal era: lunes vídeos y lecturas (2–3 h) · martes–miércoles notebook guiado (2 h) · jueves sesión en vivo con mentor (1,5 h) ·
+domingo entrega del caso práctico y cuestionario (1–2 h).

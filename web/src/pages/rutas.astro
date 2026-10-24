@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import ListaEspera from "../components/ListaEspera.astro";
+import { rutas, resolverModulo } from "../data/rutas";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const vista = rutas.map((r) => {
+  const grupos = r.grupos.map((g) => ({ ...g, modulos: g.codigos.map(resolverModulo) }));
+  const todos = grupos.flatMap((g) => g.modulos);
+  // «CAR» u otros transversales cuentan igual: se ve cuánto de la ruta se puede estudiar hoy.
+  return { ...r, grupos, total: todos.length, listos: todos.filter((m) => m.estado === "disponible").length };
+});
+---
+<Base titulo="Rutas por rol" descripcion="Qué módulos estudiar según el puesto al que aspiras">
+  <div class="wrap">
+    <h1>Rutas por rol</h1>
+    <p style="max-width:70ch;color:var(--texto-suave)">
+      Los niveles N1–N3 ordenan el aprendizaje; las rutas responden a «quiero trabajar de…».
+      Son el mismo catálogo de módulos, filtrado y ordenado para cada puesto, y cada ruta termina
+      con tres piezas de portafolio que un reclutador puede comprobar abriendo un repositorio.
+      Los módulos marcados <span class="badge wip">en preparación</span> aún no están publicados.
+    </p>
+
+    {vista.map((r) => (
+      <section class="ruta" id={r.slug} style={`border-left-color:${r.color}`}>
+        <h2>{r.nombre}</h2>
+        <p style="margin:.2rem 0 .6rem">{r.resumen}</p>
+        <p class="meta" style="font-size:.85rem;color:var(--texto-suave);margin:0">
+          {r.listos} de {r.total} módulos disponibles ·
+          <span data-ruta-progreso={r.slug} data-codigos={r.grupos.flatMap((g) => g.codigos).join(",")}></span>
+        </p>
+        {r.grupos.map((g) => (
+          <>
+            <h4 style="margin:.9rem 0 0;font-size:.85rem;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.04em">{g.etiqueta}</h4>
+            <div class="chips">
+              {g.modulos.map((m) =>
+                m.enlazable ? (
+                  <a class="chip hecho" data-modulo={m.codigo} href={`${base}/modulos/${m.codigo.toLowerCase()}/`}><strong>{m.codigo}</strong> {m.titulo}</a>
+                ) : (
+                  <span class="chip wip" title="En preparación"><strong>{m.codigo}</strong> {m.titulo} · en preparación</span>
+                )
+              )}
+            </div>
+          </>
+        ))}
+        <h4 style="margin:1rem 0 0;font-size:.85rem;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.04em">Portafolio mínimo</h4>
+        <ul class="piezas">
+          {r.portafolio.map((p) => <li>{p}</li>)}
+        </ul>
+      </section>
+    ))}
+
+    <p style="color:var(--texto-suave);font-size:.9rem">
+      ¿No sabes por dónde empezar? Haz la <a href={`${base}/prueba-de-nivel/`}>prueba de nivel</a>.
+    </p>
+    <ListaEspera />
+  </div>
+
+  <script>
+    // Progreso por ruta a partir de los módulos que has marcado como completados en este navegador.
+    try {
+      const hechos = new Set<string>(JSON.parse(localStorage.getItem("modulos-completados") || "[]"));
+      document.querySelectorAll<HTMLElement>("[data-ruta-progreso]").forEach((el) => {
+        const codigos = (el.dataset.codigos || "").split(",");
+        const n = codigos.filter((c) => hechos.has(c)).length;
+        el.textContent = ` completados por ti: ${n}/${codigos.length}`;
+      });
+      document.querySelectorAll<HTMLElement>("[data-modulo]").forEach((el) => {
+        if (hechos.has(el.dataset.modulo!)) el.textContent = "✓ " + el.textContent;
+      });
+    } catch {
+      /* sin localStorage */
+    }
+  </script>
+</Base>

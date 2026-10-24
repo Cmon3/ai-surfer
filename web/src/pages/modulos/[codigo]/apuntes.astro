@@ -2,6 +2,7 @@
 import Base from "../../../layouts/Base.astro";
 import { modulosDisponibles } from "../../../data/catalogo";
 import { material } from "../../../data/modulos-md";
+import { colabUrl } from "../../../config";
 
 export function getStaticPaths() {
   return modulosDisponibles().map((m) => ({
@@ -13,7 +14,7 @@ export function getStaticPaths() {
 const { m } = Astro.props;
 const mat = material(m.carpeta!);
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const colab = `https://colab.research.google.com/github/[tu-usuario]/[tu-repo]/blob/main/modulos/${m.carpeta}/notebook.ipynb`;
+const colab = colabUrl(m.carpeta!); // repositorio configurado en src/config.ts
 ---
 <Base titulo={`Apuntes · ${m.codigo}`} descripcion={`Apuntes del módulo ${m.codigo}`}>
   <div class="wrap">

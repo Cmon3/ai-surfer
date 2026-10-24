@@ -1,0 +1,33 @@
+---
+import Base from "../../../layouts/Base.astro";
+import MotorEjercicios from "../../../components/MotorEjercicios.astro";
+import { modulosDisponibles } from "../../../data/catalogo";
+import { cargarEjercicios } from "../../../data/ejercicios";
+
+export function getStaticPaths() {
+  return modulosDisponibles()
+    .map((m) => ({ m, datos: cargarEjercicios(m.carpeta!) }))
+    .filter((x) => x.datos)
+    .map(({ m, datos }) => ({ params: { codigo: m.codigo.toLowerCase() }, props: { m, datos: datos! } }));
+}
+
+const { m, datos } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Base titulo={`Ejercicios · ${m.codigo}`} descripcion={`Ejercicios de código del módulo ${m.codigo}, ejecutados en tu navegador`}>
+  <div class="wrap">
+    <p><a href={`${base}/modulos/${m.codigo.toLowerCase()}/`}>← {m.titulo}</a></p>
+    <h1>Ejercicios · {m.codigo} {m.titulo}</h1>
+    <p style="color:var(--texto-suave)">
+      Escribe código real y pulsa <strong>Ejecutar y comprobar</strong>: se ejecuta en tu navegador
+      (Python vía Pyodide, sin servidor y sin instalar nada). La primera ejecución descarga el intérprete
+      (~10 s); después queda en caché. Tu progreso y tu código se guardan en este navegador.
+    </p>
+    {datos.intro && <div class="prose" set:html={datos.intro} />}
+    <div class="ej-resumen">
+      <span data-ej-resumen>0/{datos.ejercicios.length} ejercicios superados</span>
+      <span class="barra"><span data-ej-barra></span></span>
+    </div>
+    <MotorEjercicios ejercicios={datos.ejercicios} clave={`ejercicios:${m.codigo}`} />
+  </div>
+</Base>

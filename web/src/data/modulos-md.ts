@@ -30,3 +30,12 @@ export function material(carpeta: string): MaterialModulo {
     cuestionarioHtml: leerMd(carpeta, "cuestionario.md"),
   };
 }
+
+/** Texto Markdown sin procesar de un archivo del módulo (o null si no existe). */
+export function leerFuente(carpeta: string, archivo: string): string | null {
+  try {
+    return readFileSync(path.join(RAIZ_MODULOS, carpeta, archivo), "utf8");
+  } catch {
+    return null;
+  }
+}

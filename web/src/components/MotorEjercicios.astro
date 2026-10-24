@@ -1,0 +1,66 @@
+---
+/**
+ * Motor de ejercicios reutilizable. Pinta una tarjeta por ejercicio y arranca
+ * el script del navegador (Web Worker + Pyodide). Úsalo con la salida de
+ * cargarEjercicios() o con una lista propia (ver prueba-de-nivel.astro).
+ *
+ * Evento: al superar un ejercicio por primera vez emite en `document` el
+ * CustomEvent "ejercicio-superado" con detail.id.
+ */
+import type { EjercicioPublico } from "../data/ejercicios";
+import { PYODIDE_CDN, EJERCICIOS_TIMEOUT_S } from "../config";
+
+interface Props {
+  ejercicios: EjercicioPublico[];
+  /** Clave de localStorage donde se guarda el progreso. */
+  clave: string;
+  persistir?: boolean;
+}
+const { ejercicios, clave, persistir = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const config = {
+  clave,
+  persistir,
+  cdn: PYODIDE_CDN,
+  workerUrl: `${base}/ejercicios/worker.js`,
+  timeoutS: EJERCICIOS_TIMEOUT_S,
+  ejercicios: ejercicios.map((e) => ({
+    id: e.id,
+    tipo: e.tipo,
+    setup: e.setup,
+    paquetes: e.paquetes,
+    tests: e.tests,
+    nPistas: e.pistasHtml.length,
+  })),
+};
+---
+<script type="application/json" id="ej-config" set:html={JSON.stringify(config).replace(/</g, "\\u003c")} />
+
+{ejercicios.map((e, i) => (
+  <article class="ej" data-ej-id={e.id}>
+    <header class="ej-cab">
+      <h3>
+        <span class="ej-num">{i + 1}.</span> {e.titulo}
+        {e.nivel && <span class="badge wip">{e.nivel}</span>}
+        {e.tipo === "sql" && <span class="badge ok">SQL</span>}
+      </h3>
+      <span class="ej-marca" data-marca></span>
+    </header>
+    <div class="prose ej-enunciado" set:html={e.enunciadoHtml} />
+    <textarea rows={Math.min(18, Math.max(6, e.inicial.split("\n").length + 1))} spellcheck="false" autocomplete="off" autocapitalize="off" aria-label={`Código del ejercicio ${i + 1}`}>{e.inicial}</textarea>
+    <div class="ej-acciones">
+      <button class="ej-btn principal" type="button" data-run>▶ Ejecutar y comprobar</button>
+      <button class="ej-btn" type="button" data-pista>Pedir pista</button>
+      <button class="ej-btn" type="button" data-reset>Restablecer</button>
+      <span class="ej-atajo">Ctrl/⌘ + Enter ejecuta</span>
+    </div>
+    <div data-pistas></div>
+    <div class="ej-salida" data-salida aria-live="polite"></div>
+    {e.pistasHtml.map((p) => <template data-pista-html set:html={p} />)}
+  </article>
+))}
+
+<script>
+  import { iniciarMotor } from "../scripts/motor-ejercicios";
+  iniciarMotor();
+</script>

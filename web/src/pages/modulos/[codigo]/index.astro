@@ -2,6 +2,7 @@
 import Base from "../../../layouts/Base.astro";
 import { modulosDisponibles } from "../../../data/catalogo";
 import { material } from "../../../data/modulos-md";
+import { cargarEjercicios } from "../../../data/ejercicios";
 
 export function getStaticPaths() {
   return modulosDisponibles().map((m) => ({
@@ -12,6 +13,7 @@ export function getStaticPaths() {
 
 const { m } = Astro.props;
 const mat = material(m.carpeta!);
+const nEjercicios = cargarEjercicios(m.carpeta!)?.ejercicios.length ?? 0;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 <Base titulo={`${m.codigo} · ${m.titulo}`} descripcion={m.titulo}>
@@ -25,13 +27,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       <button class="cta" data-marcar={m.codigo} style="border:none;cursor:pointer;font-size:.95rem;padding:.55rem 1.1rem">Marcar completado</button>
     </div>
 
+    {nEjercicios > 0 && <p>⌨️ <a href={`${base}/modulos/${m.codigo.toLowerCase()}/ejercicios/`}>Ejercicios de código</a> ({nEjercicios}, se ejecutan en tu navegador) <span data-ej-resumen-mod style="color:var(--texto-suave);font-size:.9rem"></span></p>}
     {mat.apuntesHtml && <p>📖 <a href={`${base}/modulos/${m.codigo.toLowerCase()}/apuntes/`}>Apuntes completos</a> (teoría de cada lección en el navegador)</p>}
     {mat.cuestionarioHtml && <p>📝 <a href={`${base}/modulos/${m.codigo.toLowerCase()}/cuestionario/`}>Cuestionario de autoevaluación</a> (10 preguntas)</p>}
 
     <div class="prose" set:html={mat.readmeHtml} />
   </div>
 
-  <script define:vars={{ codigo: m.codigo }}>
+  <script define:vars={{ codigo: m.codigo, nEjercicios }}>
     const clave = "modulos-completados";
     const leer = () => JSON.parse(localStorage.getItem(clave) || "[]");
     const boton = document.querySelector("[data-marcar]");
@@ -48,5 +51,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       pintar();
     });
     pintar();
+    // Resumen del progreso de ejercicios (guardado por el motor en localStorage)
+    try {
+      const resumen = document.querySelector("[data-ej-resumen-mod]");
+      const p = JSON.parse(localStorage.getItem("ejercicios:" + codigo) || "{}");
+      const hechos = Object.values(p).filter((x) => x && x.ok).length;
+      if (resumen && hechos) resumen.textContent = "· " + hechos + "/" + nEjercicios + " superados";
+    } catch (e) { /* sin localStorage */ }
   </script>
 </Base>

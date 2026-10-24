@@ -1,0 +1,41 @@
+---
+import { LISTA_ESPERA_EMAIL } from "../config";
+import { rutas } from "../data/rutas";
+const configurada = LISTA_ESPERA_EMAIL.trim() !== "";
+---
+<section class="espera" id="lista-espera">
+  <h2 style="margin-top:0">Lista de espera</h2>
+  <p>
+    La certificación, la corrección de entregas y las cohortes con mentor están en preparación.
+    Cuéntanos qué ruta te interesa y te avisamos cuando abran plazas.
+  </p>
+  <form id="form-espera" data-email={LISTA_ESPERA_EMAIL}>
+    <input type="text" name="nombre" placeholder="Tu nombre (opcional)" aria-label="Tu nombre (opcional)" />
+    <select name="ruta" aria-label="Ruta que te interesa">
+      {rutas.map((r) => <option value={r.nombre}>{r.nombre}</option>)}
+      <option value="Aún no lo sé">Aún no lo sé</option>
+    </select>
+    <button class="cta" type="submit" style="border:none;cursor:pointer;margin-top:0" disabled={!configurada}>Apuntarme por correo</button>
+  </form>
+  <p style="font-size:.85rem;color:var(--texto-suave);margin-bottom:0">
+    Esto no guarda nada en ningún servidor: abre tu programa de correo con el mensaje ya escrito y lo envías tú.
+  </p>
+  {!configurada && (
+    <p class="aviso-config">
+      PENDIENTE DE CONFIGURAR: el buzón de la lista de espera se define en <code>web/src/config.ts</code>
+      (<code>LISTA_ESPERA_EMAIL</code>). Hasta entonces el botón está desactivado.
+    </p>
+  )}
+  <script>
+    const form = document.getElementById("form-espera") as HTMLFormElement | null;
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = form.dataset.email;
+      if (!email) return;
+      const d = new FormData(form);
+      const asunto = "Lista de espera de AI Surfer";
+      const cuerpo = `Hola:\n\nQuiero apuntarme a la lista de espera.\nRuta de interés: ${d.get("ruta")}\nNombre: ${d.get("nombre") || "(no indicado)"}\n\nGracias.`;
+      location.href = `mailto:${email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    });
+  </script>
+</section>
