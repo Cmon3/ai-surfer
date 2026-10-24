@@ -18,8 +18,10 @@ Orientada a puestos como *AI/LLM Engineer*: post-entrenamiento, evaluación y pr
 | 6 | AI6 | [Alineación y post-entrenamiento](../../modulos/AI6-alineacion/) | ✅ Disponible |
 | 7 | AI7 | [Inferencia y despliegue](../../modulos/AI7-inferencia/) | ✅ Disponible |
 | 8 | AI8 | [Seguridad, moderación y LLMOps](../../modulos/AI8-seguridad/) | ✅ Disponible |
-| 9 | AI9 | Multimodal (optativo): modelos de visión y lenguaje, voz | 🚧 En preparación |
-| 10–12 | — | [Capstone AI](../../modulos/AI-capstone/): fine-tune con QLoRA + eval + deploy. Se publica en Hugging Face | ✅ Disponible |
+| 9 | AI9 | [Multimodal y voz](../../modulos/AI9-multimodal/) (optativo) | ✅ Disponible |
+| 10 | AI10 | [Agentes en producción: MCP, orquestación y observabilidad](../../modulos/AI10-agentes-mcp/) | ✅ Disponible |
+| Optativo | FS1 | [Full-stack para AI Engineers](../../modulos/FS1-fullstack/) (rol Forward Deployed Engineer) | ✅ Disponible |
+| 11–12 | — | [Capstone AI](../../modulos/AI-capstone/): opción A, fine-tuning con QLoRA + eval + despliegue en Hugging Face; opción B, agente con servidor MCP + evals en CI + despliegue | ✅ Disponible |
 
 ## Criterios del certificado
 

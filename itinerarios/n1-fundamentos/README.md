@@ -15,7 +15,6 @@ Primer bloque de la escuela. Para quien empieza desde cero o necesita una base s
 | 5–6 | F5 | [Herramientas del oficio](../../modulos/F5-herramientas/) | ✅ Disponible |
 | 6 | — | [Proyecto N1](proyecto/): análisis exploratorio completo (SQL + pandas + informe) | ✅ Disponible |
 
-Los módulos 🚧 son nuevos; cuando estén listos llevarán los mismos materiales que los demás: README, apuntes, diapositivas, guiones, notebook, soluciones, cuestionario y recursos abiertos.
 
 ## Criterios del certificado
 

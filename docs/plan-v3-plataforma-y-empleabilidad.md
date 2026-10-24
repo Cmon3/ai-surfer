@@ -7,6 +7,24 @@ Continúa el [plan v2](plan-v2-itinerarios-y-plataforma.md) (itinerarios y web).
 
 ---
 
+## Estado a 24-10-2026 (ejecución del plan)
+
+Hecho en la segunda revisión, con 12 agentes en paralelo y verificación central (todos los notebooks ejecutados y sus salidas revisadas):
+
+| Del plan | Estado |
+|---|---|
+| Sección 3, contenido nuevo: **AI10**, **CAR**, **CL1**, **FS1**, **I4**, **AI9** | ✅ Hechos |
+| N3-DS: **DS1, DS2, DS3, DS6, DS7, DS8** y **capstone DS** | ✅ Hechos |
+| D1: completar AI5–AI8 · D2: AI3 con base vectorial real · D3: proyecto N2 con despliegue · D10 | ✅ Hechos |
+| F5.7 (agentes de código) · capstone AI opción B | ✅ Hechos |
+| D4 `PROGRAMA.md` · D6 enlaces a Colab (`Cmon3/ai-surfer`) · D7 README de la web · D9 CI del curso · D11 Pyodide | ✅ Hechos |
+| Fase 1b de la web: ejercicios en el navegador (34, verificados también en Chrome real), cuestionarios interactivos, página de rutas | ✅ Hechos |
+| D5 PDF de las diapositivas · F2 sin diapositivas ni guiones | ⏳ Pendiente |
+| D8 licencia · despliegue público de la web · analítica · correo de la lista de espera | ⏳ Pendiente: decisiones tuyas (sección 9) |
+| Fase 2 (Supabase, Stripe, certificados) y fase 3 (tutor de IA) | ⏳ Pendiente: requiere crear las cuentas |
+
+**Limitaciones conocidas:** las celdas que llaman a la API de Claude solo se han probado en su camino sin clave; las plantillas de Azure/Terraform (CL1) y los esqueletos para Colab con GPU (AI5–AI7, AI9, DS6) no se han ejecutado; Spark, Airflow y Kafka (DS7) se simulan; las URL de `recursos-abiertos.md` no se han comprobado una a una; la ficha de cumplimiento de AI8 cita artículos del Reglamento europeo de IA que debería revisar un jurista. En macOS, XGBoost y LightGBM (I4) necesitan `brew install libomp`.
+
 ## 0. Resumen
 
 | | |

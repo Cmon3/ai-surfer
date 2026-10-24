@@ -8,15 +8,15 @@ Para analistas y *data scientists* que quieren llegar a puestos *senior*: decisi
 
 | Orden | Código | Módulo | Estado |
 |---|---|---|---|
-| 1 | DS1 | Inferencia causal: DAGs, emparejamiento, diferencias en diferencias, variables instrumentales, *uplift modeling* | 🚧 En preparación |
-| 2 | DS2 | Experimentación avanzada: CUPED, pruebas secuenciales, *bandits*, métricas de guardarraíl | 🚧 En preparación |
-| 3 | DS3 | Estadística bayesiana: PyMC, modelos jerárquicos, A/B bayesiano | 🚧 En preparación |
+| 1 | DS1 | [Inferencia causal](../../modulos/DS1-causalidad/): DAGs, *propensity score*, diferencias en diferencias, variables instrumentales, *uplift* | ✅ Disponible |
+| 2 | DS2 | [Experimentación avanzada](../../modulos/DS2-experimentacion/): CUPED, pruebas secuenciales, SRM, *bandits* | ✅ Disponible |
+| 3 | DS3 | [Estadística bayesiana](../../modulos/DS3-bayesiana/): PyMC, modelos jerárquicos, A/B bayesiano | ✅ Disponible |
 | 4 | DS4 | [Sistemas de recomendación](../../modulos/DS4-recomendacion/) (se ampliará con recomendación con embeddings) | ✅ Disponible |
 | 5 | DS5 | [Redes y grafos](../../modulos/DS5-redes-grafos/) (se ampliará con introducción a las *graph neural networks*) | ✅ Disponible |
-| 6 | DS6 | Forecasting avanzado: muchas series a la vez, modelos globales con ML, jerarquías y modelos fundacionales de series temporales | 🚧 En preparación |
-| 7 | DS7 | Datos a escala: DuckDB, Polars, Spark; almacenes de datos y dbt a nivel conceptual | 🚧 En preparación |
-| 8 | DS8 | Comunicación y producto de datos: storytelling, dashboards y diseño de métricas | 🚧 En preparación |
-| 9–10 | — | Capstone DS: problema real con decisión causal o experimental | 🚧 En preparación |
+| 6 | DS6 | [Forecasting avanzado](../../modulos/DS6-forecasting/): modelos globales, backtesting, intervalos y jerarquías | ✅ Disponible |
+| 7 | DS7 | [Datos a escala](../../modulos/DS7-datos-escala/): DuckDB, Polars, Parquet, dbt, Spark y streaming | ✅ Disponible |
+| 8 | DS8 | [Comunicación y producto de datos](../../modulos/DS8-comunicacion/): métricas, storytelling, dashboards y memos | ✅ Disponible |
+| 9–10 | — | [Capstone DS](../../modulos/DS-capstone/): problema real con decisión causal o experimental | ✅ Disponible |
 
 ## Criterios del certificado
 

@@ -54,3 +54,10 @@ arviz>=1
 
 # Tokenizer real en AI5 (opcional: sin él, el notebook usa caracteres)
 tokenizers>=0.20
+
+# Gradient boosting e interpretabilidad (I4). En macOS, XGBoost y LightGBM necesitan
+# OpenMP: brew install libomp (sin él, el notebook usa solo HistGradientBoosting y omite SHAP).
+xgboost>=2.0
+lightgbm>=4.0
+shap>=0.45
+optuna>=3.6

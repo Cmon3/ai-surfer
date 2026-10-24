@@ -26,27 +26,22 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 
 | Código | Módulo | Estado |
 |---|---|---|
-| F1 | [Python para datos](modulos/F1-python/) | ✅ |
-| F2 | [SQL para análisis de datos](modulos/F2-sql/) | ✅ (faltan diapositivas y guiones) |
-| F3 | [Estadística para la toma de decisiones](modulos/F3-estadistica/) | ✅ |
-| F4 | [Matemáticas para ML](modulos/F4-matematicas-ml/) | ✅ |
-| F5 | [Herramientas del oficio](modulos/F5-herramientas/) | ✅ |
-| I1 | [Aprendizaje no supervisado](modulos/I1-no-supervisado/) | ✅ |
-| I2 | [Regresión y predicción](modulos/I2-regresion/) | ✅ |
-| I3 | [Clasificación y pruebas de hipótesis](modulos/I3-clasificacion/) | ✅ |
-| I4 | Ingeniería de variables y gradient boosting | 🚧 |
-| I5 | [Deep learning con PyTorch](modulos/I5-deep-learning/) | ✅ |
-| I6 | [Series temporales](modulos/I6-series-temporales/) | ✅ |
-| I7 | [Introducción a los LLMs por API](modulos/I7-llms-api/) | ✅ |
-| I8 | [Del notebook a producción](modulos/I8-produccion/) | ✅ |
-| DS1–DS3, DS6–DS8 | Especialización Data Science | 🚧 |
-| DS4 | [Sistemas de recomendación](modulos/DS4-recomendacion/) | ✅ |
-| DS5 | [Redes y grafos](modulos/DS5-redes-grafos/) | ✅ |
+| F1–F5 | [Python](modulos/F1-python/), [SQL](modulos/F2-sql/), [estadística](modulos/F3-estadistica/), [matemáticas para ML](modulos/F4-matematicas-ml/), [herramientas del oficio y agentes de código](modulos/F5-herramientas/) | ✅ (F2 sin diapositivas ni guiones) |
+| I1–I3 | [No supervisado](modulos/I1-no-supervisado/), [regresión](modulos/I2-regresion/), [clasificación](modulos/I3-clasificacion/) | ✅ |
+| I4 | [Ingeniería de variables y gradient boosting](modulos/I4-boosting/) | ✅ |
+| I5–I8 | [Deep learning](modulos/I5-deep-learning/), [series temporales](modulos/I6-series-temporales/), [LLMs por API](modulos/I7-llms-api/), [del notebook a producción](modulos/I8-produccion/) | ✅ |
+| DS1–DS3 | [Inferencia causal](modulos/DS1-causalidad/), [experimentación avanzada](modulos/DS2-experimentacion/), [estadística bayesiana](modulos/DS3-bayesiana/) | ✅ |
+| DS4–DS5 | [Recomendación](modulos/DS4-recomendacion/), [redes y grafos](modulos/DS5-redes-grafos/) | ✅ |
+| DS6–DS8 | [Forecasting avanzado](modulos/DS6-forecasting/), [datos a escala](modulos/DS7-datos-escala/), [comunicación y producto de datos](modulos/DS8-comunicacion/) | ✅ |
 | AI1–AI4 | [Transformers](modulos/AI1-transformers/), [apps con LLMs](modulos/AI2-apps-llms/), [RAG y agentes](modulos/AI3-rag-agentes/), [evaluación](modulos/AI4-evaluacion-llms/) | ✅ |
-| AI5–AI8 | [Fine-tuning](modulos/AI5-fine-tuning/), [alineación](modulos/AI6-alineacion/), [inferencia](modulos/AI7-inferencia/), [seguridad y LLMOps](modulos/AI8-seguridad/) | 🟡 versión corta: faltan apuntes, guiones y soluciones |
-| AI9 | Multimodal (optativo) | 🚧 esqueleto |
+| AI5–AI8 | [Fine-tuning](modulos/AI5-fine-tuning/), [alineación](modulos/AI6-alineacion/), [inferencia](modulos/AI7-inferencia/), [seguridad y LLMOps](modulos/AI8-seguridad/) | ✅ |
+| AI9–AI10 | [Multimodal y voz](modulos/AI9-multimodal/) (optativo), [agentes en producción con MCP](modulos/AI10-agentes-mcp/) | ✅ |
+| CL1 | [Cloud para datos e IA](modulos/CL1-cloud/) (AWS y Azure) | ✅ |
+| FS1 | [Full-stack para AI Engineers](modulos/FS1-fullstack/) (Next.js + TypeScript; optativo) | ✅ |
+| CAR | [Empleabilidad: portafolio, entrevistas y búsqueda](modulos/CAR-empleabilidad/) | ✅ |
+| Proyectos | [N1](itinerarios/n1-fundamentos/proyecto/), [N2](proyecto-final/), [capstone DS](modulos/DS-capstone/), [capstone AI](modulos/AI-capstone/) | ✅ |
 
-✅ material completo · 🟡 utilizable pero incompleto · 🚧 en preparación. Plan de trabajo y prioridades: [docs/plan-v3-plataforma-y-empleabilidad.md](docs/plan-v3-plataforma-y-empleabilidad.md).
+✅ material completo. Rutas por rol (Data Scientist, ML Engineer, AI Engineer, Forward Deployed Engineer, post-training) en la web, página `/rutas/`. Plan de trabajo y prioridades: [docs/plan-v3-plataforma-y-empleabilidad.md](docs/plan-v3-plataforma-y-empleabilidad.md).
 
 Cada módulo incluye:
 
