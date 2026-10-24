@@ -1,0 +1,216 @@
+# Ejercicios de código de F1 · Python para datos.
+# Se ejecutan en el navegador (Pyodide). Formato: ver web/README.md.
+intro: |
+  Seis ejercicios con los datos de **TiendaSur**, de menos a más: funciones y bucles, diccionarios,
+  NumPy y pandas. Cada uno trae pistas graduadas: intenta primero sin ellas.
+
+ejercicios:
+  - id: f1-ticket-medio
+    titulo: Ticket medio con funciones
+    nivel: Básico
+    enunciado: |
+      Dirección quiere el **ticket medio** de una tienda. Escribe `ticket_medio(importes)`, que recibe una lista de
+      importes (en euros) y devuelve su media **redondeada a 2 decimales**.
+
+      Si la lista está vacía (una tienda recién abierta), devuelve `0` en lugar de dejar que el programa falle.
+    inicial: |
+      def ticket_medio(importes):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "ticket_medio([10, 20, 30])", esperado: "20"}
+      - {expr: "ticket_medio([12.5, 7.25, 3])", esperado: "7.58", tol: 0.001}
+      - {expr: "ticket_medio([])", esperado: "0"}
+      - {expr: "ticket_medio([100])", esperado: "100", oculto: true}
+    pistas:
+      - "La media es la suma entre cuántos elementos hay. Python tiene dos funciones integradas para eso."
+      - "Antes de dividir, comprueba si la lista está vacía: dividir entre `len(importes) == 0` provoca un `ZeroDivisionError`."
+      - "`round(valor, 2)` redondea a 2 decimales. Estructura: `if not importes: return 0` y después `return round(sum(importes) / len(importes), 2)`."
+    solucion: |
+      def ticket_medio(importes):
+          if not importes:
+              return 0
+          return round(sum(importes) / len(importes), 2)
+
+  - id: f1-limpiar-nombres
+    titulo: Limpiar nombres de producto
+    nivel: Básico
+    enunciado: |
+      El catálogo que exportan las tiendas llega sucio: espacios sobrantes, mayúsculas inconsistentes y repetidos.
+      Escribe `limpiar(nombres)` que devuelva una **lista nueva** con cada nombre sin espacios al principio ni al final y con
+      la **primera letra de cada palabra en mayúscula** (`"  cafe MOLIDO "` → `"Cafe Molido"`),
+      **sin duplicados** y respetando el **orden de primera aparición**.
+    inicial: |
+      def limpiar(nombres):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "limpiar(['  cafe MOLIDO ', 'Té verde', 'cafe molido', 'TÉ VERDE', 'taza'])", esperado: "['Cafe Molido', 'Té Verde', 'Taza']"}
+      - {expr: "limpiar([])", esperado: "[]"}
+      - {expr: "limpiar(['a', 'A', ' a '])", esperado: "['A']"}
+      - asserts: |
+          entrada = ['  x ', 'y']
+          limpiar(entrada)
+          assert entrada == ['  x ', 'y'], "no modifiques la lista de entrada"
+        nombre: "No modifica la lista original"
+    pistas:
+      - "Hay dos tareas: normalizar cada texto y quedarte con la primera aparición de cada uno. Los strings tienen métodos para ambas cosas de formato."
+      - "`.strip()` quita espacios de los extremos y `.title()` pone mayúscula inicial en cada palabra. Para no repetir, recuerda lo que ya has visto."
+      - "Recorre `nombres`, normaliza cada uno y añádelo a la lista de salida solo `if n not in salida`. (Con un `dict.fromkeys(...)` se hace en una línea conservando el orden.)"
+    solucion: |
+      def limpiar(nombres):
+          salida = []
+          for n in nombres:
+              n = n.strip().title()
+              if n not in salida:
+                  salida.append(n)
+          return salida
+
+  - id: f1-ingresos-categoria
+    titulo: Ingresos por categoría con un diccionario
+    nivel: Intermedio
+    enunciado: |
+      Tienes las ventas como lista de diccionarios: `{'categoria': 'Café', 'unidades': 3, 'precio': 4.5}`.
+      Escribe `ingresos_por_categoria(ventas)` que devuelva un **diccionario** `{categoria: ingresos}`, donde los ingresos
+      son la suma de `unidades * precio` de todas las ventas de esa categoría.
+
+      Una categoría puede aparecer muchas veces: tendrás que acumular.
+    inicial: |
+      def ingresos_por_categoria(ventas):
+          # tu código aquí
+          pass
+    tests:
+      - expr: "ingresos_por_categoria([{'categoria': 'Café', 'unidades': 3, 'precio': 4.5}, {'categoria': 'Menaje', 'unidades': 1, 'precio': 12}, {'categoria': 'Café', 'unidades': 2, 'precio': 5}])"
+        esperado: "{'Café': 23.5, 'Menaje': 12}"
+      - {expr: "ingresos_por_categoria([])", esperado: "{}"}
+      - expr: "ingresos_por_categoria([{'categoria': 'Té', 'unidades': 4, 'precio': 2.25}])"
+        esperado: "{'Té': 9.0}"
+        oculto: true
+    pistas:
+      - "Necesitas un diccionario que vaya creciendo mientras recorres las ventas: la clave es la categoría."
+      - "Si la categoría ya está en el diccionario, suma; si no, empieza en 0. El método `dict.get(clave, 0)` devuelve 0 cuando la clave no existe."
+      - "Dentro del bucle: `totales[c] = totales.get(c, 0) + v['unidades'] * v['precio']`, donde `c = v['categoria']`."
+    solucion: |
+      def ingresos_por_categoria(ventas):
+          totales = {}
+          for v in ventas:
+              c = v['categoria']
+              totales[c] = totales.get(c, 0) + v['unidades'] * v['precio']
+          return totales
+
+  - id: f1-zscore-numpy
+    titulo: Estandarizar con NumPy (sin bucles)
+    nivel: Intermedio
+    paquetes: [numpy]
+    enunciado: |
+      Para comparar variables con escalas distintas se estandarizan: `z = (x - media) / desviación`.
+      Escribe `estandarizar(x)`, que recibe una lista o array de NumPy y devuelve un array con los valores estandarizados,
+      usando la **desviación típica poblacional** (`np.std` por defecto, `ddof=0`).
+
+      Hazlo **vectorizado**: sin bucles `for`. El resultado debe tener media 0 y desviación 1.
+    inicial: |
+      import numpy as np
+
+      def estandarizar(x):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "list(estandarizar([2, 4, 4, 4, 5, 5, 7, 9]))", esperado: "[-1.5, -0.5, -0.5, -0.5, 0.0, 0.0, 1.0, 2.0]", tol: 0.000000001}
+      - asserts: |
+          import numpy as np
+          z = estandarizar(np.array([10., 20., 30., 40., 100.]))
+          assert abs(z.mean()) < 1e-9, "la media debe ser 0"
+          assert abs(z.std() - 1) < 1e-9, "la desviación debe ser 1"
+        nombre: "Media 0 y desviación 1"
+      - asserts: |
+          import numpy as np
+          assert isinstance(estandarizar([1, 2, 3]), np.ndarray), "devuelve un np.ndarray"
+        nombre: "Devuelve un array de NumPy"
+    pistas:
+      - "Convierte la entrada a array con `np.asarray` para que las operaciones sean elemento a elemento."
+      - "NumPy resta y divide arrays con escalares sin bucles: `(x - x.mean()) / x.std()`."
+      - "Solución completa en dos líneas: `x = np.asarray(x, dtype=float)` y `return (x - x.mean()) / x.std()`."
+    solucion: |
+      import numpy as np
+
+      def estandarizar(x):
+          x = np.asarray(x, dtype=float)
+          return (x - x.mean()) / x.std()
+
+  - id: f1-pandas-filtrar
+    titulo: Filtrar y ordenar con pandas
+    nivel: Intermedio
+    paquetes: [pandas]
+    setup: &ventas_pd |
+      import pandas as pd
+      ventas = pd.DataFrame({
+          "tienda":  ["Sevilla-Centro", "Málaga-Puerto", "Cádiz-Playa", "Málaga-Centro", "Sevilla-Nervión", "Málaga-Puerto"],
+          "ciudad":  ["Sevilla", "Málaga", "Cádiz", "Málaga", "Sevilla", "Málaga"],
+          "importe": [120.0, 340.5, 80.0, 99.9, 410.0, 150.0],
+      })
+    enunciado: |
+      La variable `ventas` ya está cargada (un `DataFrame` con `tienda`, `ciudad` e `importe`). Escribe `grandes_malaga(df)`
+      que devuelva las ventas de **Málaga** con importe **mayor o igual que 100**, ordenadas de **mayor a menor importe**,
+      con solo las columnas `tienda` e `importe` y el índice reiniciado (`0, 1, 2…`).
+    inicial: |
+      def grandes_malaga(df):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "grandes_malaga(ventas)['tienda'].tolist()", esperado: "['Málaga-Puerto', 'Málaga-Puerto']"}
+      - {expr: "grandes_malaga(ventas)['importe'].tolist()", esperado: "[340.5, 150.0]"}
+      - {expr: "list(grandes_malaga(ventas).columns)", esperado: "['tienda', 'importe']"}
+      - {expr: "list(grandes_malaga(ventas).index)", esperado: "[0, 1]", nombre: "Índice reiniciado"}
+      - asserts: |
+          assert len(ventas) == 6, "no modifiques el DataFrame original (usa copias o encadena métodos)"
+          assert list(ventas.columns) == ["tienda", "ciudad", "importe"]
+        nombre: "El DataFrame original queda intacto"
+    pistas:
+      - "Primero filtra con una máscara booleana; después ordena; al final elige columnas y reinicia el índice."
+      - "La máscara combina condiciones con `&` y cada una entre paréntesis: `(df['ciudad'] == 'Málaga') & (df['importe'] >= 100)`."
+      - "Encadena: `df[mascara].sort_values('importe', ascending=False)[['tienda', 'importe']].reset_index(drop=True)`."
+    solucion: |
+      def grandes_malaga(df):
+          mascara = (df["ciudad"] == "Málaga") & (df["importe"] >= 100)
+          return (df[mascara]
+                  .sort_values("importe", ascending=False)[["tienda", "importe"]]
+                  .reset_index(drop=True))
+
+  - id: f1-pandas-merge-groupby
+    titulo: Margen por categoría (merge + groupby)
+    nivel: Avanzado
+    paquetes: [pandas]
+    setup: |
+      import pandas as pd
+      productos = pd.DataFrame({
+          "producto_id": [1, 2, 3, 4],
+          "categoria": ["Café", "Café", "Té", "Menaje"],
+          "precio": [5.0, 8.0, 4.0, 15.0],
+          "coste": [3.0, 5.0, 3.5, 9.0],
+      })
+      lineas = pd.DataFrame({
+          "producto_id": [1, 2, 1, 3, 4, 2, 5],
+          "unidades":    [10, 4, 6, 20, 2, 1, 3],
+      })
+    enunciado: |
+      Tienes `productos` (precio de venta y coste por unidad) y `lineas` (unidades vendidas por producto). Escribe
+      `margen_por_categoria(productos, lineas)` que devuelva una **Serie** con el **margen total**
+      `(precio - coste) * unidades` de cada categoría, **ordenada de mayor a menor**.
+
+      Ojo: la última línea (`producto_id` 5) no existe en el catálogo; una línea de un producto desconocido **no debe contar**.
+    inicial: |
+      def margen_por_categoria(productos, lineas):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "margen_por_categoria(productos, lineas).to_dict()", esperado: "{'Café': 47.0, 'Menaje': 12.0, 'Té': 10.0}", tol: 0.000000001}
+      - {expr: "list(margen_por_categoria(productos, lineas).index)", esperado: "['Café', 'Menaje', 'Té']", nombre: "Orden de mayor a menor"}
+    pistas:
+      - "Necesitas unir las dos tablas por `producto_id`, calcular el margen por línea y sumar por categoría."
+      - "`lineas.merge(productos, on='producto_id', how='inner')` descarta el producto 5. Luego crea una columna `margen` con una resta y una multiplicación de columnas."
+      - "Termina con `.groupby('categoria')['margen'].sum().sort_values(ascending=False)`."
+    solucion: |
+      def margen_por_categoria(productos, lineas):
+          t = lineas.merge(productos, on="producto_id", how="inner")
+          t["margen"] = (t["precio"] - t["coste"]) * t["unidades"]
+          return t.groupby("categoria")["margen"].sum().sort_values(ascending=False)

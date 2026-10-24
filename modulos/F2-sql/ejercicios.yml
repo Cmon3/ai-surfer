@@ -1,0 +1,238 @@
+# Ejercicios de código de F2 · SQL para análisis de datos.
+# El alumno escribe una consulta SQL; se ejecuta con sqlite3 (Python) en el navegador sobre una base de datos
+# de TiendaSur creada en memoria. Los tests ven `filas` (lista de tuplas) y `columnas` (nombres de columna).
+intro: |
+  Seis consultas sobre la base de datos de **TiendaSur**, que se crea en tu navegador. Tablas:
+
+  | Tabla | Columnas |
+  |---|---|
+  | `tiendas` | `id`, `nombre`, `ciudad` |
+  | `productos` | `id`, `nombre`, `categoria`, `precio`, `coste` |
+  | `pedidos` | `id`, `tienda_id`, `fecha` (`AAAA-MM-DD`), `cliente` |
+  | `lineas` | `pedido_id`, `producto_id`, `unidades` |
+
+  Escribe **una sola sentencia `SELECT`** (puede llevar `WITH`). Se comprueban las **columnas** (nombre y orden) y las **filas**,
+  así que usa los alias que pide cada enunciado y el `ORDER BY` indicado.
+
+ejercicios:
+  - id: f2-filtrar
+    titulo: Filtrar y ordenar productos
+    nivel: Básico
+    tipo: sql
+    setup: &tiendasur |
+      import sqlite3
+      con = sqlite3.connect(":memory:")
+      con.executescript("""
+      CREATE TABLE tiendas (id INTEGER PRIMARY KEY, nombre TEXT, ciudad TEXT);
+      CREATE TABLE productos (id INTEGER PRIMARY KEY, nombre TEXT, categoria TEXT, precio REAL, coste REAL);
+      CREATE TABLE pedidos (id INTEGER PRIMARY KEY, tienda_id INTEGER, fecha TEXT, cliente TEXT);
+      CREATE TABLE lineas (pedido_id INTEGER, producto_id INTEGER, unidades INTEGER);
+      """)
+      con.executemany("INSERT INTO tiendas VALUES (?,?,?)", [
+          (1, "Sevilla-Centro", "Sevilla"), (2, "Sevilla-Nervión", "Sevilla"), (3, "Cádiz-Playa", "Cádiz"),
+          (4, "Málaga-Puerto", "Málaga"), (5, "Málaga-Centro", "Málaga")])
+      con.executemany("INSERT INTO productos VALUES (?,?,?,?,?)", [
+          (1, "Café Arábica 1kg", "Café", 12.0, 7.0), (2, "Café Descafeinado 500g", "Café", 7.5, 4.0),
+          (3, "Té Verde 100g", "Té", 5.0, 2.5), (4, "Té Rooibos 100g", "Té", 4.5, 2.0),
+          (5, "Taza Cerámica", "Menaje", 9.0, 4.0), (6, "Cafetera Italiana", "Menaje", 24.0, 13.0),
+          (7, "Molinillo Manual", "Menaje", 32.0, 18.0), (8, "Filtros Papel x100", "Menaje", 3.0, 1.0)])
+      con.executemany("INSERT INTO pedidos VALUES (?,?,?,?)", [
+          (1, 1, "2026-01-05", "ana"), (2, 1, "2026-01-18", "luis"), (3, 2, "2026-01-20", "ana"),
+          (4, 3, "2026-02-02", "marta"), (5, 1, "2026-02-14", "ana"), (6, 4, "2026-02-14", "pedro"),
+          (7, 2, "2026-02-27", "luis"), (8, 3, "2026-03-03", "marta"), (9, 4, "2026-03-09", "sofia"),
+          (10, 1, "2026-03-15", "pedro"), (11, 4, "2026-03-21", "ana"), (12, 2, "2026-03-30", "sofia")])
+      con.executemany("INSERT INTO lineas VALUES (?,?,?)", [
+          (1, 1, 2), (1, 3, 3), (2, 2, 4), (3, 5, 2), (3, 8, 5), (4, 1, 1), (4, 6, 1),
+          (5, 1, 3), (5, 4, 6), (6, 7, 1), (6, 5, 2), (7, 3, 4), (8, 2, 2), (8, 4, 3),
+          (9, 6, 2), (9, 1, 1), (10, 2, 5), (10, 8, 10), (11, 7, 1), (11, 3, 2), (12, 1, 4)])
+    enunciado: |
+      Marketing quiere promocionar los productos **de las categorías `Café` o `Té`** cuyo precio sea **al menos 5 €**.
+      Devuelve `nombre` y `precio`, ordenados por `precio` de mayor a menor y, a igual precio, por `nombre` alfabéticamente.
+    inicial: |
+      -- Escribe tu consulta
+      SELECT *
+      FROM productos
+    tests:
+      - {expr: "columnas", esperado: "['nombre', 'precio']"}
+      - {expr: "filas", esperado: "[('Café Arábica 1kg', 12.0), ('Café Descafeinado 500g', 7.5), ('Té Verde 100g', 5.0)]"}
+    pistas:
+      - "Dos condiciones: una sobre la categoría (dos valores posibles) y otra sobre el precio. Se combinan con `AND`."
+      - "Para varios valores de una columna existe `IN ('a', 'b')`. Cuidado: si mezclas `AND` y `OR` sin paréntesis, `AND` se evalúa primero."
+      - "`SELECT nombre, precio FROM productos WHERE categoria IN ('Café', 'Té') AND precio >= 5 ORDER BY precio DESC, nombre`."
+    solucion: |
+      SELECT nombre, precio
+      FROM productos
+      WHERE categoria IN ('Café', 'Té') AND precio >= 5
+      ORDER BY precio DESC, nombre
+
+  - id: f2-join-ingresos
+    titulo: Ingresos y pedidos por tienda (JOIN)
+    nivel: Intermedio
+    tipo: sql
+    setup: *tiendasur
+    enunciado: |
+      Calcula, para cada tienda **con ventas**, su `ingresos` (suma de `unidades * precio`) y su número de `pedidos`.
+      Devuelve las columnas `tienda` (el nombre), `pedidos` e `ingresos`, ordenadas por `ingresos` de mayor a menor.
+
+      **Trampa clásica:** al unir `pedidos` con `lineas`, cada pedido aparece tantas veces como líneas tenga.
+      Si cuentas filas, contarás de más.
+    inicial: |
+      SELECT t.nombre AS tienda
+      FROM tiendas t
+    tests:
+      - {expr: "columnas", esperado: "['tienda', 'pedidos', 'ingresos']"}
+      - {expr: "filas", esperado: "[('Sevilla-Centro', 4, 199.5), ('Málaga-Puerto', 3, 152.0), ('Sevilla-Nervión', 3, 101.0), ('Cádiz-Playa', 2, 64.5)]", tol: 0.001}
+    pistas:
+      - "Necesitas cuatro tablas encadenadas: `tiendas` → `pedidos` → `lineas` → `productos`. Cada `JOIN` lleva su condición `ON`."
+      - "Los ingresos son `SUM(l.unidades * pr.precio)`. Para los pedidos, `COUNT(*)` cuenta líneas, no pedidos: usa `COUNT(DISTINCT p.id)`."
+      - "Agrupa por tienda (`GROUP BY t.id, t.nombre`). Un `JOIN` interno ya excluye las tiendas sin ventas. Termina con `ORDER BY ingresos DESC`."
+    solucion: |
+      SELECT t.nombre AS tienda,
+             COUNT(DISTINCT p.id) AS pedidos,
+             SUM(l.unidades * pr.precio) AS ingresos
+      FROM tiendas t
+      JOIN pedidos p   ON p.tienda_id = t.id
+      JOIN lineas l    ON l.pedido_id = p.id
+      JOIN productos pr ON pr.id = l.producto_id
+      GROUP BY t.id, t.nombre
+      ORDER BY ingresos DESC
+
+  - id: f2-having
+    titulo: Categorías que superan un umbral (GROUP BY + HAVING)
+    nivel: Intermedio
+    tipo: sql
+    setup: *tiendasur
+    enunciado: |
+      Devuelve las **categorías** cuyos ingresos totales (`unidades * precio`) sean **de 150 € o más**, con las columnas
+      `categoria`, `unidades` (total vendido) e `ingresos`, ordenadas por `ingresos` de mayor a menor.
+
+      Recuerda: `WHERE` filtra filas **antes** de agrupar; para filtrar sobre un resultado agregado se usa otra cláusula.
+    inicial: |
+      SELECT pr.categoria
+      FROM productos pr
+    tests:
+      - {expr: "columnas", esperado: "['categoria', 'unidades', 'ingresos']"}
+      - {expr: "filas", esperado: "[('Menaje', 24, 217.0), ('Café', 22, 214.5)]", tol: 0.001}
+      - {expr: "len(filas)", esperado: "2", nombre: "Té (ingresos inferiores a 150 €) queda fuera", oculto: true}
+    pistas:
+      - "Hay que unir `lineas` con `productos`, agrupar por `categoria` y sumar dos cosas distintas."
+      - "Un filtro sobre `SUM(...)` no puede ir en `WHERE`, porque la suma aún no existe cuando se evalúa. Existe `HAVING`."
+      - "`... GROUP BY pr.categoria HAVING SUM(l.unidades * pr.precio) >= 150 ORDER BY ingresos DESC`. En SQLite se puede usar el alias en `HAVING` y `ORDER BY`."
+    solucion: |
+      SELECT pr.categoria AS categoria,
+             SUM(l.unidades) AS unidades,
+             SUM(l.unidades * pr.precio) AS ingresos
+      FROM lineas l
+      JOIN productos pr ON pr.id = l.producto_id
+      GROUP BY pr.categoria
+      HAVING SUM(l.unidades * pr.precio) >= 150
+      ORDER BY ingresos DESC
+
+  - id: f2-anti-join
+    titulo: Tiendas sin ventas (LEFT JOIN)
+    nivel: Intermedio
+    tipo: sql
+    setup: *tiendasur
+    enunciado: |
+      Una tienda abrió hace poco y aún no ha registrado ningún pedido. Encuentra **las tiendas que no tienen ningún pedido**.
+      Devuelve `nombre` y `ciudad`, ordenadas por `nombre`.
+
+      Un `JOIN` interno nunca devolverá estas filas, porque no tienen pareja. Necesitas conservar las tiendas aunque no
+      haya pedido y quedarte solo con las que no lo tienen.
+    inicial: |
+      SELECT t.nombre, t.ciudad
+      FROM tiendas t
+    tests:
+      - {expr: "columnas", esperado: "['nombre', 'ciudad']"}
+      - {expr: "filas", esperado: "[('Málaga-Centro', 'Málaga')]"}
+    pistas:
+      - "Parte de `tiendas` y únele los pedidos con un `LEFT JOIN`: las tiendas sin pedidos quedan con `NULL` en las columnas de `pedidos`."
+      - "Después filtra las filas sin pareja. Para comparar con `NULL` no sirve `= NULL`; hay que usar `IS NULL`."
+      - "`FROM tiendas t LEFT JOIN pedidos p ON p.tienda_id = t.id WHERE p.id IS NULL ORDER BY t.nombre`."
+    solucion: |
+      SELECT t.nombre, t.ciudad
+      FROM tiendas t
+      LEFT JOIN pedidos p ON p.tienda_id = t.id
+      WHERE p.id IS NULL
+      ORDER BY t.nombre
+
+  - id: f2-cte-ticket
+    titulo: Ticket medio por tienda (CTE)
+    nivel: Avanzado
+    tipo: sql
+    setup: *tiendasur
+    enunciado: |
+      El **ticket** de un pedido es la suma de `unidades * precio` de sus líneas. Calcula el **ticket medio por tienda**:
+      primero el ticket de cada pedido y después su media por tienda.
+
+      Devuelve `tienda` y `ticket_medio` (**redondeado a 2 decimales**), solo de las tiendas con **al menos 3 pedidos**,
+      ordenadas por `ticket_medio` de mayor a menor.
+
+      Hazlo con una **CTE** (`WITH ... AS`): la media de las medias por línea no sería correcta, y la consulta se lee mejor por capas.
+    inicial: |
+      WITH tickets AS (
+          -- una fila por pedido con su importe total
+          SELECT 1
+      )
+      SELECT * FROM tickets
+    tests:
+      - {expr: "columnas", esperado: "['tienda', 'ticket_medio']"}
+      - {expr: "filas", esperado: "[('Málaga-Puerto', 50.67), ('Sevilla-Centro', 49.88), ('Sevilla-Nervión', 33.67)]", tol: 0.011}
+      - {expr: "len(filas)", esperado: "3", nombre: "Cádiz-Playa (solo 2 pedidos) queda fuera", oculto: true}
+    pistas:
+      - "Capa 1: una fila por pedido (`GROUP BY p.id`) con su `SUM(unidades * precio)`. Capa 2: agrupa esa capa por tienda."
+      - "En la CTE incluye `tienda_id` además del importe, para poder agrupar luego. La media es `AVG(importe)` y el redondeo `ROUND(x, 2)`."
+      - "El filtro de «al menos 3 pedidos» es sobre un agregado: `HAVING COUNT(*) >= 3` en la consulta exterior (cada fila de la CTE es un pedido)."
+    solucion: |
+      WITH tickets AS (
+          SELECT p.id AS pedido_id, p.tienda_id, SUM(l.unidades * pr.precio) AS importe
+          FROM pedidos p
+          JOIN lineas l ON l.pedido_id = p.id
+          JOIN productos pr ON pr.id = l.producto_id
+          GROUP BY p.id, p.tienda_id
+      )
+      SELECT t.nombre AS tienda, ROUND(AVG(k.importe), 2) AS ticket_medio
+      FROM tickets k
+      JOIN tiendas t ON t.id = k.tienda_id
+      GROUP BY t.id, t.nombre
+      HAVING COUNT(*) >= 3
+      ORDER BY ticket_medio DESC
+
+  - id: f2-ventana
+    titulo: Acumulado de ingresos con funciones de ventana
+    nivel: Avanzado
+    tipo: sql
+    setup: *tiendasur
+    enunciado: |
+      Para la tienda **Sevilla-Centro** (`tienda_id = 1`), muestra la evolución de sus pedidos: una fila por pedido con
+      `fecha`, el `importe` del pedido y el `acumulado` de ingresos hasta ese pedido (suma de los importes de los pedidos
+      anteriores y el actual, en orden de fecha).
+
+      Orden de salida: `fecha`. Usa una **función de ventana** (`SUM(...) OVER (ORDER BY ...)`) sobre una capa que ya tenga
+      el importe por pedido.
+    inicial: |
+      WITH por_pedido AS (
+          SELECT 1
+      )
+      SELECT * FROM por_pedido
+    tests:
+      - {expr: "columnas", esperado: "['fecha', 'importe', 'acumulado']"}
+      - {expr: "filas", esperado: "[('2026-01-05', 39.0, 39.0), ('2026-01-18', 30.0, 69.0), ('2026-02-14', 63.0, 132.0), ('2026-03-15', 67.5, 199.5)]", tol: 0.001}
+      - {expr: "filas[-1][2]", esperado: "199.5", tol: 0.001, nombre: "El último acumulado coincide con los ingresos totales de la tienda (199,50 €)"}
+    pistas:
+      - "Primero necesitas una capa (CTE) con una fila por pedido de la tienda 1: `fecha` e `importe = SUM(unidades * precio)`."
+      - "Sobre esa capa, el acumulado es una suma que crece fila a fila: `SUM(importe) OVER (ORDER BY fecha)`."
+      - "En la CTE: `WHERE p.tienda_id = 1 GROUP BY p.id, p.fecha`. En la consulta final: `SELECT fecha, importe, SUM(importe) OVER (ORDER BY fecha) AS acumulado FROM por_pedido ORDER BY fecha`."
+    solucion: |
+      WITH por_pedido AS (
+          SELECT p.fecha AS fecha, SUM(l.unidades * pr.precio) AS importe
+          FROM pedidos p
+          JOIN lineas l ON l.pedido_id = p.id
+          JOIN productos pr ON pr.id = l.producto_id
+          WHERE p.tienda_id = 1
+          GROUP BY p.id, p.fecha
+      )
+      SELECT fecha, importe,
+             SUM(importe) OVER (ORDER BY fecha) AS acumulado
+      FROM por_pedido
+      ORDER BY fecha

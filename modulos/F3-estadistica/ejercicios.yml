@@ -1,0 +1,269 @@
+# Ejercicios de código de F3 · Estadística para la toma de decisiones.
+intro: |
+  Seis ejercicios para **medir la incertidumbre** con código: error estándar, intervalos de confianza, bootstrap, el teorema
+  central del límite, una distribución discreta y la paradoja de Simpson. Usan NumPy y SciPy, que se descargan al ejecutar
+  por primera vez.
+
+ejercicios:
+  - id: f3-error-estandar
+    titulo: Error estándar de la media
+    nivel: Básico
+    paquetes: [numpy]
+    enunciado: |
+      Una muestra de tickets de TiendaSur te da una media, pero ¿con cuánta precisión? Escribe `error_estandar(x)`, que
+      devuelva el **error estándar de la media**: `s / sqrt(n)`, donde `s` es la desviación típica **muestral**
+      (divide entre `n - 1`, es decir `ddof=1`) y `n` el tamaño de la muestra.
+    inicial: |
+      import numpy as np
+
+      def error_estandar(x):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "error_estandar([2, 4, 4, 4, 5, 5, 7, 9])", esperado: "0.7559289460184544", tol: 0.0000001}
+      - {expr: "error_estandar([10, 12])", esperado: "1.0", tol: 0.0000001}
+      - {expr: "error_estandar([5, 5, 5, 5])", esperado: "0.0", tol: 0.0000001, oculto: true}
+      - asserts: |
+          import numpy as np
+          rng = np.random.default_rng(1)
+          x = rng.normal(100, 20, 400)
+          assert error_estandar(x[:100]) > error_estandar(x), "con más datos, el error estándar debe ser menor"
+        nombre: "Más datos, menos error"
+    pistas:
+      - "`np.std` calcula la desviación típica, pero por defecto divide entre `n`. Consulta qué argumento cambia ese divisor."
+      - "`np.std(x, ddof=1)` es la desviación muestral. El tamaño es `len(x)` y la raíz, `np.sqrt`."
+      - "`return np.std(x, ddof=1) / np.sqrt(len(x))`. Si te da `0.707…` en lugar de `1.0` con `[10, 12]`, te falta `ddof=1`."
+    solucion: |
+      import numpy as np
+
+      def error_estandar(x):
+          x = np.asarray(x, dtype=float)
+          return float(np.std(x, ddof=1) / np.sqrt(len(x)))
+
+  - id: f3-ic-media
+    titulo: Intervalo de confianza del 95 % para la media
+    nivel: Intermedio
+    paquetes: [numpy, scipy]
+    enunciado: |
+      Escribe `ic_media(x, nivel=0.95)`, que devuelva una **tupla `(inferior, superior)`** con el intervalo de confianza para
+      la media usando la **distribución t de Student** con `n - 1` grados de libertad:
+      `media ± t_crítico · error_estándar`.
+
+      Usa `scipy.stats.t.ppf` para el valor crítico (para un nivel del 95 % se busca el cuantil `0.975`).
+    inicial: |
+      import numpy as np
+      from scipy import stats
+
+      def ic_media(x, nivel=0.95):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "ic_media([48, 52, 50, 47, 53, 51, 49, 50])", esperado: "(48.328, 51.672)", tol: 0.001, nombre: "Tickets de una muestra de 8 pedidos"}
+      - {expr: "ic_media([48, 52, 50, 47, 53, 51, 49, 50], nivel=0.99)", esperado: "(47.525, 52.475)", tol: 0.001}
+      - asserts: |
+          lo, hi = ic_media([48, 52, 50, 47, 53, 51, 49, 50])
+          lo99, hi99 = ic_media([48, 52, 50, 47, 53, 51, 49, 50], 0.99)
+          assert lo < 50.0 < hi, "la media muestral (50) debe estar dentro"
+          assert (hi99 - lo99) > (hi - lo), "a más confianza, intervalo más ancho"
+        nombre: "Más confianza, intervalo más ancho"
+    pistas:
+      - "Necesitas: la media, el error estándar (`s/√n` con `ddof=1`) y el valor crítico de la t. Luego `media - t·EE` y `media + t·EE`."
+      - "`stats.t.ppf(q, df)`: para un nivel de confianza `nivel`, la cola derecha deja `(1 - nivel)/2`, así que `q = 1 - (1 - nivel) / 2` y `df = n - 1`."
+      - "Devuelve `(media - tc * ee, media + tc * ee)`. Si usas la normal (1,96) en vez de la t, el intervalo te saldrá algo más estrecho: con n = 8, importa."
+    solucion: |
+      import numpy as np
+      from scipy import stats
+
+      def ic_media(x, nivel=0.95):
+          x = np.asarray(x, dtype=float)
+          n = len(x)
+          media = x.mean()
+          ee = x.std(ddof=1) / np.sqrt(n)
+          tc = stats.t.ppf(1 - (1 - nivel) / 2, df=n - 1)
+          return (float(media - tc * ee), float(media + tc * ee))
+
+  - id: f3-bootstrap
+    titulo: Bootstrap de la mediana
+    nivel: Intermedio
+    paquetes: [numpy]
+    enunciado: |
+      La mediana no tiene una fórmula sencilla de error estándar, pero el **bootstrap** sirve para cualquier métrica.
+      Escribe `bootstrap_mediana(x, B=2000, semilla=0)`, que devuelva el **intervalo percentil del 95 %**
+      `(p2.5, p97.5)` de las medianas de `B` remuestras **con reemplazo** del mismo tamaño que `x`.
+
+      Usa `rng = np.random.default_rng(semilla)` para que el resultado sea reproducible.
+    inicial: |
+      import numpy as np
+
+      def bootstrap_mediana(x, B=2000, semilla=0):
+          rng = np.random.default_rng(semilla)
+          # tu código aquí
+          pass
+    tests:
+      - asserts: |
+          import numpy as np
+          x = np.array([12, 15, 14, 10, 80, 13, 16, 11, 14, 15, 13, 12, 95, 14, 13], dtype=float)
+          lo, hi = bootstrap_mediana(x)
+          assert lo <= np.median(x) <= hi, "la mediana observada debe caer dentro del intervalo"
+          assert 11 <= lo <= 14 and 14 <= hi <= 16, f"intervalo fuera de lo esperable: ({lo:.2f}, {hi:.2f})"
+        nombre: "Intervalo coherente con una muestra con valores extremos"
+      - asserts: |
+          import numpy as np
+          x = np.arange(1, 41, dtype=float)
+          assert bootstrap_mediana(x, semilla=3) == bootstrap_mediana(x, semilla=3), "misma semilla, mismo resultado"
+        nombre: "Reproducible con la misma semilla"
+      - asserts: |
+          import numpy as np
+          x = np.arange(1, 41, dtype=float)
+          lo, hi = bootstrap_mediana(x)
+          assert hi > lo, "el intervalo no puede ser un punto"
+          assert hi - lo < 20, "intervalo demasiado ancho para 40 datos"
+        nombre: "Anchura razonable"
+    pistas:
+      - "El esquema es: repetir `B` veces → remuestrear con reemplazo → calcular la mediana → guardar. Al final, percentiles de las `B` medianas."
+      - "`rng.choice(x, size=len(x), replace=True)` genera una remuestra. `np.median(...)` la resume. Acumula en una lista."
+      - "`return tuple(np.percentile(medianas, [2.5, 97.5]))`. Devuelve floats de Python con `float(...)` si quieres un resultado más limpio."
+    solucion: |
+      import numpy as np
+
+      def bootstrap_mediana(x, B=2000, semilla=0):
+          rng = np.random.default_rng(semilla)
+          x = np.asarray(x, dtype=float)
+          medianas = [np.median(rng.choice(x, size=len(x), replace=True)) for _ in range(B)]
+          lo, hi = np.percentile(medianas, [2.5, 97.5])
+          return (float(lo), float(hi))
+
+  - id: f3-tcl
+    titulo: Comprobar el teorema central del límite
+    nivel: Intermedio
+    paquetes: [numpy]
+    enunciado: |
+      Los importes de los pedidos de TiendaSur están muy sesgados (pocos pedidos enormes). Aun así, las **medias de muestras**
+      se comportan como una normal. Escribe `medias_muestrales(poblacion, n, k, semilla=0)`, que extraiga `k` muestras
+      de tamaño `n` (con reemplazo) de `poblacion` y devuelva un array con las `k` **medias**.
+
+      Con ello comprobarás dos cosas: la media de las medias se parece a la media poblacional, y su dispersión es
+      aproximadamente `σ / √n` (el error estándar).
+    inicial: |
+      import numpy as np
+
+      def medias_muestrales(poblacion, n, k, semilla=0):
+          rng = np.random.default_rng(semilla)
+          # tu código aquí
+          pass
+    setup: |
+      import numpy as np
+      poblacion = np.random.default_rng(42).lognormal(mean=3.0, sigma=0.8, size=50_000)
+    tests:
+      - asserts: |
+          m = medias_muestrales(poblacion, n=50, k=2000)
+          assert len(m) == 2000, "debe devolver k medias"
+        nombre: "Devuelve k medias"
+      - asserts: |
+          m = medias_muestrales(poblacion, n=50, k=2000)
+          assert abs(m.mean() - poblacion.mean()) < 0.03 * poblacion.mean(), "la media de las medias debe aproximar μ"
+        nombre: "La media de las medias aproxima la media poblacional"
+      - asserts: |
+          import numpy as np
+          m = medias_muestrales(poblacion, n=50, k=4000)
+          esperado = poblacion.std() / np.sqrt(50)
+          assert abs(m.std() / esperado - 1) < 0.1, f"σ/√n = {esperado:.2f}, pero la desviación de tus medias es {m.std():.2f}"
+        nombre: "La desviación de las medias es ≈ σ/√n"
+      - asserts: |
+          m50 = medias_muestrales(poblacion, n=50, k=3000)
+          m200 = medias_muestrales(poblacion, n=200, k=3000)
+          assert m200.std() < 0.6 * m50.std(), "con n 4 veces mayor, la dispersión debe reducirse a la mitad aprox."
+        nombre: "Cuadruplicar n reduce la dispersión a la mitad (≈)"
+    pistas:
+      - "Repite `k` veces: tomar una muestra de tamaño `n` y calcular su media. Puedes hacerlo con un bucle o con una sola llamada que genere una matriz."
+      - "`rng.choice(poblacion, size=n)` da una muestra. En lista: `[rng.choice(poblacion, size=n).mean() for _ in range(k)]`."
+      - "Devuelve un array: `np.array([...])`. Alternativa vectorizada: `rng.choice(poblacion, size=(k, n)).mean(axis=1)`."
+    solucion: |
+      import numpy as np
+
+      def medias_muestrales(poblacion, n, k, semilla=0):
+          rng = np.random.default_rng(semilla)
+          return rng.choice(poblacion, size=(k, n), replace=True).mean(axis=1)
+
+  - id: f3-binomial
+    titulo: ¿Cuántas devoluciones es demasiado?
+    nivel: Intermedio
+    paquetes: [scipy]
+    enunciado: |
+      Históricamente el **10 %** de los pedidos de TiendaSur se devuelve. Una tienda recibe `n` pedidos y observa `k` devoluciones.
+      Escribe `prob_al_menos(k, n, p)`: la probabilidad de ver **`k` o más** devoluciones si cada pedido se devuelve con
+      probabilidad `p`, independientemente (distribución **binomial**).
+
+      Sirve para decidir si lo observado es normal o una señal de alarma. Devuelve un `float`.
+    inicial: |
+      from scipy import stats
+
+      def prob_al_menos(k, n, p):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "prob_al_menos(0, 20, 0.1)", esperado: "1.0", tol: 0.0000001, nombre: "Ver 0 o más siempre ocurre"}
+      - {expr: "prob_al_menos(3, 20, 0.1)", esperado: "0.3230", tol: 0.0005}
+      - {expr: "prob_al_menos(6, 20, 0.1)", esperado: "0.0113", tol: 0.0005}
+      - {expr: "prob_al_menos(21, 20, 0.1)", esperado: "0.0", tol: 0.0000001, oculto: true}
+    pistas:
+      - "`scipy.stats.binom` ofrece `pmf(k, n, p)` (probabilidad de exactamente k) y `cdf(k, n, p)` (de k o menos)."
+      - "«k o más» es el complementario de «k − 1 o menos»: `1 - cdf(k - 1, n, p)`. Cuidado con el desplazamiento de uno."
+      - "`return float(1 - stats.binom.cdf(k - 1, n, p))`. SciPy también tiene `sf` (función de supervivencia): `stats.binom.sf(k - 1, n, p)` es lo mismo, con mejor precisión en colas."
+    solucion: |
+      from scipy import stats
+
+      def prob_al_menos(k, n, p):
+          return float(stats.binom.sf(k - 1, n, p))
+
+  - id: f3-simpson
+    titulo: La paradoja de Simpson
+    nivel: Avanzado
+    enunciado: |
+      Dos agentes de soporte, X e Y, resuelven incidencias fáciles y difíciles. Los datos son
+      `{agente: {'faciles': (resueltas, total), 'dificiles': (resueltas, total)}}`.
+
+      Escribe `simpson(datos)`, que devuelva `True` si hay **paradoja de Simpson**: el agente con mejor tasa en **cada**
+      segmento (fáciles y difíciles) es el **mismo**, pero **no** es el mejor en la tasa **global**. Si no, `False`.
+      Supón que solo hay dos agentes y que no hay empates.
+
+      Ayuda: primero escribe `tasa(resueltas, total)`; después compara.
+    inicial: |
+      def tasa(resueltas, total):
+          # tu código aquí
+          pass
+
+      def simpson(datos):
+          # tu código aquí
+          pass
+    setup: |
+      caso_simpson = {"X": {"faciles": (18, 20), "dificiles": (24, 80)},
+                      "Y": {"faciles": (68, 80), "dificiles": (5, 20)}}
+      caso_sin_paradoja = {"X": {"faciles": (18, 20), "dificiles": (30, 40)},
+                           "Y": {"faciles": (40, 50), "dificiles": (20, 40)}}
+      caso_cruzado = {"X": {"faciles": (19, 20), "dificiles": (10, 40)},
+                      "Y": {"faciles": (60, 80), "dificiles": (20, 40)}}
+    tests:
+      - {expr: "tasa(18, 20)", esperado: "0.9", tol: 0.000001}
+      - {expr: "simpson(caso_simpson)", esperado: "True", nombre: "X gana en fáciles y difíciles pero pierde en global"}
+      - {expr: "simpson(caso_sin_paradoja)", esperado: "False", nombre: "X gana en todo: sin paradoja"}
+      - {expr: "simpson(caso_cruzado)", esperado: "False", nombre: "Cada agente gana en un segmento: sin paradoja", oculto: true}
+    pistas:
+      - "Tres tasas por agente: fáciles, difíciles y global. La global suma las resueltas y los totales de **ambos** segmentos antes de dividir (no es la media de las dos tasas)."
+      - "Determina quién gana cada segmento (`max` con `key=`), y quién gana en global. Hay paradoja si el mismo agente gana los dos segmentos y es distinto del ganador global."
+      - "Con tres variables `gf`, `gd`, `gg` (ganadores de fáciles, difíciles y global): `return gf == gd and gf != gg`."
+    solucion: |
+      def tasa(resueltas, total):
+          return resueltas / total
+
+      def simpson(datos):
+          def ganador(f):
+              return max(datos, key=f)
+          gf = ganador(lambda a: tasa(*datos[a]["faciles"]))
+          gd = ganador(lambda a: tasa(*datos[a]["dificiles"]))
+          def global_(a):
+              r = datos[a]["faciles"][0] + datos[a]["dificiles"][0]
+              t = datos[a]["faciles"][1] + datos[a]["dificiles"][1]
+              return tasa(r, t)
+          gg = ganador(global_)
+          return gf == gd and gf != gg

@@ -1,0 +1,257 @@
+# Ejercicios de código de I3 · Clasificación y pruebas de hipótesis.
+intro: |
+  Seis ejercicios sobre **predecir si un cliente se va (churn)** y **decidir con datos**: métricas a partir de las predicciones,
+  probabilidades de una regresión logística, el umbral como decisión de negocio, el AUC, un test A/B y las comparaciones
+  múltiples. Se usa NumPy y SciPy.
+
+ejercicios:
+  - id: i3-metricas
+    titulo: Precisión, recall y F1 desde las predicciones
+    nivel: Básico
+    enunciado: |
+      Un modelo marca a algunos clientes como «se irá» (clase `1`). Escribe `metricas(y_real, y_pred)`, con listas de 0 y 1, que
+      devuelva un diccionario con `precision`, `recall`, `f1` y `exactitud` (accuracy), **redondeados a 3 decimales**:
+
+      - precisión = VP / (VP + FP) &nbsp;·&nbsp; recall = VP / (VP + FN)
+      - F1 = media armónica de precisión y recall &nbsp;·&nbsp; exactitud = aciertos / total
+
+      Si una métrica tiene el denominador 0 (por ejemplo, el modelo no marca a nadie), devuelve `0.0` para esa métrica.
+    inicial: |
+      def metricas(y_real, y_pred):
+          # tu código aquí
+          pass
+    tests:
+      - expr: "metricas([1,1,1,1,0,0,0,0,0,0], [1,1,1,0,1,1,0,0,0,0])"
+        esperado: "{'precision': 0.6, 'recall': 0.75, 'f1': 0.667, 'exactitud': 0.7}"
+        tol: 0.0006
+      - expr: "metricas([1,0,0,0], [0,0,0,0])"
+        esperado: "{'precision': 0.0, 'recall': 0.0, 'f1': 0.0, 'exactitud': 0.75}"
+        nombre: "Un modelo que no marca a nadie: sin división por cero"
+      - expr: "metricas([1,1,0,0], [1,1,0,0])"
+        esperado: "{'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'exactitud': 1.0}"
+        oculto: true
+    pistas:
+      - "Empieza contando los cuatro casos de la matriz de confusión: VP (real 1, predicho 1), FP (real 0, predicho 1), FN (real 1, predicho 0) y VN."
+      - "Cuéntalos recorriendo `zip(y_real, y_pred)`. Para cada cociente comprueba antes que el denominador no sea 0: `a / b if b else 0.0`."
+      - "F1 = `2 * p * r / (p + r)` si `p + r > 0`. Redondea al final con `round(x, 3)` y no antes (el redondeo intermedio acumula error)."
+    solucion: |
+      def metricas(y_real, y_pred):
+          vp = sum(1 for r, p in zip(y_real, y_pred) if r == 1 and p == 1)
+          fp = sum(1 for r, p in zip(y_real, y_pred) if r == 0 and p == 1)
+          fn = sum(1 for r, p in zip(y_real, y_pred) if r == 1 and p == 0)
+          vn = sum(1 for r, p in zip(y_real, y_pred) if r == 0 and p == 0)
+          prec = vp / (vp + fp) if vp + fp else 0.0
+          rec = vp / (vp + fn) if vp + fn else 0.0
+          f1 = 2 * prec * rec / (prec + rec) if prec + rec else 0.0
+          exa = (vp + vn) / len(y_real)
+          return {"precision": round(prec, 3), "recall": round(rec, 3), "f1": round(f1, 3), "exactitud": round(exa, 3)}
+
+  - id: i3-sigmoide-odds
+    titulo: De los coeficientes de una logística a una probabilidad
+    nivel: Básico
+    paquetes: [numpy]
+    enunciado: |
+      Un modelo de *churn* entrenado con regresión logística tiene `intercepto = -2.0` y, por cada cliente, dos variables:
+      `meses_sin_comprar` (coeficiente `0.5`) y `reclamaciones` (coeficiente `0.8`).
+
+      Escribe:
+
+      - `probabilidad(intercepto, coefs, x)`: la probabilidad de abandono `1 / (1 + e^(-z))`, donde `z` es el log-odds
+        `intercepto + Σ coefᵢ · xᵢ`.
+      - `razon_de_odds(coef)`: cuánto se **multiplican las odds** al subir una unidad esa variable (`e^coef`).
+    inicial: |
+      import numpy as np
+
+      def probabilidad(intercepto, coefs, x):
+          # tu código aquí
+          pass
+
+      def razon_de_odds(coef):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "probabilidad(-2.0, [0.5, 0.8], [0, 0])", esperado: "0.1192", tol: 0.0001, nombre: "Cliente sin riesgo: z = −2"}
+      - {expr: "probabilidad(-2.0, [0.5, 0.8], [4, 0])", esperado: "0.5", tol: 0.000001, nombre: "z = 0 → probabilidad 0,5"}
+      - {expr: "probabilidad(-2.0, [0.5, 0.8], [6, 2])", esperado: "0.9309", tol: 0.0001, nombre: "z = 2,6"}
+      - {expr: "razon_de_odds(0.5)", esperado: "1.6487", tol: 0.0001, nombre: "Cada mes sin comprar multiplica las odds por 1,65"}
+      - {expr: "razon_de_odds(0.0)", esperado: "1.0", tol: 0.000001, oculto: true}
+    pistas:
+      - "Calcula el log-odds `z` con una suma ponderada (producto escalar de coeficientes y valores) más el intercepto; después aplica la sigmoide."
+      - "`z = intercepto + np.dot(coefs, x)` y `1 / (1 + np.exp(-z))`. Para `razon_de_odds`, `np.exp`."
+      - "`return float(1 / (1 + np.exp(-z)))` y `return float(np.exp(coef))`."
+    solucion: |
+      import numpy as np
+
+      def probabilidad(intercepto, coefs, x):
+          z = intercepto + np.dot(coefs, x)
+          return float(1 / (1 + np.exp(-z)))
+
+      def razon_de_odds(coef):
+          return float(np.exp(coef))
+
+  - id: i3-umbral-coste
+    titulo: El umbral lo decide el negocio
+    nivel: Intermedio
+    paquetes: [numpy]
+    enunciado: |
+      Perder a un cliente que se va (falso negativo) cuesta **mucho más** que ofrecer un descuento a uno que se queda
+      (falso positivo). Escribe `mejor_umbral(y_real, prob, coste_fp, coste_fn)`, que pruebe los umbrales
+      `0.05, 0.10, …, 0.95` (`np.arange(0.05, 0.96, 0.05)`) y devuelva el que **minimice el coste total**:
+
+      `coste = coste_fp · (nº de FP) + coste_fn · (nº de FN)`, prediciendo `1` cuando `prob >= umbral`.
+
+      Si dos umbrales empatan, devuelve el **menor**. Devuelve el umbral **redondeado a 2 decimales**.
+    inicial: |
+      import numpy as np
+
+      def mejor_umbral(y_real, prob, coste_fp, coste_fn):
+          # tu código aquí
+          pass
+    setup: |
+      y_real = [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+      prob   = [0.56, 0.87, 0.54, 0.64, 0.31, 0.74, 0.48, 0.44, 0.12, 0.34, 0.27, 0.96, 0.16, 0.69]
+    tests:
+      - {expr: "mejor_umbral(y_real, prob, coste_fp=1, coste_fn=1)", esperado: "0.5", tol: 0.0001, nombre: "Errores igual de caros: umbral central"}
+      - {expr: "mejor_umbral(y_real, prob, coste_fp=1, coste_fn=10)", esperado: "0.3", tol: 0.0001, nombre: "Perder un cliente cuesta 10 veces más: umbral bajo"}
+      - {expr: "mejor_umbral(y_real, prob, coste_fp=10, coste_fn=1)", esperado: "0.7", tol: 0.0001, nombre: "Molestar a un cliente fiel cuesta 10 veces más: umbral alto", oculto: true}
+    pistas:
+      - "Es una búsqueda exhaustiva: para cada umbral candidato, calcula predicciones, cuenta FP y FN, y evalúa el coste. Guarda el mejor."
+      - "Con arrays: `pred = (prob >= u)`, `fp = np.sum((pred == 1) & (y == 0))`, `fn = np.sum((pred == 0) & (y == 1))`."
+      - "Recorre los umbrales en orden creciente y actualiza solo si el coste es **estrictamente menor**: así, ante un empate, te quedas con el menor. Redondea con `round(float(u), 2)`."
+    solucion: |
+      import numpy as np
+
+      def mejor_umbral(y_real, prob, coste_fp, coste_fn):
+          y = np.asarray(y_real)
+          p = np.asarray(prob)
+          mejor_u, mejor_c = None, np.inf
+          for u in np.arange(0.05, 0.96, 0.05):
+              pred = p >= u
+              fp = np.sum(pred & (y == 0))
+              fn = np.sum(~pred & (y == 1))
+              c = coste_fp * fp + coste_fn * fn
+              if c < mejor_c - 1e-12:
+                  mejor_u, mejor_c = u, c
+          return round(float(mejor_u), 2)
+
+  - id: i3-auc
+    titulo: El AUC como probabilidad de ordenar bien
+    nivel: Avanzado
+    paquetes: [numpy, scikit-learn]
+    enunciado: |
+      El **AUC** tiene una interpretación directa: es la probabilidad de que, al elegir un cliente que **sí** se fue y otro que **no**,
+      el modelo dé **más puntuación al primero**. Los empates cuentan medio acierto.
+
+      Escribe `auc(y_real, puntuacion)` comparando **todas las parejas** (positivo, negativo):
+      `AUC = (aciertos + 0.5 · empates) / (nº positivos · nº negativos)`.
+    inicial: |
+      def auc(y_real, puntuacion):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "auc([1, 1, 0, 0], [0.9, 0.8, 0.3, 0.1])", esperado: "1.0", tol: 0.000001, nombre: "Separación perfecta"}
+      - {expr: "auc([1, 0, 1, 0], [0.5, 0.5, 0.5, 0.5])", esperado: "0.5", tol: 0.000001, nombre: "Todo empatado: el AUC es 0,5"}
+      - {expr: "auc([1, 1, 0, 0, 0], [0.8, 0.4, 0.6, 0.2, 0.1])", esperado: "0.8333", tol: 0.0001}
+      - asserts: |
+          import numpy as np
+          from sklearn.metrics import roc_auc_score
+          rng = np.random.default_rng(0)
+          y = rng.integers(0, 2, 200)
+          s = y * 0.8 + rng.normal(0, 1, 200)
+          assert abs(auc(y, s) - roc_auc_score(y, s)) < 1e-9, "debe coincidir con roc_auc_score"
+        nombre: "Coincide con roc_auc_score de scikit-learn"
+    pistas:
+      - "Separa las puntuaciones de los positivos y de los negativos. Después hay que comparar cada positivo con cada negativo."
+      - "Dos bucles anidados sirven (para este tamaño). Por cada pareja suma `1` si `pos > neg`, `0.5` si son iguales y `0` si no."
+      - "`return total / (len(pos) * len(neg))`, con `pos = [s for r, s in zip(y_real, puntuacion) if r == 1]` y `neg` análogo."
+    solucion: |
+      def auc(y_real, puntuacion):
+          pos = [s for r, s in zip(y_real, puntuacion) if r == 1]
+          neg = [s for r, s in zip(y_real, puntuacion) if r == 0]
+          total = 0.0
+          for p in pos:
+              for n in neg:
+                  if p > n:
+                      total += 1
+                  elif p == n:
+                      total += 0.5
+          return total / (len(pos) * len(neg))
+
+  - id: i3-test-ab
+    titulo: Test A/B de dos proporciones
+    nivel: Intermedio
+    paquetes: [scipy]
+    enunciado: |
+      TiendaSur prueba un nuevo botón de compra. Con la versión A convierten `conv_a` de `n_a` visitantes y con la B, `conv_b` de `n_b`.
+      Escribe `test_ab(conv_a, n_a, conv_b, n_b)`, que devuelva `(z, p_valor)` del **test z de dos proporciones** (bilateral):
+
+      - `p̂ = (conv_a + conv_b) / (n_a + n_b)` &nbsp; (proporción conjunta bajo H₀)
+      - `EE = √( p̂ (1 − p̂) (1/n_a + 1/n_b) )`
+      - `z = (p_b − p_a) / EE` &nbsp;con&nbsp; `p_a = conv_a / n_a`, `p_b = conv_b / n_b`
+      - `p_valor = 2 · (1 − Φ(|z|))`, con `scipy.stats.norm`
+
+      Un `p_valor < 0.05` es evidencia de que las versiones difieren.
+    inicial: |
+      import numpy as np
+      from scipy import stats
+
+      def test_ab(conv_a, n_a, conv_b, n_b):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "test_ab(200, 4000, 260, 4000)", esperado: "(2.8816, 0.003957)", tol: 0.0002, nombre: "5,0 % frente a 6,5 %: diferencia significativa"}
+      - {expr: "test_ab(200, 4000, 210, 4000)", esperado: "(0.5070, 0.6121)", tol: 0.0005, nombre: "5,0 % frente a 5,25 %: no concluyente"}
+      - asserts: |
+          z1, _ = test_ab(100, 2000, 140, 2000)
+          z2, _ = test_ab(140, 2000, 100, 2000)
+          assert z1 > 0 and z2 < 0 and abs(z1 + z2) < 1e-9, "z cambia de signo si se intercambian A y B"
+        nombre: "z es positivo cuando B convierte mejor que A"
+    pistas:
+      - "Calcula en este orden: proporciones de cada grupo, proporción conjunta, error estándar conjunto, `z` y por último el p-valor."
+      - "Para el p-valor bilateral usa la cola derecha de |z|: `stats.norm.sf(abs(z))` (es `1 - cdf`, más preciso) multiplicada por 2."
+      - "`z = (pb - pa) / ee`; `return (float(z), float(2 * stats.norm.sf(abs(z))))`."
+    solucion: |
+      import numpy as np
+      from scipy import stats
+
+      def test_ab(conv_a, n_a, conv_b, n_b):
+          pa, pb = conv_a / n_a, conv_b / n_b
+          p = (conv_a + conv_b) / (n_a + n_b)
+          ee = np.sqrt(p * (1 - p) * (1 / n_a + 1 / n_b))
+          z = (pb - pa) / ee
+          return (float(z), float(2 * stats.norm.sf(abs(z))))
+
+  - id: i3-comparaciones-multiples
+    titulo: Comparaciones múltiples y Bonferroni
+    nivel: Avanzado
+    paquetes: [numpy]
+    enunciado: |
+      Si miras 12 métricas de un test A/B con `α = 0.05`, la probabilidad de ver al menos un «significativo» **por puro azar** es ≈ 46 %.
+      La corrección de **Bonferroni** exige `p < α / m` a cada una (`m` = número de pruebas).
+
+      Escribe `significativos(pvalores, alfa=0.05)`, que devuelva una tupla de dos listas de índices (de la posición en `pvalores`):
+
+      1. los significativos **sin corregir** (`p < alfa`),
+      2. los significativos **con Bonferroni** (`p < alfa / m`).
+
+      Ambas listas, en orden creciente.
+    inicial: |
+      def significativos(pvalores, alfa=0.05):
+          # tu código aquí
+          pass
+    tests:
+      - expr: "significativos([0.001, 0.04, 0.2, 0.03, 0.8, 0.0004], 0.05)"
+        esperado: "([0, 1, 3, 5], [0, 5])"
+        nombre: "Seis pruebas: el umbral corregido es 0,05 / 6 ≈ 0,0083"
+      - {expr: "significativos([0.2, 0.5, 0.9])", esperado: "([], [])"}
+      - {expr: "significativos([0.012, 0.9, 0.6, 0.7, 0.8], 0.05)", esperado: "([0], [])", nombre: "Con 5 pruebas el umbral corregido es 0,01: 0,012 ya no pasa", oculto: true}
+    pistas:
+      - "El número de pruebas `m` es `len(pvalores)`. El umbral corregido es `alfa / m`; el no corregido, `alfa`."
+      - "Dos listas por comprensión con `enumerate`: `[i for i, p in enumerate(pvalores) if p < umbral]`."
+      - "`alfa / m` se calcula una vez fuera de las listas. La comparación es estrictamente menor (`<`)."
+    solucion: |
+      def significativos(pvalores, alfa=0.05):
+          m = len(pvalores)
+          sin_corregir = [i for i, p in enumerate(pvalores) if p < alfa]
+          bonferroni = [i for i, p in enumerate(pvalores) if p < alfa / m]
+          return (sin_corregir, bonferroni)

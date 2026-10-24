@@ -2,4 +2,6 @@ node_modules/
 dist/
 __pycache__/
 .venv/
-modulos/*/proyecto-churn/
+modulos/*/proyecto-*/
+.next/
+*.tsbuildinfo

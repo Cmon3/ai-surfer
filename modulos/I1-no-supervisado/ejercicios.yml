@@ -1,0 +1,246 @@
+# Ejercicios de código de I1 · Aprendizaje no supervisado.
+intro: |
+  Cinco ejercicios para **segmentar clientes**: por qué escalar, cuántos grupos elegir (codo y silueta), cuánta información
+  conservar con PCA y el análisis RFM de TiendaSur. Se usa scikit-learn: la primera ejecución descarga NumPy, SciPy y
+  scikit-learn (unos segundos).
+
+ejercicios:
+  - id: i1-escalar-distancias
+    titulo: Escalar antes de medir distancias
+    nivel: Básico
+    paquetes: [numpy]
+    setup: |
+      import numpy as np
+      # Clientes: [gasto anual (€), visitas al año]
+      clientes = np.array([
+          [1200.0, 10.0],   # 0: referencia
+          [1230.0, 60.0],   # 1: casi el mismo gasto, pero visita 6 veces más
+          [1450.0, 11.0],   # 2: visita parecido, pero gasta 250 € más
+          [ 600.0,  9.0],
+          [2100.0, 14.0],
+      ])
+    enunciado: |
+      `clientes` tiene dos columnas: gasto anual (en euros, cientos o miles) y visitas al año (decenas). Sin escalar, la
+      distancia euclídea la domina el gasto y las visitas casi no cuentan.
+
+      Escribe `vecino_mas_cercano(X, i, escalar)`: devuelve el **índice del cliente más cercano** (distancia euclídea) al
+      cliente `i`, sin contarse a sí mismo. Si `escalar` es `True`, estandariza **cada columna**
+      (`(x - media) / desviación`) antes de medir.
+
+      Comprueba cómo cambia el resultado para el cliente 0.
+    inicial: |
+      import numpy as np
+
+      def vecino_mas_cercano(X, i, escalar=True):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "vecino_mas_cercano(clientes, 0, escalar=False)", esperado: "1", nombre: "Sin escalar gana el de gasto casi idéntico (índice 1)"}
+      - {expr: "vecino_mas_cercano(clientes, 0, escalar=True)", esperado: "2", nombre: "Escalando, gana el de comportamiento parecido (índice 2)"}
+      - {expr: "vecino_mas_cercano(clientes, 3, escalar=True)", esperado: "0", oculto: true}
+      - asserts: |
+          import numpy as np
+          copia = clientes.copy()
+          vecino_mas_cercano(clientes, 0, True)
+          assert np.array_equal(copia, clientes), "no modifiques X en el sitio"
+        nombre: "No modifica los datos originales"
+    pistas:
+      - "Dos pasos: (1) opcionalmente estandarizar columnas, (2) calcular la distancia del cliente `i` a todos y quedarte con el mínimo, ignorando `i`."
+      - "`X.mean(axis=0)` y `X.std(axis=0)` dan una media y una desviación por columna. La distancia es `np.linalg.norm(X - X[i], axis=1)`."
+      - "La distancia a sí mismo es 0, así que ponla en infinito antes de buscar: `d[i] = np.inf` y `return int(np.argmin(d))`."
+    solucion: |
+      import numpy as np
+
+      def vecino_mas_cercano(X, i, escalar=True):
+          X = np.asarray(X, dtype=float)
+          if escalar:
+              X = (X - X.mean(axis=0)) / X.std(axis=0)
+          d = np.linalg.norm(X - X[i], axis=1)
+          d[i] = np.inf
+          return int(np.argmin(d))
+
+  - id: i1-kmeans-silueta
+    titulo: Elegir k con la silueta
+    nivel: Intermedio
+    paquetes: [numpy, scikit-learn]
+    setup: |
+      import numpy as np
+      from sklearn.datasets import make_blobs
+      # 3 segmentos de clientes (2 variables ya escaladas)
+      X, _ = make_blobs(n_samples=300, centers=[[0, 0], [6, 0], [3, 5]], cluster_std=0.8, random_state=7)
+    enunciado: |
+      Escribe `mejor_k(X, ks)`, que ajuste un `KMeans` para cada `k` de la lista `ks` (usa `n_init=10` y `random_state=0`) y devuelva
+      el `k` con **mayor coeficiente de silueta** (`sklearn.metrics.silhouette_score`).
+
+      La silueta mide cuánto se parece cada punto a su grupo frente al grupo vecino: cerca de 1 es buena separación.
+      A diferencia de la inercia, **no mejora siempre al subir `k`**.
+    inicial: |
+      import numpy as np
+      from sklearn.cluster import KMeans
+      from sklearn.metrics import silhouette_score
+
+      def mejor_k(X, ks):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "mejor_k(X, range(2, 8))", esperado: "3", nombre: "Los datos tienen 3 grupos"}
+      - {expr: "mejor_k(X, [2, 5, 6])", esperado: "2", nombre: "Si 3 no está entre los candidatos, gana 2 (la mejor de las disponibles)"}
+      - asserts: |
+          assert isinstance(mejor_k(X, [2, 3, 4]), int), "devuelve un int de Python (no un array)"
+        nombre: "Devuelve un entero"
+    pistas:
+      - "Para cada `k`: ajusta KMeans, obtén las etiquetas, calcula la silueta. Guarda pares (k, silueta) y elige el máximo."
+      - "`etiquetas = KMeans(n_clusters=k, n_init=10, random_state=0).fit_predict(X)` y `silhouette_score(X, etiquetas)`."
+      - "`puntuaciones = {k: silhouette_score(X, KMeans(n_clusters=k, n_init=10, random_state=0).fit_predict(X)) for k in ks}` y `return int(max(puntuaciones, key=puntuaciones.get))`."
+    solucion: |
+      import numpy as np
+      from sklearn.cluster import KMeans
+      from sklearn.metrics import silhouette_score
+
+      def mejor_k(X, ks):
+          puntuaciones = {}
+          for k in ks:
+              etiquetas = KMeans(n_clusters=k, n_init=10, random_state=0).fit_predict(X)
+              puntuaciones[k] = silhouette_score(X, etiquetas)
+          return int(max(puntuaciones, key=puntuaciones.get))
+
+  - id: i1-inercia-codo
+    titulo: La inercia y el método del codo
+    nivel: Intermedio
+    paquetes: [numpy, scikit-learn]
+    setup: |
+      import numpy as np
+      from sklearn.datasets import make_blobs
+      X, _ = make_blobs(n_samples=300, centers=[[0, 0], [6, 0], [3, 5]], cluster_std=0.8, random_state=7)
+    enunciado: |
+      La **inercia** es la suma de cuadrados de las distancias de cada punto a su centroide. Siempre baja al subir `k`,
+      pero deja de bajar mucho en el «codo».
+
+      Escribe dos funciones:
+
+      - `inercias(X, ks)`: lista con la inercia de `KMeans(n_clusters=k, n_init=10, random_state=0)` para cada `k` de `ks`.
+      - `codo(ks, inercias)`: devuelve el `k` donde la **mejora respecto al `k` anterior es mayor**,
+        medida como **caída relativa** `(inercia[k-1] - inercia[k]) / inercia[k-1]`, **sin contar el primer elemento**.
+        Es una versión simple del codo: el último `k` que aporta un salto grande.
+    inicial: |
+      import numpy as np
+      from sklearn.cluster import KMeans
+
+      def inercias(X, ks):
+          # tu código aquí
+          pass
+
+      def codo(ks, valores):
+          # tu código aquí
+          pass
+    tests:
+      - asserts: |
+          ine = inercias(X, [1, 2, 3, 4, 5, 6])
+          assert len(ine) == 6
+          assert all(a > b for a, b in zip(ine, ine[1:])), "la inercia debe bajar al subir k"
+        nombre: "La inercia decrece al aumentar k"
+      - {expr: "codo([1, 2, 3, 4], [1000.0, 400.0, 100.0, 90.0])", esperado: "3", nombre: "Ejemplo manual: el mayor salto relativo se produce al pasar a k = 3 (de 400 a 100)"}
+      - {expr: "codo([2, 3, 4, 5], [500.0, 450.0, 200.0, 190.0])", esperado: "4", oculto: true}
+      - {expr: "codo(list(range(1, 7)), inercias(X, list(range(1, 7))))", esperado: "3", nombre: "Con los 3 segmentos de TiendaSur, el codo está en k = 3"}
+    pistas:
+      - "`inercias`: `KMeans(...).fit(X).inertia_` es el atributo que buscas. Una lista por comprensión basta."
+      - "`codo`: calcula la caída relativa entre cada valor y el anterior. Emparéjalos con `zip(valores, valores[1:])` y recuerda a qué `k` corresponde cada caída (el del segundo elemento del par)."
+      - "`caidas = [(a - b) / a for a, b in zip(valores, valores[1:])]`; el `k` asociado a la caída `i` es `ks[i + 1]`. Devuelve `ks[1:][np.argmax(caidas)]` como int."
+    solucion: |
+      import numpy as np
+      from sklearn.cluster import KMeans
+
+      def inercias(X, ks):
+          return [float(KMeans(n_clusters=k, n_init=10, random_state=0).fit(X).inertia_) for k in ks]
+
+      def codo(ks, valores):
+          caidas = [(a - b) / a for a, b in zip(valores, valores[1:])]
+          return int(ks[1:][int(np.argmax(caidas))])
+
+  - id: i1-pca-varianza
+    titulo: ¿Cuántas componentes necesito?
+    nivel: Intermedio
+    paquetes: [numpy, scikit-learn]
+    setup: |
+      import numpy as np
+      rng = np.random.default_rng(0)
+      # 500 clientes con 8 métricas correlacionadas, generadas por solo 2 factores latentes + ruido
+      Z = rng.normal(size=(500, 2)) * [3.0, 2.0]
+      W = rng.normal(size=(2, 8))
+      datos = Z @ W + rng.normal(scale=0.3, size=(500, 8))
+    enunciado: |
+      Escribe `n_componentes(X, umbral)`: el **menor número de componentes principales** cuya **varianza explicada acumulada** sea
+      al menos `umbral` (por ejemplo `0.95`). Estandariza antes las columnas con `StandardScaler`.
+
+      Usa `PCA().fit(...)` con todas las componentes y mira `explained_variance_ratio_`.
+    inicial: |
+      import numpy as np
+      from sklearn.decomposition import PCA
+      from sklearn.preprocessing import StandardScaler
+
+      def n_componentes(X, umbral):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "n_componentes(datos, 0.90)", esperado: "2", nombre: "8 variables, pero 2 factores explican el 90 %"}
+      - {expr: "n_componentes(datos, 0.50)", esperado: "1"}
+      - {expr: "n_componentes(datos, 1.0)", esperado: "8", nombre: "Para conservar el 100 % hacen falta todas", oculto: true}
+      - asserts: |
+          assert isinstance(n_componentes(datos, 0.9), int), "devuelve un int de Python"
+        nombre: "Devuelve un entero"
+    pistas:
+      - "Ajusta PCA sobre los datos escalados: `PCA().fit(Xs)`. `explained_variance_ratio_` es la fracción de varianza de cada componente, ordenada de mayor a menor."
+      - "Acumúlala con `np.cumsum`. Busca la primera posición donde la suma alcanza el umbral y suma 1 (las posiciones empiezan en 0)."
+      - "`acum = np.cumsum(pca.explained_variance_ratio_)` y `int(np.searchsorted(acum, umbral - 1e-12) + 1)`. (El pequeño margen evita fallos por redondeo cuando `umbral = 1.0`.)"
+    solucion: |
+      import numpy as np
+      from sklearn.decomposition import PCA
+      from sklearn.preprocessing import StandardScaler
+
+      def n_componentes(X, umbral):
+          Xs = StandardScaler().fit_transform(X)
+          acum = np.cumsum(PCA().fit(Xs).explained_variance_ratio_)
+          return int(np.searchsorted(acum, umbral - 1e-12) + 1)
+
+  - id: i1-rfm
+    titulo: Tabla RFM de clientes
+    nivel: Avanzado
+    paquetes: [pandas]
+    setup: |
+      import pandas as pd
+      pedidos = pd.DataFrame({
+          "cliente": ["ana", "luis", "ana", "marta", "ana", "pedro", "luis", "marta", "sofia"],
+          "fecha": pd.to_datetime(["2026-01-05", "2026-01-18", "2026-02-14", "2026-02-20", "2026-03-15",
+                                    "2026-03-20", "2026-03-28", "2026-03-29", "2026-03-30"]),
+          "importe": [39.0, 30.0, 63.0, 45.0, 67.5, 120.0, 18.0, 55.0, 25.0],
+      })
+      hoy = pd.Timestamp("2026-04-01")
+    enunciado: |
+      El análisis **RFM** describe a cada cliente con tres números: *Recency* (días desde su última compra), *Frequency*
+      (número de pedidos) y *Monetary* (gasto total). Es la entrada típica de una segmentación con k-means.
+
+      Escribe `rfm(pedidos, hoy)` que devuelva un `DataFrame` indexado por `cliente`, con las columnas
+      `recencia`, `frecuencia` y `gasto` (en ese orden), **ordenado por `cliente` alfabéticamente**.
+    inicial: |
+      def rfm(pedidos, hoy):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "list(rfm(pedidos, hoy).columns)", esperado: "['recencia', 'frecuencia', 'gasto']"}
+      - {expr: "list(rfm(pedidos, hoy).index)", esperado: "['ana', 'luis', 'marta', 'pedro', 'sofia']"}
+      - {expr: "rfm(pedidos, hoy)['recencia'].tolist()", esperado: "[17, 4, 3, 12, 2]", nombre: "Recencia en días"}
+      - {expr: "rfm(pedidos, hoy)['frecuencia'].tolist()", esperado: "[3, 2, 2, 1, 1]"}
+      - {expr: "rfm(pedidos, hoy)['gasto'].tolist()", esperado: "[169.5, 48.0, 100.0, 120.0, 25.0]", tol: 0.000001}
+    pistas:
+      - "Agrupa por cliente y calcula tres agregados distintos a la vez: la última fecha (`max`), el número de pedidos (`count`) y la suma del importe."
+      - "`pedidos.groupby('cliente').agg(ultima=('fecha', 'max'), frecuencia=('fecha', 'count'), gasto=('importe', 'sum'))`. La recencia sale de `(hoy - ultima).dt.days`."
+      - "Crea la columna `recencia` con `.dt.days`, quédate con `['recencia', 'frecuencia', 'gasto']` y el `groupby` ya deja el índice ordenado por cliente."
+    solucion: |
+      def rfm(pedidos, hoy):
+          t = pedidos.groupby("cliente").agg(
+              ultima=("fecha", "max"),
+              frecuencia=("fecha", "count"),
+              gasto=("importe", "sum"),
+          )
+          t["recencia"] = (hoy - t["ultima"]).dt.days
+          return t[["recencia", "frecuencia", "gasto"]].sort_index()

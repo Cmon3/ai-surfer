@@ -30,3 +30,20 @@ jupyterlab>=4.0
 ipykernel>=6.29
 nbconvert>=7.14
 nbformat>=5.9
+
+# Cloud simulado (CL1)
+boto3>=1.34
+moto>=5.0
+
+# Agentes y MCP (AI10). mcp 2.x: FastMCP pasa a llamarse MCPServer
+mcp>=2,<3
+opentelemetry-sdk>=1.25
+
+# RAG con base vectorial local (AI3)
+sqlite-vec>=0.1.6
+
+# Datos a escala y comunicación (DS7, DS8)
+duckdb>=1.1
+polars>=1.0
+plotly>=5.20
+dbt-duckdb>=1.8

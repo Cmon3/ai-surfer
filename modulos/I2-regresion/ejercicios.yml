@@ -1,0 +1,241 @@
+# Ejercicios de código de I2 · Regresión y predicción.
+intro: |
+  Cinco ejercicios sobre **predecir ventas** de TiendaSur: mínimos cuadrados a mano, R², variables categóricas,
+  validación cruzada para detectar sobreajuste y Lasso para seleccionar variables. La primera ejecución descarga
+  scikit-learn (unos segundos).
+
+ejercicios:
+  - id: i2-minimos-cuadrados
+    titulo: La recta de mínimos cuadrados a mano
+    nivel: Básico
+    paquetes: [numpy]
+    enunciado: |
+      Antes de usar `LinearRegression`, calcula la recta tú mismo. Escribe `ajustar_recta(x, y)` que devuelva la tupla
+      `(pendiente, intercepto)` de la recta de mínimos cuadrados `y = intercepto + pendiente · x`, con las fórmulas:
+
+      `pendiente = Σ (xᵢ − x̄)(yᵢ − ȳ) / Σ (xᵢ − x̄)²` &nbsp;&nbsp; e &nbsp;&nbsp; `intercepto = ȳ − pendiente · x̄`
+
+      Sin usar `np.polyfit` ni scikit-learn.
+    inicial: |
+      import numpy as np
+
+      def ajustar_recta(x, y):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "ajustar_recta([1, 2, 3, 4], [3, 5, 7, 9])", esperado: "(2.0, 1.0)", tol: 0.000001, nombre: "Datos exactos: y = 1 + 2x"}
+      - {expr: "ajustar_recta([0, 1, 2, 3, 4], [1, 3, 2, 5, 4])", esperado: "(0.8, 1.4)", tol: 0.000001}
+      - asserts: |
+          import numpy as np
+          rng = np.random.default_rng(5)
+          x = rng.uniform(0, 10, 50)
+          y = 4 - 1.5 * x + rng.normal(0, 1, 50)
+          b, a = ajustar_recta(x, y)
+          b2, a2 = np.polyfit(x, y, 1)
+          assert abs(b - b2) < 1e-9 and abs(a - a2) < 1e-9, f"difiere de polyfit: ({b:.4f}, {a:.4f}) vs ({b2:.4f}, {a2:.4f})"
+        nombre: "Coincide con np.polyfit en datos con ruido"
+    pistas:
+      - "Calcula primero las medias de `x` e `y`. La pendiente es un cociente de dos sumas; el intercepto sale de la pendiente y las medias."
+      - "Numerador: `np.sum((x - xm) * (y - ym))`. Denominador: `np.sum((x - xm) ** 2)`. Trabaja con arrays de NumPy para operar sin bucles."
+      - "`b = np.sum((x - xm) * (y - ym)) / np.sum((x - xm) ** 2)`; `a = ym - b * xm`; `return (float(b), float(a))`."
+    solucion: |
+      import numpy as np
+
+      def ajustar_recta(x, y):
+          x = np.asarray(x, dtype=float)
+          y = np.asarray(y, dtype=float)
+          xm, ym = x.mean(), y.mean()
+          b = np.sum((x - xm) * (y - ym)) / np.sum((x - xm) ** 2)
+          a = ym - b * xm
+          return (float(b), float(a))
+
+  - id: i2-r2
+    titulo: Calcular R² a mano
+    nivel: Básico
+    paquetes: [numpy]
+    enunciado: |
+      El coeficiente de determinación mide qué fracción de la variabilidad de `y` explica el modelo:
+
+      `R² = 1 − SC_res / SC_tot`, con `SC_res = Σ (yᵢ − ŷᵢ)²` y `SC_tot = Σ (yᵢ − ȳ)²`.
+
+      Escribe `r2(y, y_pred)`. Un modelo que predice siempre la media da `R² = 0`; uno peor que eso da un valor **negativo**.
+    inicial: |
+      import numpy as np
+
+      def r2(y, y_pred):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "r2([1, 2, 3, 4], [1, 2, 3, 4])", esperado: "1.0", tol: 0.000001, nombre: "Predicción perfecta"}
+      - {expr: "r2([1, 2, 3, 4], [2.5, 2.5, 2.5, 2.5])", esperado: "0.0", tol: 0.000001, nombre: "Predecir siempre la media da 0"}
+      - {expr: "r2([3, 5, 7, 9], [2.5, 5.5, 6.5, 9.5])", esperado: "0.95", tol: 0.000001}
+      - {expr: "r2([1, 2, 3, 4], [4, 3, 2, 1])", esperado: "-3.0", tol: 0.000001, nombre: "Peor que la media: R² negativo", oculto: true}
+    pistas:
+      - "Hay dos sumas de cuadrados: la de los errores del modelo y la de las desviaciones de `y` respecto a su media."
+      - "`sc_res = np.sum((y - y_pred) ** 2)` y `sc_tot = np.sum((y - y.mean()) ** 2)`. Convierte las entradas a arrays para restar elemento a elemento."
+      - "`return float(1 - sc_res / sc_tot)`."
+    solucion: |
+      import numpy as np
+
+      def r2(y, y_pred):
+          y = np.asarray(y, dtype=float)
+          y_pred = np.asarray(y_pred, dtype=float)
+          sc_res = np.sum((y - y_pred) ** 2)
+          sc_tot = np.sum((y - y.mean()) ** 2)
+          return float(1 - sc_res / sc_tot)
+
+  - id: i2-categoricas
+    titulo: Efecto de una variable categórica
+    nivel: Intermedio
+    paquetes: [pandas, scikit-learn]
+    setup: |
+      import numpy as np
+      import pandas as pd
+      rng = np.random.default_rng(3)
+      n = 120
+      tiendas = pd.DataFrame({
+          "metros": rng.uniform(40, 200, n).round(0),
+          "ciudad": rng.choice(["Sevilla", "Cádiz", "Málaga"], n),
+      })
+      # Ventas diarias (€): 150 base + 12 por m² + 300 extra en Málaga + 80 extra en Cádiz (sin ruido)
+      tiendas["ventas"] = (150 + 12 * tiendas["metros"]
+                           + 300 * (tiendas["ciudad"] == "Málaga")
+                           + 80 * (tiendas["ciudad"] == "Cádiz"))
+    enunciado: |
+      `tiendas` tiene `metros`, `ciudad` y `ventas`. Las ventas dependen de los metros y de la ciudad, y queremos el
+      **efecto de estar en Málaga** «a igualdad de metros».
+
+      Escribe `efecto_malaga(df)`: crea variables ficticias (*dummies*) de `ciudad` con `pd.get_dummies(..., drop_first=True)`
+      (se elimina la **primera categoría por orden alfabético**, que pasa a ser la categoría de referencia), ajusta
+      `LinearRegression` sobre `metros` + dummies y devuelve el **coeficiente de Málaga**.
+
+      Pregúntate: ¿respecto a qué ciudad se interpreta ese coeficiente? Los tests te lo confirmarán.
+    inicial: |
+      import pandas as pd
+      from sklearn.linear_model import LinearRegression
+
+      def efecto_malaga(df):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "efecto_malaga(tiendas)", esperado: "220.0", tol: 0.001, nombre: "Málaga frente a la categoría de referencia (Cádiz): 300 − 80 = 220"}
+      - asserts: |
+          import pandas as pd
+          t2 = tiendas.copy()
+          t2["ventas"] = 100 + 5 * t2["metros"] + 50 * (t2["ciudad"] == "Málaga")
+          assert abs(efecto_malaga(t2) - 50) < 0.001
+        nombre: "Si Sevilla y Cádiz se comportan igual, el efecto de Málaga es el que se ha puesto (50)"
+        oculto: true
+    pistas:
+      - "`pd.get_dummies(df['ciudad'], drop_first=True)` crea una columna por categoría salvo la primera alfabética, que queda como referencia: ahí está la clave de la interpretación."
+      - "Une `metros` con las dummies (conviértelas a número con `dtype=float`), ajusta el modelo y busca el coeficiente de la columna `Málaga`."
+      - "`X = pd.concat([df[['metros']], pd.get_dummies(df['ciudad'], drop_first=True, dtype=float)], axis=1)`; `m = LinearRegression().fit(X, df['ventas'])`; `dict(zip(X.columns, m.coef_))['Málaga']`. Ojo: sklearn exige nombres de columna de tipo texto."
+    solucion: |
+      import pandas as pd
+      from sklearn.linear_model import LinearRegression
+
+      def efecto_malaga(df):
+          X = pd.concat([df[["metros"]], pd.get_dummies(df["ciudad"], drop_first=True, dtype=float)], axis=1)
+          X.columns = X.columns.astype(str)
+          m = LinearRegression().fit(X, df["ventas"])
+          return float(dict(zip(X.columns, m.coef_))["Málaga"])
+
+  - id: i2-validacion-cruzada
+    titulo: Detectar el sobreajuste con validación cruzada
+    nivel: Intermedio
+    paquetes: [numpy, scikit-learn]
+    setup: |
+      import numpy as np
+      rng = np.random.default_rng(1)
+      x = np.sort(rng.uniform(0, 10, 20))     # solo 20 tiendas: pocos datos para tanta flexibilidad
+      y = 3 + 2 * x + rng.normal(0, 2.0, 20)     # relación lineal + ruido
+      X = x.reshape(-1, 1)
+    enunciado: |
+      Un polinomio de grado alto se ajusta de maravilla a los datos de entrenamiento y falla con datos nuevos. Escribe
+      `rmse_cv(X, y, grado, k=5)`, que devuelva el **RMSE medio en validación cruzada** de una regresión polinómica del grado dado:
+
+      - Un `Pipeline` con `PolynomialFeatures(grado)`, `StandardScaler()` y `LinearRegression()`.
+      - `KFold(n_splits=k, shuffle=True, random_state=0)`.
+      - `cross_val_score` con `scoring="neg_root_mean_squared_error"` (devuelve valores **negativos**: cambia el signo).
+
+      Con ello comprobarás que el error de validación de un polinomio de grado 15 es mucho peor que el de la recta.
+    inicial: |
+      import numpy as np
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+      from sklearn.linear_model import LinearRegression
+      from sklearn.model_selection import KFold, cross_val_score
+
+      def rmse_cv(X, y, grado, k=5):
+          # tu código aquí
+          pass
+    tests:
+      - asserts: |
+          r1 = rmse_cv(X, y, 1)
+          assert 1.5 < r1 < 3.0, f"el RMSE de la recta debería rondar la desviación del ruido (2), no {r1:.2f}"
+        nombre: "La recta tiene un error cercano al del ruido (σ = 2)"
+      - asserts: |
+          assert rmse_cv(X, y, 15) > 2 * rmse_cv(X, y, 1), "el grado 15 debe empeorar claramente en validación"
+        nombre: "El grado 15 sobreajusta: su error de validación es más del doble"
+      - asserts: |
+          assert rmse_cv(X, y, 2) > 0, "el RMSE es positivo (cambia el signo de neg_root_mean_squared_error)"
+        nombre: "Devuelve un RMSE positivo"
+    pistas:
+      - "El flujo es: construir el modelo (pipeline), definir los pliegues y delegar en `cross_val_score`. Esa función devuelve una puntuación por pliegue."
+      - "Con `scoring='neg_root_mean_squared_error'` scikit-learn devuelve el error con signo negativo (porque «más es mejor»). Haz la media y cambia el signo."
+      - "`modelo = make_pipeline(PolynomialFeatures(grado), StandardScaler(), LinearRegression())`; `cv = KFold(k, shuffle=True, random_state=0)`; `return float(-cross_val_score(modelo, X, y, cv=cv, scoring='neg_root_mean_squared_error').mean())`."
+    solucion: |
+      import numpy as np
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+      from sklearn.linear_model import LinearRegression
+      from sklearn.model_selection import KFold, cross_val_score
+
+      def rmse_cv(X, y, grado, k=5):
+          modelo = make_pipeline(PolynomialFeatures(grado), StandardScaler(), LinearRegression())
+          cv = KFold(n_splits=k, shuffle=True, random_state=0)
+          puntuaciones = cross_val_score(modelo, X, y, cv=cv, scoring="neg_root_mean_squared_error")
+          return float(-puntuaciones.mean())
+
+  - id: i2-lasso
+    titulo: Lasso como selector de variables
+    nivel: Avanzado
+    paquetes: [numpy, scikit-learn]
+    setup: |
+      import numpy as np
+      rng = np.random.default_rng(11)
+      n, p = 200, 10
+      X = rng.normal(size=(n, p))
+      # Solo las variables 0 y 3 influyen en las ventas; las otras 8 son ruido
+      y = 5 * X[:, 0] - 3 * X[:, 3] + rng.normal(0, 1, n)
+    enunciado: |
+      Con 10 variables candidatas, Lasso (regularización L1) lleva a **cero exacto** los coeficientes de las que no aportan.
+      Escribe `variables_seleccionadas(X, y, alfa)`: estandariza `X` con `StandardScaler`, ajusta
+      `Lasso(alpha=alfa)` y devuelve la **lista de índices de columnas con coeficiente distinto de cero**, en orden creciente.
+
+      Prueba con `alfa=0.3` y observa qué ocurre con `alfa` muy pequeño (casi sin regularizar) y muy grande.
+    inicial: |
+      import numpy as np
+      from sklearn.linear_model import Lasso
+      from sklearn.preprocessing import StandardScaler
+
+      def variables_seleccionadas(X, y, alfa):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "variables_seleccionadas(X, y, 0.3)", esperado: "[0, 3]", nombre: "Con α = 0.3 sobreviven solo las dos variables reales"}
+      - {expr: "variables_seleccionadas(X, y, 100)", esperado: "[]", nombre: "Con α enorme, todos los coeficientes se anulan"}
+      - {expr: "len(variables_seleccionadas(X, y, 0.0001)) >= 9", esperado: "True", nombre: "Con α casi 0, entra casi todo el ruido", oculto: true}
+    pistas:
+      - "Lasso penaliza el valor absoluto de los coeficientes, así que conviene que todas las variables estén en la misma escala: por eso `StandardScaler`."
+      - "Tras `.fit`, el atributo `coef_` tiene un coeficiente por columna. Quédate con las posiciones donde no sea cero."
+      - "`np.flatnonzero(modelo.coef_)` devuelve esas posiciones como array; conviértelo con `.tolist()`."
+    solucion: |
+      import numpy as np
+      from sklearn.linear_model import Lasso
+      from sklearn.preprocessing import StandardScaler
+
+      def variables_seleccionadas(X, y, alfa):
+          Xs = StandardScaler().fit_transform(X)
+          modelo = Lasso(alpha=alfa).fit(Xs, y)
+          return np.flatnonzero(modelo.coef_).tolist()
