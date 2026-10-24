@@ -28,6 +28,14 @@ navegador ──POST /api/chat (JSON)──▶ route handler (servidor)
 | `MODO_SIMULADO` | No | `true` fuerza el modo simulado aunque haya clave. |
 
 ## Despliegue (Vercel)
+
+> ⚠️ **Antes de poner tu clave en un despliegue público:** esta app no tiene autenticación ni límite de peticiones. Cualquiera que encuentre la URL puede usar `/api/chat` con **tu** saldo. Haz al menos una de estas cosas:
+> 1. Pon un **límite de gasto** bajo a la clave en la consola de Anthropic (o crea una clave solo para esta demo).
+> 2. Activa la **protección del despliegue** de la plataforma (en Vercel: *Settings → Deployment Protection*), para que solo tú y quien invites podáis abrirla.
+> 3. Para una demo pública en tu portafolio, despliega en **modo simulado** (`MODO_SIMULADO=true`, sin clave) y muestra la versión real en un vídeo.
+>
+> Y bórrala o rota la clave cuando termines.
+
 1. Sube el repositorio a GitHub (sin `.env*`; ya está en `.gitignore`).
 2. En Vercel: *Add New Project* -> importa el repo -> *Root Directory*: `modulos/FS1-fullstack/app-solucion` (o la carpeta de tu repo).
 3. *Settings -> Environment Variables*: añade `ANTHROPIC_API_KEY` (entornos Production y Preview; **sin** prefijo `NEXT_PUBLIC_`, que expondría la variable al navegador).

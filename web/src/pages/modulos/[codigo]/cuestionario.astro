@@ -25,7 +25,7 @@ const config = quiz ? { clave: `cuestionario:${m.codigo}`, correctas: quiz.map((
     <h1>Cuestionario · {m.codigo}</h1>
     {quiz ? (
       <>
-        <script type="application/json" id="cq-config" set:html={JSON.stringify(config)} />
+        <script type="application/json" id="cq-config" set:html={JSON.stringify(config).replace(/</g, "\\u003c")} />
         <div class="cq-resumen">
           <span data-cq-resumen></span>
           <button class="ej-btn" type="button" data-cq-reintentar hidden>Volver a empezar</button>
