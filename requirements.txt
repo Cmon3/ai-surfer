@@ -51,3 +51,6 @@ dbt-duckdb>=1.8
 # Estadística bayesiana (DS3). Los notebooks usan la API de ArviZ 1.x
 pymc>=6
 arviz>=1
+
+# Tokenizer real en AI5 (opcional: sin él, el notebook usa caracteres)
+tokenizers>=0.20
