@@ -35,3 +35,11 @@ Duración de cada vídeo en el README; las diapositivas van con Marp y se regene
 - [4–9] Secciones, semillas, nombres y Clear outputs.
 - [9–16] Cuándo NO a notebook (scripts/py modular) — anticipación a I8.
 - [16–20] Cierre del módulo y presentación del proyecto N1.
+
+## 5.7 · Tu primer día con un agente de código (15 min)
+- [0–2] Gancho: la oferta de Galadrim pide «Cursor o Claude Code con fluidez». Pregunta: ¿qué diferencia a quien lo usa bien de quien «le pide cosas y reza»? Respuesta: la estructura del proyecto.
+- [2–5] Qué es un agente (lee, edita, ejecuta en bucle) frente a un chat. Ejemplo real de Claude Code en terminal sobre `analisis-tiendas`.
+- [5–8] `AGENTS.md`/`CLAUDE.md`: abrir el del notebook, leerlo línea a línea y explicar por qué cada regla existe.
+- [8–12] Demo en el notebook: test que falla, petición pequeña, `git diff`, tests en verde. Después el agente «tramposo»: borra aserciones y deja una clave; `revisar_diff` lo detecta; `git checkout` lo deshace.
+- [12–15] Permisos mínimos, rama, `.env` en `.gitignore`, clave filtrada = clave revocada. Cierre: «tú firmas el commit».
+

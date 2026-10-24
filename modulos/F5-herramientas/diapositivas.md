@@ -120,6 +120,16 @@ pip install -r requirements.txt
 
 ---
 
+# 5.7 · Tu primer día con un agente de código
+
+- Un agente **lee, edita y ejecuta** sobre tu repo: Git y la terminal son tu red de seguridad
+- `AGENTS.md` / `CLAUDE.md`: comandos + reglas que no se rompen
+- **Test primero** (falla) → petición pequeña → `git diff` → tests en verde
+- Permisos mínimos · rama · sin secretos (clave en el historial = clave revocada)
+- Tú firmas el commit: si no sabes explicarlo, no lo aceptes
+
+---
+
 <!-- _class: lead -->
 # Resumen
 

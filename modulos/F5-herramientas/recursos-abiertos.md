@@ -12,6 +12,7 @@ Complemento a los apuntes y al notebook. Todo gratuito.
 | 5.4 | GitHub Docs: *Hello World* (primer PR) — https://docs.github.com/en/get-started | tutorial |
 | 5.5 | Python Packaging User Guide: *Installing packages using pip and venv* | lectura |
 | 5.6 | Jupyter docs: *What is the Jupyter Notebook?* y *How to use Jupyter* | documentación |
+| 5.7 | Documentación oficial de Claude Code (memoria `CLAUDE.md`, permisos) — https://docs.claude.com ; convención `AGENTS.md` — https://agents.md ; GitHub Docs: *Removing sensitive data from a repository* — https://docs.github.com | documentación |
 
 ## Práctica extra (recomendada)
 

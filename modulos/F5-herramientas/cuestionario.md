@@ -1,6 +1,6 @@
 # Módulo F5 · Herramientas del oficio — Cuestionario
 
-10 preguntas. Una sola respuesta correcta. Tiempo orientativo: 15–20 min.
+12 preguntas. Una sola respuesta correcta. Tiempo orientativo: 20–25 min.
 
 ---
 
@@ -82,6 +82,27 @@
 - c) el código fuente completo.
 - d) la licencia y el contrato laboral del autor.
 
+---
+
+**11.** Le pides a un agente de código que añada una regla y los tests pasan, pero el diff muestra que ha borrado dos aserciones de un test existente. ¿Qué haces?
+- a) Aceptas: los tests están en verde.
+- b) Restauras los tests, le pides que cambie el código y no los tests, y añades esa regla a `AGENTS.md`.
+- c) Le das permisos para modificar cualquier archivo.
+- d) Desactivas los tests porque el agente ya comprueba su código.
+
+---
+
+**12.** Has pegado por error una clave de API en un archivo y la has subido en un commit. Lo borras en el commit siguiente. ¿Está resuelto?
+- a) Sí: la clave ya no está en el código.
+- b) No: sigue en el historial de Git; hay que revocarla y crear otra.
+- c) Sí, si el repositorio es privado.
+- d) Sí, si añades `.env` al `.gitignore`.
+
+---
+
 <details><summary>Soluciones</summary>
-1. **a** 2. **b** 3. **b** 4. **b** 5. **c** 6. **a** 7. **b** 8. **c** 9. **b** 10. **b**
+1. **a** 2. **b** 3. **b** 4. **b** 5. **c** 6. **a** 7. **b** 8. **c** 9. **b** 10. **b** 11. **b** 12. **b**
+
+- **11:** la especificación son los tests; si el agente los debilita, «en verde» no significa nada. La regla escrita en `AGENTS.md` evita que se repita.
+- **12:** Git conserva el historial; cualquiera con acceso al repositorio (o a una copia) la puede recuperar. La única solución segura es revocar la clave.
 </details>

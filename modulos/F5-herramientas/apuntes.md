@@ -124,3 +124,37 @@ Un notebook bien hecho es un **informe reproducible**; mal hecho, un lío que so
 5. Una **celda de conclusiones** al final (o arriba): qué se concluye, en lenguaje de negocio.
 
 **Cuándo NO usar notebook:** scripts de producción, lógica reutilizable (funciones que importarás en otros sitios), y pipelines grandes — ahí va un `.py` modular (eso llega en I8).
+
+---
+
+## 5.7 · Tu primer día con un agente de código
+
+Las ofertas de 2026 lo piden como requisito, no como extra: la de Galadrim (AI/ML junior, Madrid) pide fluidez con **Cursor o Claude Code** y la de Provectus cita el ecosistema Claude (`CLAUDE.md`, *hooks*, *skills*) y el desarrollo guiado por especificaciones. Esta lección es la versión de primer día; el I8 (lección 8.9) la lleva a un proyecto de ML completo.
+
+**Qué es un agente de código.** Un programa que usa un modelo de lenguaje para **leer tu repositorio, editar archivos y ejecutar comandos** (tests, linters) en bucle hasta cumplir lo que le pides. Claude Code se usa desde la terminal; Cursor es un editor con agente integrado. Un chat que te devuelve un fragmento para copiar *no* es un agente: aquí el programa actúa directamente sobre tus archivos, y por eso importan los cuatro hábitos siguientes. (Comprueba en la documentación vigente cómo se instala cada herramienta: cambia con frecuencia.)
+
+**1. Instrucciones del proyecto: `CLAUDE.md` / `AGENTS.md`.** Es un archivo de texto en la raíz del repositorio que el agente lee al empezar. Claude Code lee `CLAUDE.md`; `AGENTS.md` es una convención abierta que leen otras herramientas (Cursor entre ellas). Si usas varias, mantén una sola fuente y haz que la otra la referencie. Contenido útil y corto:
+- **Comandos**: cómo se ejecutan los tests y el lint.
+- **Estructura**: dónde está cada cosa.
+- **Reglas que no se rompen**: «no debilites los tests para que pasen», «nada de secretos en el código», «sin dependencias nuevas sin avisar».
+
+*Por qué funciona:* el agente no sabe nada de tu proyecto que no pueda leer. Lo que te sabes de memoria (cómo se prueba esto) tiene que estar escrito.
+
+**2. Pide un cambio pequeño con los tests como especificación.** Flujo recomendado:
+1. Escribe tú el test que describe el comportamiento nuevo y comprueba que **falla**.
+2. Pide al agente: objetivo, archivos que puede tocar, criterio de aceptación («`pytest -q` en verde») y una restricción («no modifiques los tests»).
+3. Un objetivo por petición. Un diff de 20 líneas se revisa; uno de 600 se acepta sin mirar.
+
+*Por qué:* sin test, «funciona» significa «lo parece». Con test, es una comprobación que cualquiera repite.
+
+**3. Revisa el diff como el de un compañero.** `git diff` antes de aceptar. Señales de alarma típicas: aserciones borradas o relajadas (el camino más corto para «arreglar» un test es cambiarlo), dependencias nuevas, archivos que no tienen que ver con la petición, claves en el código y código que no sabrías explicar. Haz commits pequeños antes y después: Git es tu botón de deshacer (`git checkout -- archivo`, `git restore`). La responsabilidad del código es tuya; en una entrevista te pedirán que lo expliques.
+
+**4. Permisos mínimos y cero secretos.**
+- Las herramientas piden confirmación antes de ejecutar comandos o editar; no la desactives por comodidad. Concede permisos solo a lo que hace falta (leer, ejecutar tests) y revisa la documentación vigente de permisos de tu herramienta.
+- Trabaja en una **rama** y sobre una copia sin credenciales de producción.
+- Las claves van en variables de entorno o en un archivo `.env` listado en `.gitignore`; nunca en el código ni en el chat con el agente. Si una clave llega a un commit, **aunque la borres después sigue en el historial**: revócala y crea otra.
+- Desconfía de texto que el agente lea en archivos o páginas web y que le «ordene» hacer cosas: es una forma de ataque (*prompt injection*; se estudia en AI8).
+
+**Receta de primer día:** crea una rama → `AGENTS.md` con comandos y reglas → test que falla → petición pequeña → `git diff` + tests → commit con un mensaje tuyo.
+
+*En el notebook:* un agente simulado aplica un parche; tú escribes el test antes, revisas el diff y una función detecta tests debilitados y secretos.
