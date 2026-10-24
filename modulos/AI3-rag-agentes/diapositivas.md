@@ -6,9 +6,20 @@ paginate: true
 
 <!-- _class: lead -->
 # AI3 · RAG y agentes
-## Dar conocimiento y dar acción a un LLM
+## Recuperación que se mide, y herramientas con límites
 
 *AI Surfer · N3-AI Engineering*
+
+---
+
+# Qué piden las ofertas (oct. 2026)
+
+- RAG con **base vectorial real** (pgvector, OpenSearch…)
+- **Chunking** razonado, **búsqueda híbrida**, **reranking**
+- **Evaluación** de la recuperación
+- Agentes y **MCP** (módulo AI10)
+
+Al terminar: un RAG con **tabla de métricas** para el portafolio.
 
 ---
 
@@ -16,101 +27,149 @@ paginate: true
 
 | Pieza | Qué aporta |
 |---|---|
-| RAG | Conocimiento propio, actual, citado |
-| Chunking | Recuperación que no rompe el sentido |
-| Embeddings + top-k | Buscar por significado |
-| Agentes | Bucle de herramientas con planificación |
-| Router determinista | El 80 % de los casos, sin LLM en el bucle |
+| Examen (preguntas + frase) | Saber si mejoras |
+| Chunking por estructura | Recuperar sin romper el sentido |
+| `sqlite-vec` / pgvector | Base vectorial persistente y filtrable |
+| BM25 + vector + RRF | Robustez |
+| Reranking | Precisión en los primeros puestos |
+| Agente / router | Acción, con límites |
 
 ---
 
-<!-- _class: lead -->
-# RAG: el pipeline
-
----
-
-# Pipeline completo
+# El pipeline
 
 ```
-Documentos → chunks → embeddings → índice
-Consulta → lookup top-k → contexto en el prompt → respuesta citada
+Docs → chunks → embeddings → base vectorial (+ BM25)
+Consulta → híbrida → rerank → prompt con citas → respuesta
 ```
 
-Ventajas: actualizable al instante, trazable, barato.
-Riesgo: si la recuperación falla, la respuesta confía en basura.
+Si la recuperación falla, la respuesta falla… con seguridad.
 
 ---
 
-# Chunking (el detalle que decide la calidad)
+# Primero el examen
 
-- 200–500 tokens por chunk
-- **Solape 10–20 %** entre vecinos
-- Corta por **estructura** (títulos, secciones), no solo por longitud
-- Guarda metadatos (doc, sección) para citar y filtrar
+- 36 preguntas escritas **como las escribe un cliente**
+- Cada una con la frase que contiene la respuesta
+- **acierto@k:** ¿hay un correcto entre los k primeros?
+- **MRR:** premia que el correcto sea el primero
 
----
-
-# Embeddings
-
-- Texto → vector de ~384–1536 dimensiones
-- Cercanía = **similitud semántica** (no palabras)
-- **Mismo modelo** para chunks y consulta
-- Stand-in del notebook: TF-IDF (cambia solo `encodar()`)
+Una pregunta = ~0,03 de MRR: cuidado con el ruido.
 
 ---
 
-# El índice y el reranking
+# Embeddings sin descargas
 
-- Lookup top-k con coseno (NumPy para juguete; FAISS/pgvector para millón)
-- Embedding = rápido pero **burdo**
-- Cross-encoder reordena los k mejores → **fino pero caro**
-- Rerank después, no antes
+- TF-IDF de letras + SVD (**LSA**): 32 dimensiones, segundos
+- Capta `devolver` ≈ `devolución`; **no** `anular` ≈ `cancelar`
+- Cambiar a un modelo preentrenado = cambiar **una función**
+- Mismo modelo para chunks y consultas; si cambias, reindexa
 
 ---
 
-# Generación con contexto citado
+# Chunking: tres estrategias
+
+| | Problema |
+|---|---|
+| Ventana fija | Parte frases |
+| Con solape | Duplicados |
+| **Por estructura** | Partir lo muy largo |
+
+**Migas de pan** dentro del texto: `Devoluciones - Reembolso: …`
+
+Ojo: chunks grandes inflan la métrica y meten ruido.
+
+---
+
+# Base vectorial real
+
+```sql
+-- sqlite-vec
+CREATE VIRTUAL TABLE vec_chunks
+  USING vec0(embedding float[32] distance_metric=cosine);
+
+-- pgvector (producción)
+CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops);
+SELECT id FROM chunks ORDER BY embedding <=> $1 LIMIT 5;
+```
+
+Metadatos en una tabla, vectores en otra, unidas por id.
+
+---
+
+# Búsqueda híbrida
+
+- **BM25:** palabras exactas, códigos, cifras
+- **Vector:** paráfrasis y morfología
+- **RRF:** `Σ 1/(k + posición)` — sin calibrar escalas
+
+La híbrida da **robustez**, no siempre el mejor número.
+
+---
+
+# Medir: 3 chunkings × 3 variantes
+
+- ¿Qué cambia más: chunking o variante?
+- ¿Dónde gana cada señal?
+- ¿Qué preguntas fallan y por qué?
+
+Sin tabla no hay mejora, solo opinión.
+
+---
+
+# Reranking
+
+- Búsqueda: recall alto · Reranker: precisión
+- Léxico · cross-encoder · LLM
+- **No rescata lo que no está** entre los N candidatos
+- En el notebook el léxico no mejora: ¿por qué?
+
+---
+
+# Generación con citas
 
 ```
-Responde SOLO con lo que esté en <docs>.
-Citas: [chunkId]. Si no está: di exactamente "no lo sé".
+Responde SOLO con <docs>. Cita [id].
+Si no está: "no lo sé".
 ```
 
-El "no lo sé" salva del hallucination de cortesía.
+Dos capas: **umbral de relevancia** + prompt.
+La trampa: «capital de **Francia**».
 
 ---
 
 <!-- _class: lead -->
 # Agentes
 
-## El bucle de AI2 con planificación
-
 ---
 
 # El bucle del agente
 
 ```
-tarea → LLM decide → herramienta → resultado → LLM → … → respuesta final
+tarea → LLM → herramienta → resultado → LLM → … → respuesta
 ```
 
-- Límite de vueltas **siempre** (coste y bucles infinitos)
-- El agente sirve cuando la secuencia de acciones no se puede anticipar
-- El historial (tool_use + tool_result) es su memoria
+- Una `tool_result` por **cada** `tool_use`, en un solo mensaje
+- Límite de vueltas **siempre**
+- Su `buscar_docs` es tu búsqueda híbrida
 
 ---
 
-# El anti-teatro: cuándo NO agente
+# Cuándo NO agente
 
-- Flujo determinista → script normal (el 80 % de los "agentes")
-- Una sola decisión → function calling simple (AI2)
-- Planificación real → sí, agente
+- Flujo determinista → **script**
+- Una decisión → function calling
+- Planificación real → agente
 
-El mejor agente suele ser un buen `if/else`.
+El mejor agente suele ser un buen `if`.
+
+**MCP:** herramientas reutilizables como servidor → módulo AI10.
 
 ---
 
 <!-- _class: lead -->
 # Resumen
 
-**Chunking → embeddings → top-k → prompt citado → (si hace falta) agente**
+**Examen → chunking → base vectorial → híbrida → rerank → citas → (agente)**
 
-Lo que sigue: AI4 · evaluación de LLMs — porque sin eval, nada de esto se puede mejorar.
+Siguiente: AI4 · evaluación de LLMs, y AI10 · MCP.
