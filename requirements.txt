@@ -47,3 +47,7 @@ duckdb>=1.1
 polars>=1.0
 plotly>=5.20
 dbt-duckdb>=1.8
+
+# Estadística bayesiana (DS3). Los notebooks usan la API de ArviZ 1.x
+pymc>=6
+arviz>=1
