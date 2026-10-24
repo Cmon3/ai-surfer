@@ -11,7 +11,7 @@ Complemento a los apuntes y al notebook. Todo gratuito salvo que se indique (com
 | 8.2 | Kohavi, Tang y Xu: *Trustworthy Online Controlled Experiments* (de pago; capítulos sobre métricas y guardarraíles) — https://experimentguide.com/ | libro |
 | 8.3 | Storytelling with Data: blog y *Learn* — https://www.storytellingwithdata.com/ | blog |
 | 8.4 | Claus O. Wilke: *Fundamentals of Data Visualization* — https://clauswilke.com/dataviz/ | libro en línea |
-| 8.4 | Calling Bullshit: *Misleading axes* y *Data visualization* — https://callingbullshit.org/tools_visualization.html | curso abierto |
+| 8.4 | Calling Bullshit: *Misleading axes* y *Data visualization* — https://callingbullshit.org/tools/tools_misleading_axes.html | curso abierto |
 | 8.4 | From Data to Viz: árbol de decisión de gráficos y «caveats» — https://www.data-to-viz.com/ | guía |
 | 8.5 | Plotly: *Python graphing library* (subplots e indicadores) — https://plotly.com/python/ | documentación |
 | 8.5 | Matplotlib: *Tutorials* — https://matplotlib.org/stable/tutorials/index.html | documentación |

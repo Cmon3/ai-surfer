@@ -12,7 +12,7 @@ Complemento a los apuntes y a la app. Todo gratuito. Comprueba la licencia de ca
 | FS1.3 | *Learn Next.js* y documentación del App Router — https://nextjs.org/learn | tutorial |
 | FS1.3 | Next.js: *Route Handlers* — https://nextjs.org/docs/app/building-your-application/routing/route-handlers | documentación |
 | FS1.4 | Documentación de Anthropic: *Streaming Messages* — https://docs.claude.com | documentación |
-| FS1.4 | MDN: *Streams API* y `ReadableStream` — https://developer.mozilla.org/es/docs/Web/API/Streams_API | documentación |
+| FS1.4 | MDN: *Streams API* y `ReadableStream` — https://developer.mozilla.org/en-US/docs/Web/API/Streams_API | documentación |
 | FS1.5 | Documentación de Anthropic: *Tool use* — https://docs.claude.com | documentación |
 | FS1.5 | Zod — https://zod.dev | documentación |
 | FS1.5 | Vitest: *Getting Started* — https://vitest.dev/guide/ | documentación |

@@ -8,7 +8,7 @@ Complemento a los apuntes y al notebook. Todo gratuito (comprueba que sigue disp
 |---|---|---|
 | 7.1–7.2 | DuckDB: *Documentation* (guías de Python y de lectura de Parquet) — https://duckdb.org/docs/ | documentación |
 | 7.2 | Polars: *User guide* (expresiones, evaluación perezosa) — https://docs.pola.rs/ | documentación |
-| 7.3 | Apache Parquet: *Documentation* — https://parquet.apache.org/docs/ · PyArrow: *Reading and writing Parquet* — https://arrow.apache.org/docs/python/parquet.html | documentación |
+| 7.3 | Apache Parquet: *Documentation* — https://parquet.apache.org/docs/ · PyArrow: *Reading and writing Parquet* — https://arrow.apache.org/docs/python/api/formats.html | documentación |
 | 7.4 | Kimball Group: *Dimensional Modeling Techniques* — https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/ | artículo |
 | 7.4 | Databricks: *What is a medallion architecture?* — https://www.databricks.com/glossary/medallion-architecture | artículo |
 | 7.5 | dbt: *Documentation* y *dbt Fundamentals* (curso gratuito) — https://docs.getdbt.com/ · https://learn.getdbt.com/ | documentación / curso |
