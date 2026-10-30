@@ -1,0 +1,351 @@
+# Ejercicios de F0 · Fundamentos de programación.
+# Cada problema aparece dos veces: en Python y en JavaScript. Formato: ver web/README.md.
+intro: |
+  Seis problemas de **TiendaSur**, cada uno en **Python** y en **JavaScript**. Resuelve primero la versión del
+  lenguaje que prefieras y después tradúcela al otro: comprobarás que la lógica es la misma y solo cambia la puntuación.
+
+ejercicios:
+  - id: f0-iva-py
+    titulo: Precio con IVA
+    nivel: Variables
+    enunciado: |
+      Escribe `precio_con_iva(precio, iva)`, que devuelva el precio con el impuesto aplicado **redondeado a 2 decimales**.
+      `iva` es un porcentaje: 21 significa 21 %.
+    inicial: |
+      def precio_con_iva(precio, iva):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "precio_con_iva(100, 21)", esperado: "121.0"}
+      - {expr: "precio_con_iva(12.5, 10)", esperado: "13.75"}
+      - {expr: "precio_con_iva(10, 0)", esperado: "10.0", oculto: true}
+    pistas:
+      - "El precio final es el precio más un porcentaje de ese precio."
+      - "`precio * (1 + iva / 100)` calcula el total."
+      - "`round(valor, 2)` redondea a 2 decimales."
+    solucion: |
+      def precio_con_iva(precio, iva):
+          return round(precio * (1 + iva / 100), 2)
+
+  - id: f0-iva-js
+    titulo: Precio con IVA
+    nivel: Variables
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `precioConIva(precio, iva)` devuelve el precio con el impuesto, **redondeado a 2 decimales**.
+    inicial: |
+      function precioConIva(precio, iva) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "precioConIva(100, 21)", esperado: "121"}
+      - {expr: "precioConIva(12.5, 10)", esperado: "13.75"}
+      - {expr: "precioConIva(10, 0)", esperado: "10", oculto: true}
+    pistas:
+      - "La fórmula es la misma que en Python."
+      - "JavaScript no tiene `round(x, 2)`: multiplica por 100, redondea y divide entre 100."
+      - "`Math.round(valor * 100) / 100`."
+    solucion: |
+      function precioConIva(precio, iva) {
+        return Math.round(precio * (1 + iva / 100) * 100) / 100;
+      }
+
+  - id: f0-envio-py
+    titulo: Coste de envío
+    nivel: Condicionales
+    enunciado: |
+      Escribe `coste_envio(importe)`: gratis (0) si el pedido supera 50 €, 2 € si supera 20 € y 4 € en el resto de casos.
+      Cuidado: un pedido de exactamente 50 € no supera 50 €.
+    inicial: |
+      def coste_envio(importe):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "coste_envio(60)", esperado: "0"}
+      - {expr: "coste_envio(50)", esperado: "2"}
+      - {expr: "coste_envio(30)", esperado: "2"}
+      - {expr: "coste_envio(20)", esperado: "4"}
+      - {expr: "coste_envio(5)", esperado: "4", oculto: true}
+    pistas:
+      - "Necesitas tres ramas. ¿Cuál va primero?"
+      - "Comprueba primero la condición más restrictiva (`> 50`)."
+      - "`if importe > 50: ... elif importe > 20: ... else: ...`"
+    solucion: |
+      def coste_envio(importe):
+          if importe > 50:
+              return 0
+          elif importe > 20:
+              return 2
+          else:
+              return 4
+
+  - id: f0-envio-js
+    titulo: Coste de envío
+    nivel: Condicionales
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `costeEnvio(importe)` devuelve 0 si supera 50, 2 si supera 20 y 4 en el resto.
+    inicial: |
+      function costeEnvio(importe) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "costeEnvio(60)", esperado: "0"}
+      - {expr: "costeEnvio(50)", esperado: "2"}
+      - {expr: "costeEnvio(30)", esperado: "2"}
+      - {expr: "costeEnvio(20)", esperado: "4"}
+      - {expr: "costeEnvio(5)", esperado: "4", oculto: true}
+    pistas:
+      - "La lógica es idéntica; cambian los paréntesis y las llaves."
+      - "`elif` se escribe `else if`."
+      - "`if (importe > 50) { return 0; } else if (importe > 20) { return 2; }`"
+    solucion: |
+      function costeEnvio(importe) {
+        if (importe > 50) {
+          return 0;
+        } else if (importe > 20) {
+          return 2;
+        } else {
+          return 4;
+        }
+      }
+
+  - id: f0-pares-py
+    titulo: Sumar los pedidos pares
+    nivel: Bucles
+    enunciado: |
+      Escribe `suma_pares(numeros)`, que devuelva la suma de los números pares de la lista. Si no hay ninguno, devuelve 0.
+    inicial: |
+      def suma_pares(numeros):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "suma_pares([1, 2, 3, 4])", esperado: "6"}
+      - {expr: "suma_pares([1, 3])", esperado: "0"}
+      - {expr: "suma_pares([])", esperado: "0"}
+      - {expr: "suma_pares([10, -2, 5])", esperado: "8", oculto: true}
+    pistas:
+      - "Necesitas un acumulador que empiece en 0."
+      - "Un número es par si el resto de dividir entre 2 es 0."
+      - "`if n % 2 == 0: total += n`"
+    solucion: |
+      def suma_pares(numeros):
+          total = 0
+          for n in numeros:
+              if n % 2 == 0:
+                  total += n
+          return total
+
+  - id: f0-pares-js
+    titulo: Sumar los pedidos pares
+    nivel: Bucles
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `sumaPares(numeros)`.
+    inicial: |
+      function sumaPares(numeros) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "sumaPares([1, 2, 3, 4])", esperado: "6"}
+      - {expr: "sumaPares([1, 3])", esperado: "0"}
+      - {expr: "sumaPares([])", esperado: "0"}
+      - {expr: "sumaPares([10, -2, 5])", esperado: "8", oculto: true}
+    pistas:
+      - "Declara el acumulador con `let`, porque va a cambiar."
+      - "`for (const n of numeros) { ... }` recorre la lista."
+      - "`if (n % 2 === 0) { total += n; }`"
+    solucion: |
+      function sumaPares(numeros) {
+        let total = 0;
+        for (const n of numeros) {
+          if (n % 2 === 0) {
+            total += n;
+          }
+        }
+        return total;
+      }
+
+  - id: f0-maximo-py
+    titulo: La venta más alta, sin usar max
+    nivel: Funciones
+    enunciado: |
+      Escribe `mayor(importes)` **sin usar `max`**: devuelve el importe más alto, o `None` si la lista está vacía.
+      Es una pregunta típica de primera entrevista: comprueba que sabes razonar un bucle.
+    inicial: |
+      def mayor(importes):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "mayor([3, 9, 2])", esperado: "9"}
+      - {expr: "mayor([-5, -2, -9])", esperado: "-2"}
+      - {expr: "mayor([])", esperado: "None"}
+      - {expr: "mayor([7])", esperado: "7", oculto: true}
+    pistas:
+      - "Guarda el mejor candidato visto hasta ahora."
+      - "No empieces el candidato en 0: falla con importes negativos. Empieza con el primer elemento."
+      - "`mejor = importes[0]`, y dentro del bucle `if x > mejor: mejor = x`."
+    solucion: |
+      def mayor(importes):
+          if not importes:
+              return None
+          mejor = importes[0]
+          for x in importes:
+              if x > mejor:
+                  mejor = x
+          return mejor
+
+  - id: f0-maximo-js
+    titulo: La venta más alta, sin usar Math.max
+    nivel: Funciones
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `mayor(importes)` sin usar `Math.max`. Devuelve `null` si la lista está vacía.
+    inicial: |
+      function mayor(importes) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "mayor([3, 9, 2])", esperado: "9"}
+      - {expr: "mayor([-5, -2, -9])", esperado: "-2"}
+      - {expr: "mayor([])", esperado: "null"}
+      - {expr: "mayor([7])", esperado: "7", oculto: true}
+    pistas:
+      - "La longitud se consulta con `importes.length`."
+      - "El candidato inicial es `importes[0]`; declara con `let`."
+      - "`if (x > mejor) { mejor = x; }`"
+    solucion: |
+      function mayor(importes) {
+        if (importes.length === 0) {
+          return null;
+        }
+        let mejor = importes[0];
+        for (const x of importes) {
+          if (x > mejor) {
+            mejor = x;
+          }
+        }
+        return mejor;
+      }
+
+  - id: f0-categorias-py
+    titulo: Ventas por categoría
+    nivel: Diccionarios
+    enunciado: |
+      Escribe `por_categoria(ventas)`. Recibe una lista de pares `(categoria, importe)` y devuelve un diccionario con el
+      total de cada categoría. Es el corazón de `ejemplos/ventas.py`.
+    inicial: |
+      def por_categoria(ventas):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "por_categoria([('te', 3), ('cafe', 5), ('te', 2)])", esperado: "{'te': 5, 'cafe': 5}"}
+      - {expr: "por_categoria([])", esperado: "{}"}
+      - {expr: "por_categoria([('te', 1)])", esperado: "{'te': 1}", oculto: true}
+    pistas:
+      - "Empieza con un diccionario vacío."
+      - "`for categoria, importe in ventas:` separa cada par."
+      - "`totales.get(categoria, 0)` da el valor actual, o 0 si la clave aún no existe."
+    solucion: |
+      def por_categoria(ventas):
+          totales = {}
+          for categoria, importe in ventas:
+              totales[categoria] = totales.get(categoria, 0) + importe
+          return totales
+
+  - id: f0-categorias-js
+    titulo: Ventas por categoría
+    nivel: Diccionarios
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `porCategoria(ventas)` recibe pares `[categoria, importe]` y devuelve un objeto con los totales.
+    inicial: |
+      function porCategoria(ventas) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "porCategoria([['te', 3], ['cafe', 5], ['te', 2]])", esperado: "{\"te\": 5, \"cafe\": 5}"}
+      - {expr: "porCategoria([])", esperado: "{}"}
+      - {expr: "porCategoria([['te', 1]])", esperado: "{\"te\": 1}", oculto: true}
+    pistas:
+      - "Un objeto vacío `{}` sirve de diccionario."
+      - "`for (const [categoria, importe] of ventas)` separa cada par."
+      - "`totales[categoria] = (totales[categoria] ?? 0) + importe;` El operador `??` da 0 si no existe."
+    solucion: |
+      function porCategoria(ventas) {
+        const totales = {};
+        for (const [categoria, importe] of ventas) {
+          totales[categoria] = (totales[categoria] ?? 0) + importe;
+        }
+        return totales;
+      }
+
+  - id: f0-errores-py
+    titulo: Media que no se rompe
+    nivel: Errores
+    enunciado: |
+      `media_texto(valores)` recibe una lista de textos que deberían ser números, como los de un CSV. Devuelve la media de los
+      que se puedan convertir e **ignora los demás**. Si ninguno es válido, devuelve `None`.
+    inicial: |
+      def media_texto(valores):
+          # tu código aquí
+          pass
+    tests:
+      - {expr: "media_texto(['1', '2', '3'])", esperado: "2.0"}
+      - {expr: "media_texto(['4', 'n/d', '6'])", esperado: "5.0"}
+      - {expr: "media_texto(['x'])", esperado: "None"}
+      - {expr: "media_texto([])", esperado: "None", oculto: true}
+    pistas:
+      - "`float('abc')` lanza un `ValueError`."
+      - "Envuelve la conversión en `try`/`except ValueError` y sigue con `continue`."
+      - "Acumula los válidos en una lista y comprueba al final si está vacía."
+    solucion: |
+      def media_texto(valores):
+          validos = []
+          for v in valores:
+              try:
+                  validos.append(float(v))
+              except ValueError:
+                  continue
+          if not validos:
+              return None
+          return sum(validos) / len(validos)
+
+  - id: f0-errores-js
+    titulo: Media que no se rompe
+    nivel: Errores
+    tipo: javascript
+    enunciado: |
+      Lo mismo en JavaScript: `mediaTexto(valores)`. Aquí hay una diferencia importante: `Number("abc")` **no lanza un error**,
+      devuelve `NaN`. Cada lenguaje señala los fallos a su manera. Devuelve `null` si no hay ningún valor válido.
+    inicial: |
+      function mediaTexto(valores) {
+        // tu código aquí
+      }
+    tests:
+      - {expr: "mediaTexto(['1', '2', '3'])", esperado: "2"}
+      - {expr: "mediaTexto(['4', 'n/d', '6'])", esperado: "5"}
+      - {expr: "mediaTexto(['x'])", esperado: "null"}
+      - {expr: "mediaTexto([])", esperado: "null", oculto: true}
+    pistas:
+      - "`Number.isNaN(x)` comprueba si la conversión falló."
+      - "No uses `x === NaN`: `NaN` no es igual a nada, ni a sí mismo."
+      - "Acumula los válidos con `validos.push(n)` y divide al final."
+    solucion: |
+      function mediaTexto(valores) {
+        const validos = [];
+        for (const v of valores) {
+          const n = Number(v);
+          if (!Number.isNaN(n)) {
+            validos.push(n);
+          }
+        }
+        if (validos.length === 0) {
+          return null;
+        }
+        let suma = 0;
+        for (const n of validos) {
+          suma += n;
+        }
+        return suma / validos.length;
+      }

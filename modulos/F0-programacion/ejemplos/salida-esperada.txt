@@ -1,0 +1,8 @@
+Ventas: 5
+Total: 98.75
+Media: 19.75
+Ventas de mas de 20: 2
+Por categoria:
+  cafe: 42.50
+  menaje: 45.90
+  te: 10.35
