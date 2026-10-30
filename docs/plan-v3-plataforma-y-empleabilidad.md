@@ -23,6 +23,16 @@ Hecho en la segunda revisión, con 12 agentes en paralelo y verificación centra
 | D8 licencia · despliegue público de la web · analítica · correo de la lista de espera | ⏳ Pendiente: decisiones tuyas (sección 9) |
 | Fase 2 (Supabase, Stripe, certificados) y fase 3 (tutor de IA) | ⏳ Pendiente: requiere crear las cuentas |
 
+**Añadido el 30-10-2026 (peticiones en Quipu):**
+
+| Módulo o cambio | Estado |
+|---|---|
+| **F0** · Fundamentos de programación, con un mismo programa verificado en Python, JavaScript, Java y C++ | ✅ |
+| **EP1** · Entrevistas de programación guiadas: 12 ejercicios con explicación al lado de cada casilla y modo reto | ✅ |
+| Motor de ejercicios: JavaScript y modo guiado por pasos | ✅ |
+| AI8 actualizado con el Reglamento (UE) 2026/1744 | ✅ |
+| Análisis de licencias en [licencia-opciones.md](licencia-opciones.md) | ✅; la decisión es tuya |
+
 **Limitaciones conocidas:** las celdas que llaman a la API de Claude solo se han probado en su camino sin clave; las plantillas de Azure/Terraform (CL1) y los esqueletos para Colab con GPU (AI5–AI7, AI9, DS6) no se han ejecutado; Spark, Airflow y Kafka (DS7) se simulan; las URL de `recursos-abiertos.md` no se han comprobado una a una; la ficha de cumplimiento de AI8 cita artículos del Reglamento europeo de IA que debería revisar un jurista. En macOS, XGBoost y LightGBM (I4) necesitan `brew install libomp`.
 
 ## 0. Resumen

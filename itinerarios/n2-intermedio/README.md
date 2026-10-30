@@ -19,6 +19,7 @@ El núcleo de machine learning. Es el programa original de 14 semanas, reorganiz
 | 9–10 | — | [Proyecto N2](../../proyecto-final/): modelo predictivo desplegado como API (FastAPI + Docker) con CI en verde e informe de negocio | ✅ Disponible |
 | Optativo | CL1 | [Cloud para datos e IA](../../modulos/CL1-cloud/): desplegar la API en AWS o Azure | ✅ Disponible |
 | Transversal | CAR | [Empleabilidad](../../modulos/CAR-empleabilidad/): portafolio, CV y entrevistas | ✅ Disponible |
+| Transversal | EP1 | [Entrevistas de programación guiadas](../../modulos/EP1-entrevistas-codigo/): patrones paso a paso | ✅ Disponible |
 
 ## Criterios del certificado
 

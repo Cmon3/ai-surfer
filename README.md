@@ -26,6 +26,7 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 
 | Código | Módulo | Estado |
 |---|---|---|
+| F0 | [Fundamentos de programación](modulos/F0-programacion/) (Python, JavaScript, Java y C++; optativo si ya programas) | ✅ |
 | F1–F5 | [Python](modulos/F1-python/), [SQL](modulos/F2-sql/), [estadística](modulos/F3-estadistica/), [matemáticas para ML](modulos/F4-matematicas-ml/), [herramientas del oficio y agentes de código](modulos/F5-herramientas/) | ✅ |
 | I1–I3 | [No supervisado](modulos/I1-no-supervisado/), [regresión](modulos/I2-regresion/), [clasificación](modulos/I3-clasificacion/) | ✅ |
 | I4 | [Ingeniería de variables y gradient boosting](modulos/I4-boosting/) | ✅ |
@@ -39,6 +40,7 @@ Todos los módulos viven en un único catálogo, `modulos/`, con **códigos esta
 | CL1 | [Cloud para datos e IA](modulos/CL1-cloud/) (AWS y Azure) | ✅ |
 | FS1 | [Full-stack para AI Engineers](modulos/FS1-fullstack/) (Next.js + TypeScript; optativo) | ✅ |
 | CAR | [Empleabilidad: portafolio, entrevistas y búsqueda](modulos/CAR-empleabilidad/) | ✅ |
+| EP1 | [Entrevistas de programación guiadas](modulos/EP1-entrevistas-codigo/): 12 problemas paso a paso | ✅ |
 | Proyectos | [N1](itinerarios/n1-fundamentos/proyecto/), [N2](proyecto-final/), [capstone DS](modulos/DS-capstone/), [capstone AI](modulos/AI-capstone/) | ✅ |
 
 ✅ material completo. Rutas por rol (Data Scientist, ML Engineer, AI Engineer, Forward Deployed Engineer, post-training) en la web, página `/rutas/`. Plan de trabajo y prioridades: [docs/plan-v3-plataforma-y-empleabilidad.md](docs/plan-v3-plataforma-y-empleabilidad.md).

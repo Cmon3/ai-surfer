@@ -8,6 +8,7 @@ Primer bloque de la escuela. Para quien empieza desde cero o necesita una base s
 
 | Semana | Código | Módulo | Estado |
 |---|---|---|---|
+| 0 (optativo) | F0 | [Fundamentos de programación](../../modulos/F0-programacion/): si nunca has programado, empieza aquí | ✅ Disponible |
 | 1–2 | F1 | [Python para datos](../../modulos/F1-python/) | ✅ Disponible |
 | 2–3 | F2 | [SQL para análisis de datos](../../modulos/F2-sql/) | ✅ Disponible |
 | 3–4 | F3 | [Estadística para la toma de decisiones](../../modulos/F3-estadistica/) | ✅ Disponible |
