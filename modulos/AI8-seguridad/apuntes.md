@@ -173,9 +173,9 @@ Enfoque **por niveles de riesgo**:
 - **Obligaciones de transparencia** (art. 50): quien proporciona un sistema que **interactúa con personas** debe diseñarlo para que sepan que hablan con una IA; el contenido sintético se marca en los supuestos previstos.
 - **Riesgo mínimo**: sin obligaciones específicas (buenas prácticas voluntarias).
 - **Modelos de IA de propósito general**: obligaciones para sus **proveedores** (documentación, derechos de autor, y más si presentan riesgo sistémico). Si construyes un producto sobre uno ajeno, tu rol es el de proveedor y/o desplegador **del sistema**, no el del modelo.
-- **Alfabetización en IA** (art. 4): formación adecuada de quienes operan sistemas de IA.
+- **Alfabetización en IA** (art. 4): proveedores y responsables del despliegue deben tomar medidas para apoyarla. Desde el Digital Omnibus no se les exige garantizar un nivel concreto de cada persona.
 
-**Calendario y detalles: comprueba siempre el vigente.** El Reglamento se aplica de forma escalonada y puede haber modificaciones posteriores; consulta el texto consolidado en EUR-Lex y la información de la autoridad española de supervisión (AESIA) antes de fijar plazos o afirmar que algo «ya es obligatorio».
+**Calendario y detalles: comprueba siempre el vigente.** El Reglamento se aplica de forma escalonada y ya se ha modificado: el **Reglamento (UE) 2026/1744** (*Digital Omnibus on AI*), en vigor desde julio de 2026, retrasó las obligaciones de alto riesgo (a diciembre de 2027 para los sistemas del anexo III y a agosto de 2028 para los del anexo I), sustituyó el art. 4 y dio plazo adicional para el marcado del art. 50.2 a los sistemas ya comercializados. Consulta el texto consolidado en EUR-Lex y la información de la autoridad española de supervisión (AESIA) antes de fijar plazos o afirmar que algo «ya es obligatorio».
 
 **Qué haces con esto:** la función `ficha_cumplimiento` del notebook genera una ficha preliminar a partir de datos de tu sistema y una lista de **pendientes**. Es el punto de partida para hablar con el DPO, no el final.
 
