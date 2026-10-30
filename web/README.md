@@ -113,6 +113,8 @@ ejercicios:
 Detalles útiles:
 
 - **Tests con `expr`/`esperado`** comparan `eval(expr) == literal_eval(esperado)`; listas/arrays/tuplas se normalizan (un `np.ndarray` equivale a una lista) y `tol` se aplica a los números anidados.
+- **Ejercicios de JavaScript (`tipo: javascript`)**: se ejecutan en `worker-js.js`, sin descargas. En los tests, `esperado` es JSON. Se verifican con `npm run verificar:js`.
+- **Ejercicios guiados (`pasos`)**: lista de `{explica, codigo}`. Cada paso tiene su casilla al lado de la explicación, y el programa es la unión de las casillas, en orden. No llevan `inicial`, `pistas` ni `solucion`. Si un fragmento empieza sangrado, escribe `codigo: |2` en el YAML para fijar la sangría.
 - **Ejercicios SQL (`tipo: sql`)**: el alumno escribe una sentencia `SELECT`. El `setup` debe crear la conexión `con` (`sqlite3` en memoria); los tests ven `filas` (lista de tuplas) y `columnas`. La web carga el paquete `sqlite3` de Pyodide automáticamente para los ejercicios `tipo: sql`.
 - **YAML y números:** escribe `tol: 0.000001`, no `1e-6` (PyYAML lo lee como texto, aunque la web no).
 - Al **ejecutar** se usa un *Web Worker* con un Pyodide compartido por todos los ejercicios de la página; si el código tarda más de `EJERCICIOS_TIMEOUT_S` segundos (bucle infinito) se mata el Worker y se reinicia. Toda la salida se inserta con `textContent`, nunca como HTML.

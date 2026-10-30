@@ -165,3 +165,18 @@ a.chip:hover { text-decoration: none; background: var(--enfasis-suave); }
 .espera form { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .75rem; }
 .espera select, .espera input { font: inherit; padding: .5rem .7rem; border: 1px solid var(--borde); border-radius: 8px; background: #fff; }
 .aviso-config { background: #fff4d6; border: 1px dashed #c9a227; color: #6b5200; border-radius: 8px; padding: .5rem .8rem; font-size: .85rem; margin-top: .75rem; }
+
+/* ───────── Ejercicios guiados: explicación al lado de cada casilla ───────── */
+.ej-guiado { margin: .75rem 0; }
+.ej-modo { display: block; font-size: .88rem; color: var(--texto-suave); margin-bottom: .75rem; cursor: pointer; }
+.ej-paso { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; padding: .85rem 0; border-top: 1px solid var(--borde); align-items: start; }
+.ej-paso-num { font-size: .8rem; font-weight: 600; color: var(--texto-suave); margin-bottom: .25rem; }
+.ej-paso-ok { color: var(--ok); margin-left: .35rem; }
+.ej-paso .prose { font-size: .92rem; }
+.ej-paso .prose p { margin: .25rem 0 .5rem; }
+.ej-ref pre { background: var(--fondo-alt); border-radius: 8px; padding: .55rem .7rem; margin: 0 0 .4rem; font-size: .8rem; overflow-x: auto; }
+.ej-ref .ej-btn { font-size: .78rem; padding: .25rem .6rem; }
+.modo-reto .ej-ref { display: none; }
+@media (max-width: 760px) {
+  .ej-paso { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+}

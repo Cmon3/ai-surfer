@@ -23,6 +23,7 @@ const config = {
   persistir,
   cdn: PYODIDE_CDN,
   workerUrl: `${base}/ejercicios/worker.js`,
+  workerJsUrl: `${base}/ejercicios/worker-js.js`,
   timeoutS: EJERCICIOS_TIMEOUT_S,
   ejercicios: ejercicios.map((e) => ({
     id: e.id,
@@ -31,6 +32,7 @@ const config = {
     paquetes: e.paquetes,
     tests: e.tests,
     nPistas: e.pistasHtml.length,
+    pasos: e.pasos?.map((p) => p.codigo),
   })),
 };
 ---
@@ -43,14 +45,35 @@ const config = {
         <span class="ej-num">{i + 1}.</span> {e.titulo}
         {e.nivel && <span class="badge wip">{e.nivel}</span>}
         {e.tipo === "sql" && <span class="badge ok">SQL</span>}
+        {e.tipo === "javascript" && <span class="badge ok">JavaScript</span>}
+        {e.pasos && <span class="badge ok">Guiado</span>}
       </h3>
       <span class="ej-marca" data-marca></span>
     </header>
     <div class="prose ej-enunciado" set:html={e.enunciadoHtml} />
-    <textarea rows={Math.min(18, Math.max(6, e.inicial.split("\n").length + 1))} spellcheck="false" autocomplete="off" autocapitalize="off" aria-label={`Código del ejercicio ${i + 1}`}>{e.inicial}</textarea>
+    {e.pasos ? (
+      <div class="ej-guiado">
+        <label class="ej-modo"><input type="checkbox" data-reto /> Modo reto: ocultar el código de referencia y escribirlo de memoria</label>
+        {e.pasos.map((p, j) => (
+          <div class="ej-paso" data-paso={j}>
+            <div class="ej-paso-guia">
+              <div class="ej-paso-num">Paso {j + 1} de {e.pasos!.length} <span class="ej-paso-ok" data-paso-ok></span></div>
+              <div class="prose" set:html={p.explicaHtml} />
+              <div class="ej-ref" data-ref>
+                <pre><code>{p.codigo}</code></pre>
+                <button class="ej-btn" type="button" data-copiar={j}>Copiar a mi casilla →</button>
+              </div>
+            </div>
+            <textarea rows={Math.max(3, p.codigo.split("\n").length + 1)} spellcheck="false" autocomplete="off" autocapitalize="off" aria-label={`Ejercicio ${i + 1}, paso ${j + 1}: escribe aquí el código`} placeholder="Escribe aquí este paso…"></textarea>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <textarea rows={Math.min(18, Math.max(6, e.inicial.split("\n").length + 1))} spellcheck="false" autocomplete="off" autocapitalize="off" aria-label={`Código del ejercicio ${i + 1}`}>{e.inicial}</textarea>
+    )}
     <div class="ej-acciones">
       <button class="ej-btn principal" type="button" data-run>▶ Ejecutar y comprobar</button>
-      <button class="ej-btn" type="button" data-pista>Pedir pista</button>
+      {!e.pasos && <button class="ej-btn" type="button" data-pista>Pedir pista</button>}
       <button class="ej-btn" type="button" data-reset>Restablecer</button>
       <span class="ej-atajo">Ctrl/⌘ + Enter ejecuta</span>
     </div>

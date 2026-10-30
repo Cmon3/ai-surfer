@@ -26,6 +26,13 @@ harness = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(harness)
 
 
+def solucion_de(ej):
+    """Con «pasos», la solución es la unión de los fragmentos que copia el estudiante."""
+    if "pasos" in ej:
+        return "\n".join(p["codigo"].rstrip() for p in ej["pasos"])
+    return ej["solucion"]
+
+
 def correr(codigo, ej):
     datos = {"tipo": ej.get("tipo", "python"), "setup": ej.get("setup"), "tests": ej["tests"]}
     return json.loads(harness.ejecutar(codigo, json.dumps(datos)))
@@ -41,12 +48,14 @@ def main(filtro):
         doc = yaml.safe_load(yml.read_text(encoding="utf8"))
         ids = set()
         for ej in doc["ejercicios"]:
+            if ej.get("tipo") == "javascript":
+                continue  # los corrige scripts/verificar_ejercicios_js.mjs
             total += 1
             if ej["id"] in ids:
                 print(f"FALLO {carpeta}/{ej['id']}: id repetido"); errores += 1
             ids.add(ej["id"])
             t0 = time.time()
-            r = correr(ej["solucion"], ej)
+            r = correr(solucion_de(ej), ej)
             dt = time.time() - t0
             ok = r["error"] is None and r["resultados"] and all(x[0] for x in r["resultados"])
             if ok:
@@ -59,7 +68,7 @@ def main(filtro):
                 for good, txt in r["resultados"]:
                     if not good:
                         print("      ✗", txt)
-            ri = correr(ej["inicial"], ej)
+            ri = correr(ej.get("inicial", ""), ej)
             if ri["error"] is None and ri["resultados"] and all(x[0] for x in ri["resultados"]):
                 errores += 1
                 print(f"FALLO {carpeta}/{ej['id']}: el código inicial ya supera todos los tests")

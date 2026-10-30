@@ -26,5 +26,5 @@ for carpeta in "${carpetas[@]}"; do
   [ -f "$origen" ] || { echo "Sin diapositivas: $carpeta"; continue; }
   destino="${carpeta%/}/diapositivas.$FORMATO"
   echo "→ $(basename "$carpeta")"
-  $MARP "$origen" "--$FORMATO" --allow-local-files -o "$destino"
+  $MARP "$origen" "--$FORMATO" --allow-local-files -o "$destino" </dev/null  # sin esto, Marp puede quedarse esperando la entrada estándar
 done

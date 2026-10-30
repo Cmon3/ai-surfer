@@ -40,6 +40,7 @@ export const itinerarios: Itinerario[] = [
     certificado: "Fundamentos de Ciencia de Datos",
     color: "#7f77dd",
     modulos: [
+      { codigo: "F0", carpeta: "F0-programacion", titulo: "Fundamentos de programación", estado: "disponible", nota: "Optativo si ya programas: conceptos comunes a Python, JavaScript, Java y C++." },
       { codigo: "F1", carpeta: "F1-python", titulo: "Python para datos", estado: "disponible" },
       { codigo: "F2", carpeta: "F2-sql", titulo: "SQL para análisis de datos", estado: "disponible" },
       { codigo: "F3", carpeta: "F3-estadistica", titulo: "Estadística para la toma de decisiones", estado: "disponible" },
@@ -70,6 +71,7 @@ export const itinerarios: Itinerario[] = [
       { codigo: "I8", carpeta: "I8-produccion", titulo: "Del notebook a producción", estado: "disponible" },
       { codigo: "CL1", carpeta: "CL1-cloud", titulo: "Cloud para datos e IA", estado: "disponible", nota: "Optativo en N2; recomendado en las rutas ML Engineer y AI Engineer." },
       { codigo: "CAR", carpeta: "CAR-empleabilidad", titulo: "Empleabilidad: portafolio, entrevistas y búsqueda", estado: "disponible", nota: "Transversal: se empieza aquí y se retoma al final de cada especialización." },
+      { codigo: "EP1", carpeta: "EP1-entrevistas-codigo", titulo: "Entrevistas de programación guiadas", estado: "disponible", nota: "Transversal: doce problemas paso a paso, con la explicación al lado de cada casilla." },
     ],
     proyecto: "Modelo predictivo desplegado como API, con informe de negocio.",
     anterior: "n1-fundamentos",

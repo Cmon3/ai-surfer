@@ -28,10 +28,12 @@ for (const d of readdirSync(`${RAIZ}/modulos`).sort()) {
   if (!existsSync(f) || (filtro.size && !filtro.has(d))) continue;
   const doc = parse(readFileSync(f, "utf8"));
   for (const ej of doc.ejercicios) {
+    if (ej.tipo === "javascript") continue; // los corrige verificar_ejercicios_js.mjs
     total++;
     // Igual que la web (src/data/ejercicios.ts): los ejercicios SQL necesitan el paquete sqlite3.
     await py.loadPackage([...(ej.paquetes ?? []), ...(ej.tipo === "sql" ? ["sqlite3"] : [])]);
-    const r = JSON.parse(ejecutar(ej.solucion, JSON.stringify({ tipo: ej.tipo ?? "python", setup: ej.setup, tests: ej.tests })));
+    const solucion = ej.pasos ? ej.pasos.map((p) => p.codigo.trimEnd()).join("\n") : ej.solucion;
+    const r = JSON.parse(ejecutar(solucion, JSON.stringify({ tipo: ej.tipo ?? "python", setup: ej.setup, tests: ej.tests })));
     const ok = !r.error && r.resultados.length && r.resultados.every((x) => x[0]);
     if (ok) console.log(`OK    ${d}/${ej.id} (${r.resultados.length} tests)`);
     else {

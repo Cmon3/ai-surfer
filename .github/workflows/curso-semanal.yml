@@ -72,6 +72,10 @@ jobs:
 
       # Descarga pandas, numpy y scikit-learn de cdn.jsdelivr.net: si cambian las versiones
       # de Pyodide, esto avisa de ejercicios que dejan de funcionar en el navegador.
+      - name: Verificar ejercicios de JavaScript
+        working-directory: web
+        run: npm run verificar:js
+
       - name: Verificar con Pyodide
         working-directory: web
         run: npm run verificar:pyodide

@@ -38,13 +38,13 @@ export function resolverModulo(codigo: string): ModuloRuta {
   return { codigo, titulo: PENDIENTES[codigo] ?? codigo, estado: "en-preparacion", enlazable: false };
 }
 
-const N1 = ["F1", "F2", "F3", "F4", "F5"];
+const N1 = ["F0", "F1", "F2", "F3", "F4", "F5"];
 const N2 = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8"];
 const AI_BASE = [
   { etiqueta: "N1 (lo imprescindible)", codigos: ["F1", "F2", "F5"] },
   { etiqueta: "N2 (lo imprescindible)", codigos: ["I3", "I7", "I8"] },
   { etiqueta: "N3-AI", codigos: ["AI1", "AI2", "AI3", "AI4", "AI8", "AI10"] },
-  { etiqueta: "Transversal", codigos: ["CL1", "CAR"] },
+  { etiqueta: "Transversal", codigos: ["CL1", "CAR", "EP1"] },
 ];
 
 export const rutas: Ruta[] = [
@@ -57,7 +57,7 @@ export const rutas: Ruta[] = [
       { etiqueta: "N1 · Fundamentos", codigos: N1 },
       { etiqueta: "N2 · Intermedio", codigos: N2 },
       { etiqueta: "N3-DS", codigos: ["DS1", "DS2", "DS3", "DS8"] },
-      { etiqueta: "Transversal", codigos: ["CAR"] },
+      { etiqueta: "Transversal", codigos: ["CAR", "EP1"] },
     ],
     portafolio: [
       "Análisis con decisión de negocio (proyecto N1)",
@@ -74,7 +74,7 @@ export const rutas: Ruta[] = [
       { etiqueta: "N1 · Fundamentos", codigos: N1 },
       { etiqueta: "N2 · Intermedio", codigos: N2 },
       { etiqueta: "Especialización", codigos: ["CL1", "DS7"] },
-      { etiqueta: "Transversal", codigos: ["CAR"] },
+      { etiqueta: "Transversal", codigos: ["CAR", "EP1"] },
     ],
     portafolio: [
       "Repositorio de I8 desplegado en la nube con monitorización",

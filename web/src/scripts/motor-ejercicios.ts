@@ -1,7 +1,7 @@
 /**
- * Motor de ejercicios (lado navegador). Un único Web Worker con Pyodide
- * compartido por todos los ejercicios de la página. Todo el texto que viene
- * de Python se inserta con textContent: nunca como HTML.
+ * Motor de ejercicios (lado navegador). Un Web Worker con Pyodide compartido
+ * por los ejercicios de Python y SQL, y otro para los de JavaScript. Todo el
+ * texto que viene del intérprete se inserta con textContent: nunca como HTML.
  */
 
 interface DatosEjercicio {
@@ -11,16 +11,21 @@ interface DatosEjercicio {
   paquetes: string[];
   tests: unknown[];
   nPistas: number;
+  pasos?: string[];
 }
 interface Config {
   clave: string;
   persistir: boolean;
   cdn: string;
   workerUrl: string;
+  workerJsUrl: string;
   timeoutS: number;
   ejercicios: DatosEjercicio[];
 }
-type Progreso = Record<string, { ok?: boolean; codigo?: string; intentos?: number; pistas?: number }>;
+type Progreso = Record<string, { ok?: boolean; codigo?: string; bloques?: string[]; intentos?: number; pistas?: number }>;
+
+/** Compara un paso con su referencia sin exigir los mismos espacios ni el mismo tipo de comillas. */
+const normaliza = (s: string) => s.replace(/\s+/g, "").replace(/"/g, "'");
 
 function leerProgreso(clave: string, persistir: boolean): Progreso {
   if (!persistir) return {};
@@ -47,11 +52,10 @@ export function iniciarMotor() {
   const guardar = () => guardarProgreso(cfg.clave, cfg.persistir, progreso);
 
   // ─── Worker compartido ──────────────────────────────────────────────
-  let worker: Worker | null = null;
+  const workers: Record<string, Worker | null> = { py: null, js: null };
   let siguienteId = 1;
-  function nuevoWorker() {
-    worker = new Worker(cfg.workerUrl);
-    return worker;
+  function obtenerWorker(clase: "py" | "js") {
+    return (workers[clase] ??= new Worker(clase === "js" ? cfg.workerJsUrl : cfg.workerUrl));
   }
 
   function ejecutarEnWorker(
@@ -60,7 +64,8 @@ export function iniciarMotor() {
     alEstado: (t: string) => void
   ): Promise<{ resultados: [boolean, string][]; salida: string; error: string | null }> {
     return new Promise((resolve, reject) => {
-      const w = worker ?? nuevoWorker();
+      const clase = ej.tipo === "javascript" ? "js" : "py";
+      const w = obtenerWorker(clase);
       const id = siguienteId++;
       let reloj: number | undefined;
       const limpiar = () => {
@@ -78,7 +83,7 @@ export function iniciarMotor() {
             reloj = window.setTimeout(() => {
               limpiar();
               w.terminate();
-              worker = null; // el siguiente intento crea uno nuevo
+              workers[clase] = null; // el siguiente intento crea uno nuevo
               reject(new Error(`Tiempo agotado (${cfg.timeoutS} s). ¿Hay un bucle infinito? He reiniciado el intérprete.`));
             }, cfg.timeoutS * 1000);
           } else alEstado(m.texto);
@@ -92,7 +97,7 @@ export function iniciarMotor() {
       };
       const alError = (ev: ErrorEvent) => {
         limpiar();
-        worker = null;
+        workers[clase] = null;
         reject(new Error("Error del intérprete: " + (ev.message || "no se pudo iniciar el Worker (¿sin conexión al CDN?)")));
       };
       w.addEventListener("message", alMensaje);
@@ -122,18 +127,36 @@ export function iniciarMotor() {
   for (const ej of cfg.ejercicios) {
     const raiz = document.querySelector<HTMLElement>(`[data-ej-id="${CSS.escape(ej.id)}"]`);
     if (!raiz) continue;
-    const area = raiz.querySelector<HTMLTextAreaElement>("textarea")!;
+    const areas = Array.from(raiz.querySelectorAll<HTMLTextAreaElement>("textarea"));
+    const guiado = !!ej.pasos;
     const salida = raiz.querySelector<HTMLElement>("[data-salida]")!;
     const btnRun = raiz.querySelector<HTMLButtonElement>("[data-run]")!;
-    const btnPista = raiz.querySelector<HTMLButtonElement>("[data-pista]")!;
+    const btnPista = raiz.querySelector<HTMLButtonElement>("[data-pista]");
     const btnReset = raiz.querySelector<HTMLButtonElement>("[data-reset]")!;
     const zonaPistas = raiz.querySelector<HTMLElement>("[data-pistas]")!;
     const marca = raiz.querySelector<HTMLElement>("[data-marca]")!;
-    const inicial = area.value;
+    const iniciales = areas.map((a) => a.value);
     const pistasHtml = Array.from(raiz.querySelectorAll<HTMLElement>("template[data-pista-html]"));
 
     const estado = (progreso[ej.id] ??= {});
-    if (estado.codigo) area.value = estado.codigo;
+    if (guiado) estado.bloques?.forEach((b, i) => { if (areas[i]) areas[i].value = b; });
+    else if (estado.codigo) areas[0].value = estado.codigo;
+    // Con pasos, el programa es la unión de las casillas, en orden.
+    const leerCodigo = () => (guiado ? areas.map((a) => a.value.replace(/\s+$/, "")).join("\n") : areas[0].value);
+    function guardarCodigo() {
+      if (guiado) estado.bloques = areas.map((a) => a.value);
+      else estado.codigo = areas[0].value;
+    }
+    function pintarPasos() {
+      if (!ej.pasos) return;
+      ej.pasos.forEach((ref, i) => {
+        const fila = raiz!.querySelector<HTMLElement>(`[data-paso="${i}"]`)!;
+        const bien = normaliza(areas[i].value) === normaliza(ref);
+        fila.classList.toggle("hecho", bien);
+        fila.querySelector("[data-paso-ok]")!.textContent = bien ? "✓ coincide" : "";
+      });
+    }
+    pintarPasos();
 
     function pintarMarca() {
       marca.textContent = estado.ok ? "✓ superado" : "";
@@ -151,6 +174,7 @@ export function iniciarMotor() {
         p.insertAdjacentHTML("beforeend", t.innerHTML); // HTML generado en build desde nuestro YAML
         zonaPistas.append(p);
       });
+      if (!btnPista) return;
       btnPista.textContent = n >= pistasHtml.length ? "Sin más pistas" : `Pedir pista (${n}/${pistasHtml.length})`;
       btnPista.disabled = n >= pistasHtml.length;
     }
@@ -158,34 +182,54 @@ export function iniciarMotor() {
     pintarPistas();
 
     let guardarTimer: number | undefined;
-    area.addEventListener("input", () => {
-      clearTimeout(guardarTimer);
-      guardarTimer = window.setTimeout(() => {
-        estado.codigo = area.value;
+    for (const area of areas) {
+      area.addEventListener("input", () => {
+        pintarPasos();
+        clearTimeout(guardarTimer);
+        guardarTimer = window.setTimeout(() => {
+          guardarCodigo();
+          guardar();
+        }, 400);
+      });
+      area.addEventListener("keydown", (ev) => {
+        if (ev.key === "Tab" && !ev.shiftKey) {
+          ev.preventDefault();
+          const { selectionStart: a, selectionEnd: b } = area;
+          area.setRangeText("    ", a, b, "end");
+        } else if (ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) {
+          ev.preventDefault();
+          btnRun.click();
+        }
+      });
+    }
+
+    raiz.querySelectorAll<HTMLButtonElement>("[data-copiar]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const i = Number(b.dataset.copiar);
+        areas[i].value = ej.pasos![i];
+        areas[i].focus();
+        pintarPasos();
+        guardarCodigo();
         guardar();
-      }, 400);
+      });
     });
-    area.addEventListener("keydown", (ev) => {
-      if (ev.key === "Tab" && !ev.shiftKey) {
-        ev.preventDefault();
-        const { selectionStart: a, selectionEnd: b } = area;
-        area.setRangeText("    ", a, b, "end");
-      } else if (ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) {
-        ev.preventDefault();
-        btnRun.click();
-      }
+    raiz.querySelector<HTMLInputElement>("[data-reto]")?.addEventListener("change", (ev) => {
+      raiz!.classList.toggle("modo-reto", (ev.target as HTMLInputElement).checked);
     });
 
-    btnPista.addEventListener("click", () => {
+    btnPista?.addEventListener("click", () => {
       estado.pistas = Math.min((estado.pistas ?? 0) + 1, pistasHtml.length);
       guardar();
       pintarPistas();
     });
     btnReset.addEventListener("click", () => {
-      if (area.value !== inicial && !confirm("¿Volver al código inicial? Perderás lo que has escrito.")) return;
-      area.value = inicial;
+      const cambiado = areas.some((a, i) => a.value !== iniciales[i]);
+      if (cambiado && !confirm("¿Volver al código inicial? Perderás lo que has escrito.")) return;
+      areas.forEach((a, i) => { a.value = iniciales[i]; });
       estado.codigo = undefined;
+      estado.bloques = undefined;
       guardar();
+      pintarPasos();
       salida.replaceChildren();
     });
 
@@ -197,10 +241,10 @@ export function iniciarMotor() {
       };
       aviso("Preparando…");
       try {
-        const r = await ejecutarEnWorker(area.value, ej, aviso);
+        const r = await ejecutarEnWorker(leerCodigo(), ej, aviso);
         pintarResultado(salida, r);
         estado.intentos = (estado.intentos ?? 0) + 1;
-        estado.codigo = area.value;
+        guardarCodigo();
         const todos = !r.error && r.resultados.length > 0 && r.resultados.every((x) => x[0]);
         if (todos && !estado.ok) {
           estado.ok = true;

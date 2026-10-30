@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "verificar:ejercicios": "../.venv/bin/python scripts/verificar_ejercicios.py",
-    "verificar:pyodide": "node scripts/verificar_ejercicios_pyodide.mjs"
+    "verificar:pyodide": "node scripts/verificar_ejercicios_pyodide.mjs",
+    "verificar:js": "node scripts/verificar_ejercicios_js.mjs"
   },
   "dependencies": {
     "astro": "^7.4.2",
