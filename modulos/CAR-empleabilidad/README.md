@@ -1,6 +1,6 @@
 # Módulo CAR · Empleabilidad: portafolio, entrevistas y búsqueda
 
-**Transversal · ~10 horas, repartidas en una sesión por bloque** · Último repaso: octubre de 2026 (las ofertas y las herramientas cambian en meses: revisa las fechas). Es el módulo que convierte lo aprendido en una candidatura. Está pensado para cursarse al final de cada itinerario (N1, N2, N3) y repetirse con proyectos nuevos.
+**Transversal · ~10 horas, repartidas en una sesión por bloque** · Para entrenar la técnica de las pruebas de código paso a paso, combínalo con [EP1](../EP1-entrevistas-codigo/). Último repaso: octubre de 2026 (las ofertas y las herramientas cambian en meses: revisa las fechas). Es el módulo que convierte lo aprendido en una candidatura. Está pensado para cursarse al final de cada itinerario (N1, N2, N3) y repetirse con proyectos nuevos.
 
 ## Qué piden las ofertas (y por qué existe este módulo)
 Del análisis de 27 ofertas españolas (feb.–oct. 2026; plan v3, sección 2.1 — es una muestra, no un estudio de mercado):

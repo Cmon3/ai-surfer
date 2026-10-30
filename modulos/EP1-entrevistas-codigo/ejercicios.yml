@@ -1,0 +1,440 @@
+# Ejercicios guiados de EP1. Con «pasos», cada fragmento tiene su casilla y su explicación al lado;
+# la solución es la unión de los fragmentos. Formato: ver web/README.md.
+intro: |
+  **Cómo usar esta página.** Cada ejercicio se resuelve por pasos: a la izquierda tienes la explicación y el código, a la
+  derecha tu casilla. Escríbelo tú (cópialo solo si te atascas) y, cuando lo tengas, pulsa **Ejecutar y comprobar**.
+
+  **Después, vuelve a hacerlo de memoria.** Marca *Modo reto*, pulsa *Restablecer* y repítelo sin mirar. Copiar te enseña
+  el patrón; lo que te prepara para la entrevista es poder reconstruirlo solo.
+
+ejercicios:
+  - id: ep1-dos-sumas
+    titulo: Dos productos que suman el presupuesto
+    nivel: Tabla hash
+    enunciado: |
+      Dada una lista de `precios` y un `objetivo`, devuelve los **índices** `[i, j]` (con `i < j`) de dos productos que sumen
+      exactamente el objetivo, o `None` si no existen. Es la pregunta de entrevista más conocida.
+
+      La solución obvia prueba todos los pares: O(n²). Vamos a bajarla a **O(n)**.
+    pasos:
+      - explica: |
+          Cambia la pregunta: para cada precio, en vez de buscar una pareja, pregúntate **¿he visto ya el precio que me falta?**
+          Un diccionario responde a eso en un paso. Guardará `precio → índice`.
+        codigo: |2
+          def dos_sumas(precios, objetivo):
+              vistos = {}
+      - explica: |
+          `enumerate` da a la vez la posición y el valor. Calcula lo que falta para llegar al objetivo.
+        codigo: |2
+              for i, precio in enumerate(precios):
+                  falta = objetivo - precio
+      - explica: |
+          Si lo que falta ya está guardado, tienes el par. El índice guardado es menor porque se vio antes: `i < j` se cumple solo.
+        codigo: |2
+                  if falta in vistos:
+                      return [vistos[falta], i]
+      - explica: |
+          **Guarda después de comprobar**, no antes: así un producto no se empareja consigo mismo. Si el bucle termina, no hay par.
+
+          **Complejidad:** O(n) en tiempo y O(n) en memoria. Has cambiado memoria por velocidad: dilo en voz alta en la entrevista.
+        codigo: |2
+                  vistos[precio] = i
+              return None
+    tests:
+      - {expr: "dos_sumas([2, 7, 11, 15], 9)", esperado: "[0, 1]"}
+      - {expr: "dos_sumas([3, 3], 6)", esperado: "[0, 1]"}
+      - {expr: "dos_sumas([1, 2], 7)", esperado: "None"}
+      - {expr: "dos_sumas([5], 10)", esperado: "None", oculto: true}
+
+  - id: ep1-repetido
+    titulo: Primer pedido duplicado
+    nivel: Conjunto
+    enunciado: |
+      `primer_repetido(pedidos)` devuelve el primer identificador que aparece por segunda vez, o `None` si ninguno se repite.
+    pasos:
+      - explica: |
+          Solo necesitas saber si algo **ya apareció**, no cuántas veces ni dónde. Para eso, un conjunto (`set`) es más claro que un diccionario.
+        codigo: |2
+          def primer_repetido(pedidos):
+              vistos = set()
+      - explica: |
+          Recorre en orden: el primero que encuentres repetido es la respuesta y puedes salir ya.
+        codigo: |2
+              for pedido in pedidos:
+                  if pedido in vistos:
+                      return pedido
+      - explica: |
+          Si no estaba, lo apuntas. Al terminar sin encontrar nada, devuelve `None`.
+
+          **Complejidad:** O(n) en tiempo y memoria. Ordenar primero daría O(n log n) y perdería el orden original.
+        codigo: |2
+                  vistos.add(pedido)
+              return None
+    tests:
+      - {expr: "primer_repetido([3, 1, 4, 1, 3])", esperado: "1"}
+      - {expr: "primer_repetido([1, 2, 3])", esperado: "None"}
+      - {expr: "primer_repetido([])", esperado: "None"}
+      - {expr: "primer_repetido(['a', 'b', 'a'])", esperado: "'a'", oculto: true}
+
+  - id: ep1-parentesis
+    titulo: Paréntesis equilibrados
+    nivel: Pila
+    enunciado: |
+      `equilibrado(texto)` devuelve `True` si todos los `()`, `[]` y `{}` se abren y se cierran en el orden correcto.
+      Los demás caracteres se ignoran. Un linter o un compilador hacen exactamente esto.
+    pasos:
+      - explica: |
+          Lo último que se abre es lo primero que se cierra. Esa estructura se llama **pila** (*LIFO*), y una lista de Python sirve:
+          `append` apila y `pop` desapila. El diccionario indica qué apertura corresponde a cada cierre.
+        codigo: |2
+          def equilibrado(texto):
+              pareja = {")": "(", "]": "[", "}": "{"}
+              pila = []
+      - explica: |
+          Las aperturas se apilan: son compromisos pendientes de cerrar.
+        codigo: |2
+              for c in texto:
+                  if c in "([{":
+                      pila.append(c)
+      - explica: |
+          Ante un cierre hay dos fallos posibles: no hay nada abierto, o lo último abierto no coincide. El orden de la condición importa:
+          `not pila` va primero para no hacer `pop` de una pila vacía.
+        codigo: |2
+                  elif c in ")]}":
+                      if not pila or pila.pop() != pareja[c]:
+                          return False
+      - explica: |
+          Al final no puede quedar nada abierto. Olvidar esta línea es el error típico: `"(("` daría `True`.
+
+          **Complejidad:** O(n) en tiempo y memoria.
+        codigo: |2
+              return not pila
+    tests:
+      - {expr: "equilibrado('([]{})')", esperado: "True"}
+      - {expr: "equilibrado('(]')", esperado: "False"}
+      - {expr: "equilibrado('((')", esperado: "False"}
+      - {expr: "equilibrado(')')", esperado: "False"}
+      - {expr: "equilibrado('hola (mundo)')", esperado: "True", oculto: true}
+
+  - id: ep1-ventana
+    titulo: La mejor racha de k días
+    nivel: Ventana deslizante
+    enunciado: |
+      `mejor_racha(ventas, k)` devuelve la suma máxima de `k` días consecutivos. Si hay menos de `k` días, devuelve `None`.
+
+      Recalcular cada suma cuesta O(n·k). Con una **ventana deslizante** cuesta O(n).
+    pasos:
+      - explica: |
+          Descarta primero el caso imposible. Comprobar los casos límite al principio es una buena señal en una entrevista.
+        codigo: |2
+          def mejor_racha(ventas, k):
+              if len(ventas) < k:
+                  return None
+      - explica: |
+          Calcula la primera ventana completa. A partir de aquí no volverás a sumar `k` elementos.
+        codigo: |2
+              actual = sum(ventas[:k])
+              mejor = actual
+      - explica: |
+          Al mover la ventana un día, **entra uno y sale otro**: el total se actualiza con una resta y una suma, sin recalcular.
+          `i` es el día que entra y `i - k` el que sale.
+        codigo: |2
+              for i in range(k, len(ventas)):
+                  actual += ventas[i] - ventas[i - k]
+                  mejor = max(mejor, actual)
+      - explica: |
+          **Complejidad:** O(n) en tiempo y O(1) en memoria. El truco sirve para cualquier problema de «subsecuencia contigua».
+        codigo: |2
+              return mejor
+    tests:
+      - {expr: "mejor_racha([1, 5, 2, 3, 7], 2)", esperado: "10"}
+      - {expr: "mejor_racha([4, 4], 2)", esperado: "8"}
+      - {expr: "mejor_racha([1], 2)", esperado: "None"}
+      - {expr: "mejor_racha([-1, -2, -3], 1)", esperado: "-1", oculto: true}
+
+  - id: ep1-fusion
+    titulo: Fusionar dos listas ordenadas
+    nivel: Dos punteros
+    enunciado: |
+      `fusionar(a, b)` recibe dos listas ya ordenadas y devuelve una sola lista ordenada, **sin usar `sorted`**.
+      Es el paso central de *merge sort*.
+    pasos:
+      - explica: |
+          Un puntero por lista. Como ambas están ordenadas, el siguiente valor siempre es el menor de los dos que señalan.
+        codigo: |2
+          def fusionar(a, b):
+              i, j = 0, 0
+              salida = []
+      - explica: |
+          Mientras queden elementos en **las dos**, compara y avanza solo el puntero del que has usado.
+        codigo: |2
+              while i < len(a) and j < len(b):
+                  if a[i] <= b[j]:
+                      salida.append(a[i])
+                      i += 1
+                  else:
+                      salida.append(b[j])
+                      j += 1
+      - explica: |
+          Cuando una se agota, la otra aún puede tener elementos, y ya están ordenados. Olvidar esto es el fallo más habitual.
+
+          **Complejidad:** O(n + m) en tiempo y memoria.
+        codigo: |2
+              return salida + a[i:] + b[j:]
+    tests:
+      - {expr: "fusionar([1, 3], [2, 4])", esperado: "[1, 2, 3, 4]"}
+      - {expr: "fusionar([], [1])", esperado: "[1]"}
+      - {expr: "fusionar([1, 2], [])", esperado: "[1, 2]"}
+      - {expr: "fusionar([1, 1], [1])", esperado: "[1, 1, 1]", oculto: true}
+
+  - id: ep1-binaria
+    titulo: Búsqueda binaria
+    nivel: Búsqueda binaria
+    enunciado: |
+      `buscar(lista, objetivo)` recibe una lista **ordenada** y devuelve el índice del objetivo, o `-1` si no está.
+      Debe hacerlo en O(log n): en un millón de elementos, unas 20 comparaciones.
+    pasos:
+      - explica: |
+          `izq` y `der` delimitan la zona donde aún puede estar. Al principio, toda la lista. Usamos límites **inclusivos**.
+        codigo: |2
+          def buscar(lista, objetivo):
+              izq, der = 0, len(lista) - 1
+      - explica: |
+          La condición es `<=`, no `<`: con `<` no se comprobaría la zona de un solo elemento. `//` es la división entera.
+        codigo: |2
+              while izq <= der:
+                  medio = (izq + der) // 2
+      - explica: |
+          Mira el centro y descarta la mitad donde es imposible que esté. El `+ 1` y el `- 1` son esenciales: sin ellos, el bucle puede no terminar nunca.
+        codigo: |2
+                  if lista[medio] == objetivo:
+                      return medio
+                  elif lista[medio] < objetivo:
+                      izq = medio + 1
+                  else:
+                      der = medio - 1
+      - explica: |
+          Si la zona queda vacía, no estaba.
+
+          **Complejidad:** O(log n) en tiempo y O(1) en memoria.
+        codigo: |2
+              return -1
+    tests:
+      - {expr: "buscar([1, 3, 5, 7], 5)", esperado: "2"}
+      - {expr: "buscar([1, 3, 5, 7], 4)", esperado: "-1"}
+      - {expr: "buscar([], 1)", esperado: "-1"}
+      - {expr: "buscar([2], 2)", esperado: "0"}
+      - {expr: "buscar([1, 3, 5, 7], 7)", esperado: "3", oculto: true}
+
+  - id: ep1-top-k
+    titulo: Los k productos más vendidos
+    nivel: Conteo y orden
+    enunciado: |
+      `top_k(ventas, k)` recibe una lista de nombres de producto y devuelve los `k` más frecuentes, de mayor a menor.
+      Los empates se resuelven por orden alfabético.
+    pasos:
+      - explica: |
+          `Counter` hace el conteo que harías con un diccionario. En una entrevista, pregunta si puedes usar la biblioteca estándar: casi siempre sí.
+        codigo: |2
+          from collections import Counter
+
+          def top_k(ventas, k):
+              conteo = Counter(ventas)
+      - explica: |
+          Ordena con una **clave compuesta**: primero `-frecuencia` (el signo negativo da orden descendente) y después el nombre. Así se resuelven los empates.
+        codigo: |2
+              orden = sorted(conteo, key=lambda p: (-conteo[p], p))
+      - explica: |
+          **Complejidad:** O(n + u log u), siendo `u` los productos distintos. Con `heapq.nlargest` bajaría a O(n + u log k), una buena mejora que mencionar.
+        codigo: |2
+              return orden[:k]
+    tests:
+      - {expr: "top_k(['te', 'cafe', 'te', 'pan', 'cafe', 'te'], 2)", esperado: "['te', 'cafe']"}
+      - {expr: "top_k(['b', 'a'], 2)", esperado: "['a', 'b']"}
+      - {expr: "top_k([], 3)", esperado: "[]"}
+      - {expr: "top_k(['x'], 5)", esperado: "['x']", oculto: true}
+
+  - id: ep1-intervalos
+    titulo: Fusionar turnos solapados
+    nivel: Intervalos
+    enunciado: |
+      `fusionar_turnos(turnos)` recibe pares `[inicio, fin]` en cualquier orden y fusiona los que se solapan o se tocan.
+      Devuelve la lista ordenada por inicio.
+    pasos:
+      - explica: |
+          La clave es **ordenar por inicio**: así, un intervalo solo puede solaparse con el anterior. Sin ordenar habría que comparar todos con todos.
+        codigo: |2
+          def fusionar_turnos(turnos):
+              salida = []
+              for inicio, fin in sorted(turnos):
+      - explica: |
+          Si empieza cuando ya ha terminado el último, no hay solape: abre un intervalo nuevo. Lo guardamos como lista porque puede crecer.
+        codigo: |2
+                  if not salida or inicio > salida[-1][1]:
+                      salida.append([inicio, fin])
+      - explica: |
+          Si se solapa, amplía el último. Usa `max`: un turno puede estar **contenido** en el anterior, y `[1, 10]` con `[2, 3]` debe seguir acabando en 10.
+
+          **Complejidad:** O(n log n) por la ordenación.
+        codigo: |2
+                  else:
+                      salida[-1][1] = max(salida[-1][1], fin)
+              return salida
+    tests:
+      - {expr: "fusionar_turnos([[8, 10], [1, 3], [2, 6]])", esperado: "[[1, 6], [8, 10]]"}
+      - {expr: "fusionar_turnos([[1, 4], [4, 5]])", esperado: "[[1, 5]]"}
+      - {expr: "fusionar_turnos([[1, 10], [2, 3]])", esperado: "[[1, 10]]"}
+      - {expr: "fusionar_turnos([])", esperado: "[]", oculto: true}
+
+  - id: ep1-bfs
+    titulo: La ruta con menos saltos entre almacenes
+    nivel: Grafos (BFS)
+    enunciado: |
+      `saltos(red, origen, destino)` recibe un diccionario `almacén → lista de vecinos` y devuelve el mínimo de saltos entre dos almacenes,
+      o `-1` si no están conectados. Si origen y destino coinciden, son 0 saltos.
+    pasos:
+      - explica: |
+          La **búsqueda en anchura** explora por capas: primero lo que está a 1 salto, luego a 2... Por eso la primera vez que llega a un nodo, es por el camino más corto.
+          Usa una cola; `deque` saca por la izquierda en O(1), mientras que `list.pop(0)` es O(n).
+        codigo: |2
+          from collections import deque
+
+          def saltos(red, origen, destino):
+              cola = deque([(origen, 0)])
+              vistos = {origen}
+      - explica: |
+          Saca el siguiente nodo. Si es el destino, ya tienes la distancia mínima.
+        codigo: |2
+              while cola:
+                  actual, distancia = cola.popleft()
+                  if actual == destino:
+                      return distancia
+      - explica: |
+          Añade los vecinos no visitados. **Márcalos al meterlos en la cola**, no al sacarlos, o un mismo nodo entrará varias veces.
+          `.get(actual, [])` evita un error si un nodo no tiene entrada en el diccionario.
+        codigo: |2
+                  for vecino in red.get(actual, []):
+                      if vecino not in vistos:
+                          vistos.add(vecino)
+                          cola.append((vecino, distancia + 1))
+      - explica: |
+          Si la cola se vacía, no hay camino.
+
+          **Complejidad:** O(V + A) en tiempo, nodos más aristas, y O(V) en memoria.
+        codigo: |2
+              return -1
+    tests:
+      - {expr: "saltos({'A': ['B'], 'B': ['C'], 'C': []}, 'A', 'C')", esperado: "2"}
+      - {expr: "saltos({'A': ['B', 'C'], 'B': ['D'], 'C': ['D'], 'D': []}, 'A', 'D')", esperado: "2"}
+      - {expr: "saltos({'A': [], 'B': []}, 'A', 'B')", esperado: "-1"}
+      - {expr: "saltos({'A': ['B']}, 'A', 'A')", esperado: "0"}
+      - {expr: "saltos({'A': ['B'], 'B': ['A']}, 'A', 'Z')", esperado: "-1", oculto: true}
+
+  - id: ep1-monedas
+    titulo: Menos monedas para un importe
+    nivel: Programación dinámica
+    enunciado: |
+      `menos_monedas(monedas, importe)` devuelve el mínimo de monedas que suman exactamente `importe`, o `-1` si es imposible.
+      Tomar siempre la moneda más grande falla: con `[1, 3, 4]` e importe 6, eso da 4+1+1, pero lo óptimo es 3+3.
+    pasos:
+      - explica: |
+          **Programación dinámica:** resuelve los subproblemas pequeños y reutilízalos. `mejor[x]` será el mínimo de monedas para el importe `x`.
+          Empieza con un valor imposible, y `mejor[0] = 0`, porque para sumar 0 no hace falta ninguna.
+        codigo: |2
+          def menos_monedas(monedas, importe):
+              imposible = importe + 1
+              mejor = [0] + [imposible] * importe
+      - explica: |
+          Para cada importe, prueba cada moneda como **última** moneda usada: quedan `x - moneda` por pagar, y ese subproblema ya está resuelto.
+        codigo: |2
+              for x in range(1, importe + 1):
+                  for moneda in monedas:
+                      if moneda <= x:
+                          mejor[x] = min(mejor[x], mejor[x - moneda] + 1)
+      - explica: |
+          Si sigue valiendo el valor imposible, ninguna combinación llega.
+
+          **Complejidad:** O(importe × monedas) en tiempo y O(importe) en memoria.
+        codigo: |2
+              return mejor[importe] if mejor[importe] != imposible else -1
+    tests:
+      - {expr: "menos_monedas([1, 3, 4], 6)", esperado: "2"}
+      - {expr: "menos_monedas([2], 3)", esperado: "-1"}
+      - {expr: "menos_monedas([1, 2, 5], 11)", esperado: "3"}
+      - {expr: "menos_monedas([1], 0)", esperado: "0", oculto: true}
+
+  - id: ep1-sql-top
+    titulo: "SQL: los dos productos con más ingresos por categoría"
+    nivel: SQL · ventanas
+    tipo: sql
+    enunciado: |
+      La tabla `ventas(categoria, producto, ingresos)` tiene una fila por producto. Devuelve `categoria, producto, ingresos` con los **2 productos
+      de más ingresos de cada categoría**, ordenados por categoría y puesto. Es la pregunta de SQL más repetida en entrevistas de datos.
+    setup: |
+      import sqlite3
+      con = sqlite3.connect(":memory:")
+      con.executescript("""
+      CREATE TABLE ventas (categoria TEXT, producto TEXT, ingresos INT);
+      INSERT INTO ventas VALUES
+        ('cafe', 'molido', 90), ('cafe', 'grano', 120), ('cafe', 'capsulas', 60),
+        ('menaje', 'taza', 40), ('menaje', 'prensa', 70), ('te', 'verde', 30);
+      """)
+    pasos:
+      - explica: |
+          `LIMIT 2` no sirve: daría 2 filas en total, no 2 por grupo. Hace falta numerar **dentro de cada categoría**, y eso lo hace una función de ventana.
+          Empieza una CTE para trabajar por capas.
+        codigo: |2
+          WITH clasificadas AS (
+            SELECT categoria, producto, ingresos,
+      - explica: |
+          `PARTITION BY` reinicia el contador en cada categoría. `ORDER BY` decide quién es el 1. A diferencia de `GROUP BY`, conserva todas las filas.
+        codigo: |2
+                   ROW_NUMBER() OVER (PARTITION BY categoria ORDER BY ingresos DESC) AS puesto
+            FROM ventas
+          )
+      - explica: |
+          Filtra fuera de la CTE: en el `WHERE` de la misma consulta **no** se puede usar una función de ventana, porque aún no se ha calculado.
+
+          **Variante que preguntan:** si puede haber empates, usa `DENSE_RANK()`.
+        codigo: |2
+          SELECT categoria, producto, ingresos
+          FROM clasificadas
+          WHERE puesto <= 2
+          ORDER BY categoria, puesto
+    tests:
+      - {expr: "columnas", esperado: "['categoria', 'producto', 'ingresos']", nombre: "columnas"}
+      - {expr: "filas", esperado: "[('cafe', 'grano', 120), ('cafe', 'molido', 90), ('menaje', 'prensa', 70), ('menaje', 'taza', 40), ('te', 'verde', 30)]", nombre: "filas"}
+
+  - id: ep1-pandas-gasto
+    titulo: "pandas: el cliente que más gasta en cada ciudad"
+    nivel: pandas
+    paquetes: [pandas]
+    enunciado: |
+      `top_clientes(df)` recibe un DataFrame con columnas `ciudad`, `cliente` e `importe` (una fila por pedido) y devuelve una lista de pares
+      `[ciudad, cliente]` con el cliente de mayor gasto total de cada ciudad, por orden alfabético de ciudad.
+    pasos:
+      - explica: |
+          Hay dos niveles: un cliente tiene muchos pedidos. Primero **agrega** el gasto por cliente y ciudad. `as_index=False` deja un DataFrame normal.
+        codigo: |2
+          def top_clientes(df):
+              totales = df.groupby(["ciudad", "cliente"], as_index=False)["importe"].sum()
+      - explica: |
+          Ordena por ciudad y por importe descendente. Así, la primera fila de cada ciudad es la del mayor gasto.
+        codigo: |2
+              orden = totales.sort_values(["ciudad", "importe"], ascending=[True, False])
+      - explica: |
+          `drop_duplicates` se queda con la primera fila de cada ciudad. También se resuelve con `idxmax`; da igual cuál uses si sabes explicarla.
+
+          **Complejidad:** O(n log n) por la ordenación.
+        codigo: |2
+              primeros = orden.drop_duplicates("ciudad")
+              return primeros[["ciudad", "cliente"]].values.tolist()
+    setup: |
+      import pandas as pd
+      DF = pd.DataFrame({
+          "ciudad": ["Sevilla", "Sevilla", "Sevilla", "Cádiz", "Cádiz"],
+          "cliente": ["Ana", "Ana", "Luis", "Eva", "Noa"],
+          "importe": [30, 40, 50, 10, 20],
+      })
+    tests:
+      - {expr: "top_clientes(DF)", esperado: "[['Cádiz', 'Noa'], ['Sevilla', 'Ana']]"}
