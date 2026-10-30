@@ -1,5 +1,7 @@
 # Licencia del curso: opciones para que siga siendo abierto
 
+> **Decisión tomada y aplicada el 30-10-2026:** MIT para el código y CC BY-NC-SA 4.0 para el contenido. Ver [LICENCIAS.md](../LICENCIAS.md). Este documento recoge el análisis.
+
 > **Esto no es asesoramiento jurídico.** Es un análisis para decidir con criterio. Consulta a un abogado antes de vender el curso.
 
 **Recomendación:** dos licencias según el tipo de material.
@@ -44,10 +46,6 @@ Recuerda que el contenido abierto no es lo que se vende. Lo que se paga es el ce
 5. **Contribuciones externas.** Si aceptas cambios de otras personas, necesitas un acuerdo (CLA, o al menos una nota en `CONTRIBUTING.md`), o no podrás relicenciar ni vender permisos comerciales sobre sus partes.
 6. **Materiales de terceros.** Tus `recursos-abiertos.md` enlazan a contenido ajeno, lo que no plantea problema. Pero si incrustas vídeos, datos o imágenes, cada uno conserva su licencia: ver [recursos-y-licencias.md](recursos-y-licencias.md).
 7. **Las soluciones son públicas.** Si haces cohortes con nota, mueve `soluciones.ipynb` a un repositorio privado de instructores. Lo ya publicado seguirá disponible en el historial de Git y, con licencia, seguirá licenciado.
-
-## Cuando decidas
-
-Con la recomendación habría que añadir: `LICENSE` (MIT), `LICENSE-CONTENT.md` (CC BY-NC-SA 4.0), una sección en el README que explique qué cubre cada una, y la cabecera de licencia en la web.
 
 ## Fuentes
 

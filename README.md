@@ -132,4 +132,4 @@ El programa original semana a semana sigue en [PROGRAMA.md](PROGRAMA.md); el ord
 
 ## Licencia
 
-El material está pensado para que lo adaptes. Si vas a comercializarlo, elige una licencia explícita (por ejemplo, CC BY-NC-SA 4.0 para el contenido y MIT para el código) y añádela en un archivo `LICENSE`.
+El **código** se publica con licencia [MIT](LICENSE) y el **contenido** del curso con [CC BY-NC-SA 4.0](LICENSE-CONTENT.txt): puedes estudiarlo, compartirlo y adaptarlo sin fines comerciales, y usar el código en tus proyectos. Detalles, material de terceros y uso comercial en [LICENCIAS.md](LICENCIAS.md).

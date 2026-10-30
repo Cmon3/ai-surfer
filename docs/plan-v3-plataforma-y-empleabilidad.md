@@ -20,7 +20,7 @@ Hecho en la segunda revisión, con 12 agentes en paralelo y verificación centra
 | D4 `PROGRAMA.md` · D6 enlaces a Colab (`Cmon3/ai-surfer`) · D7 README de la web · D9 CI del curso · D11 Pyodide | ✅ Hechos |
 | Fase 1b de la web: ejercicios en el navegador (34, verificados también en Chrome real), cuestionarios interactivos, página de rutas | ✅ Hechos |
 | D5 PDF de las diapositivas · F2 sin diapositivas ni guiones | ⏳ Pendiente |
-| D8 licencia · despliegue público de la web · analítica · correo de la lista de espera | ⏳ Pendiente: decisiones tuyas (sección 9) |
+| Despliegue público de la web · analítica · correo de la lista de espera | ⏳ Pendiente: decisiones tuyas (sección 9) |
 | Fase 2 (Supabase, Stripe, certificados) y fase 3 (tutor de IA) | ⏳ Pendiente: requiere crear las cuentas |
 
 **Añadido el 30-10-2026 (peticiones en Quipu):**
@@ -31,7 +31,7 @@ Hecho en la segunda revisión, con 12 agentes en paralelo y verificación centra
 | **EP1** · Entrevistas de programación guiadas: 12 ejercicios con explicación al lado de cada casilla y modo reto | ✅ |
 | Motor de ejercicios: JavaScript y modo guiado por pasos | ✅ |
 | AI8 actualizado con el Reglamento (UE) 2026/1744 | ✅ |
-| Análisis de licencias en [licencia-opciones.md](licencia-opciones.md) | ✅; la decisión es tuya |
+| Licencia aplicada: MIT (código) y CC BY-NC-SA 4.0 (contenido); ver [LICENCIAS.md](../LICENCIAS.md) | ✅ |
 
 **Limitaciones conocidas:** las celdas que llaman a la API de Claude solo se han probado en su camino sin clave; las plantillas de Azure/Terraform (CL1) y los esqueletos para Colab con GPU (AI5–AI7, AI9, DS6) no se han ejecutado; Spark, Airflow y Kafka (DS7) se simulan; las URL de `recursos-abiertos.md` no se han comprobado una a una; la ficha de cumplimiento de AI8 cita artículos del Reglamento europeo de IA que debería revisar un jurista. En macOS, XGBoost y LightGBM (I4) necesitan `brew install libomp`.
 
@@ -281,7 +281,7 @@ En este campo el material envejece en meses: en esta revisión había un modelo 
 
 ## 9. Decisiones pendientes (tuyas)
 
-1. **Licencia y apertura:** ¿contenido abierto (p. ej. CC BY-NC-SA) y negocio en certificados, mentoría y cohortes, o contenido cerrado? Bloquea publicar.
+1. ~~**Licencia y apertura.**~~ Decidido el 30-10-2026: MIT para el código y CC BY-NC-SA 4.0 para el contenido ([LICENCIAS.md](../LICENCIAS.md)).
 2. **Primera ruta a lanzar:** recomendación, AI Engineer.
 3. **Idioma:** solo español al principio, o español + inglés (las ofertas piden inglés B2: módulos con materiales en inglés serían también práctica).
 4. **Modelo de negocio inicial:** freemium (N1 gratis) + suscripción, o cohortes de pago desde el principio.
