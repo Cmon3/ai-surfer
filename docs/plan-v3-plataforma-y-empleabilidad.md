@@ -19,7 +19,7 @@ Hecho en la segunda revisión, con 12 agentes en paralelo y verificación centra
 | F5.7 (agentes de código) · capstone AI opción B | ✅ Hechos |
 | D4 `PROGRAMA.md` · D6 enlaces a Colab (`Cmon3/ai-surfer`) · D7 README de la web · D9 CI del curso · D11 Pyodide | ✅ Hechos |
 | Fase 1b de la web: ejercicios en el navegador (34, verificados también en Chrome real), cuestionarios interactivos, página de rutas | ✅ Hechos |
-| D5 PDF de las diapositivas · F2 sin diapositivas ni guiones | ⏳ Pendiente |
+| D5 PDF de las diapositivas · F2 sin diapositivas ni guiones | ✅ Hechos |
 | Despliegue público de la web · analítica · correo de la lista de espera | ⏳ Pendiente: decisiones tuyas (sección 9) |
 | Fase 2 (Supabase, Stripe, certificados) y fase 3 (tutor de IA) | ⏳ Pendiente: requiere crear las cuentas |
 
