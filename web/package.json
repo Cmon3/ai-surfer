@@ -16,11 +16,11 @@
     "verificar:js": "node scripts/verificar_ejercicios_js.mjs"
   },
   "dependencies": {
-    "astro": "^7.4.2",
-    "marked": "^18.1.1",
+    "astro": "^7.4.4",
+    "marked": "^18.1.2",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "pyodide": "0.28.3"
+    "pyodide": "314.0.7"
   }
 }
