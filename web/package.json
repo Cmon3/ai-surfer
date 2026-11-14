@@ -16,7 +16,7 @@
     "verificar:js": "node scripts/verificar_ejercicios_js.mjs"
   },
   "dependencies": {
-    "astro": "^7.4.2",
+    "astro": "^7.4.7",
     "marked": "^18.1.1",
     "yaml": "^2.9.1"
   },
